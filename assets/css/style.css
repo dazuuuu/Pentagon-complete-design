@@ -1,0 +1,323 @@
+/* ============================================================
+   PENTAGON QUEST — MODERN DESIGN SYSTEM
+   Updated layout based on professional reference
+   Colors: Warm Sand, Forest Green, Deep Charcoal, Gold
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Tenor+Sans&display=swap');
+
+/* ── CSS Custom Properties ── */
+:root {
+  /* Warm "Human" Palette */
+  --gold:        #D4AF37;
+  --gold-soft:   #E5D5A1;
+  --green:       #1B3022;
+  --green-light: #3A5A40;
+  --charcoal:    #121212;
+  --sand:        #F4F1EA;
+  --warm-white:  #FAF9F6;
+  --earth:       #4A3728;
+  
+  --text-main:   #1A1A1A;
+  --text-muted:  #555555;
+  --bg-dark:     #121212;
+  
+  --font-main:    'Plus Jakarta Sans', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-display: 'Tenor Sans', sans-serif;
+
+  --radius-pill:  50px;
+  --radius-md:    12px;
+  --transition:   0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  --container-w:  1280px;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-main);
+  background-color: var(--warm-white);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+p { font-size: 1.05rem; color: var(--text-muted); }
+a { text-decoration: none; transition: var(--transition); color: inherit; }
+
+/* ── NAVIGATION (MODERN CENTERED) ── */
+.navbar-pq {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 24px 0;
+  transition: var(--transition);
+}
+
+.navbar-pq.scrolled {
+  position: fixed;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-pill-container {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-pill);
+  padding: 6px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.navbar-pq .nav-link {
+  color: #fff !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 8px 16px !important;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+}
+
+.navbar-pq .nav-link:hover, .navbar-pq .nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--gold-soft) !important;
+}
+
+.navbar-brand img {
+  height: 48px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.btn-contact-pill {
+  background: #fff;
+  color: var(--charcoal) !important;
+  padding: 12px 28px !important;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.btn-contact-pill:hover {
+  background: var(--gold);
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* ── HERO SECTION (NEW REFERENCE) ── */
+.modern-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: var(--charcoal);
+  color: #fff;
+  text-align: center;
+  padding: 120px 0 80px;
+  overflow: hidden;
+}
+
+.hero-video-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+}
+
+.hero-video-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(18,18,18,0.7), rgba(18,18,18,0.4), rgba(18,18,18,0.8));
+}
+
+.modern-hero .container { position: relative; z-index: 2; }
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-bottom: 48px;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 64px;
+}
+
+.btn-hero {
+  padding: 16px 36px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: var(--transition);
+}
+
+.btn-hero-primary { background: var(--charcoal); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+.btn-hero-primary:hover { background: #000; border-color: #fff; }
+
+/* ── SINGLE ROW SEARCH BAR ── */
+.search-row-wrap {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: var(--radius-pill);
+  padding: 8px;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.search-field {
+  flex: 1;
+  padding: 12px 24px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.search-field:last-of-type { border-right: none; }
+
+.search-field label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--gold-soft);
+  margin-bottom: 4px;
+}
+
+.search-field select, .search-field input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  width: 100%;
+  outline: none;
+}
+
+.search-field select option { background: var(--charcoal); }
+
+.btn-search-go {
+  background: var(--gold);
+  color: var(--charcoal);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: var(--transition);
+}
+
+.btn-search-go:hover { transform: scale(1.05); background: #fff; }
+
+/* ── ANKARA TOUCHES ── */
+.ankara-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--green) 25%, var(--gold) 50%, var(--charcoal) 75%, var(--gold) 100%);
+  background-size: 200% 100%;
+  animation: ankaraMove 10s linear infinite;
+}
+
+@keyframes ankaraMove {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* ── SECTION STYLES ── */
+.section-pad { padding: 120px 0; }
+.section-tag {
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.section-title-modern {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 32px;
+}
+
+/* ── PAGE SPECIFIC POLISH ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* Blog Card Styles */
+.blog-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  transition: var(--transition);
+  height: 100%;
+}
+.blog-card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+
+.experience-item {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 16/9;
+}
+
+.offer-card {
+  background: var(--green);
+  color: #fff;
+  padding: 40px;
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+.offer-card::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0.2;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 991px) {
+  .nav-pill-container { display: none; }
+  .search-row-wrap { flex-direction: column; border-radius: var(--radius-md); padding: 20px; }
+  .search-field { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); width: 100%; padding: 12px 0; }
+  .btn-search-go { width: 100%; border-radius: var(--radius-md); margin-top: 16px; height: 50px; }
+  .hero-title { font-size: 3rem; }
+}
