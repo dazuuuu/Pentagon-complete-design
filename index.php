@@ -2,6 +2,16 @@
 /**
  * Pentagon Quest — Home Page (Refined & Restructured)
  */
+require_once __DIR__ . '/includes/bootstrap.php';
+
+use App\Services\DestinationService;
+use App\Services\TestimonialService;
+
+$destinationService = new DestinationService();
+$testimonialService = new TestimonialService();
+$destinations = $destinationService->getFeatured(3);
+$testimonials = $testimonialService->getActive();
+
 $page_title       = 'Pentagon Quest — Authentic African Safari Expeditions';
 $page_description = 'Discover the heart of Africa with Pentagon Quest. Bespoke 4x4 wildlife expeditions, cultural immersions, and luxury safari experiences.';
 $current_page     = 'index.php';
@@ -65,19 +75,14 @@ include 'includes/header.php';
       <h2 class="section-title-modern">Popular Destinations</h2>
     </div>
     <div class="row g-4">
-      <?php
-      $destinations = [
-        ['name' => 'Masai Mara', 'country' => 'Kenya', 'img' => 'var(--green)'],
-        ['name' => 'Serengeti', 'country' => 'Tanzania', 'img' => 'var(--charcoal)'],
-        ['name' => 'Bwindi Forest', 'country' => 'Uganda', 'img' => 'var(--green-light)']
-      ];
-      foreach ($destinations as $d):
+      <?php foreach ($destinations as $d):
+        $img = $d['image_url'] ?? 'var(--green)';
       ?>
       <div class="col-lg-4 col-md-6 reveal">
         <div class="blog-card">
-          <div style="height: 300px; background: <?php echo $d['img']; ?>; position: relative;">
+          <div style="height: 300px; background: <?php echo htmlspecialchars($img); ?>; position: relative;">
             <svg width="100%" height="100%" viewBox="0 0 400 300" opacity="0.6">
-              <rect width="400" height="300" fill="<?php echo $d['img']; ?>"/>
+              <rect width="400" height="300" fill="<?php echo htmlspecialchars($img); ?>"/>
               <path d="M0,300 Q100,200 200,250 Q300,300 400,200 L400,300 L0,300 Z" fill="rgba(255,255,255,0.1)"/>
             </svg>
             <div style="position: absolute; bottom: 20px; left: 20px; color: #fff;">
@@ -133,20 +138,17 @@ include 'includes/header.php';
       <h2 class="section-title-modern">What Our Explorers Say</h2>
     </div>
     <div class="row g-4">
+      <?php foreach ($testimonials as $testimonial):
+        $accent = $testimonial['accent_color'] ?? 'gold';
+      ?>
       <div class="col-md-6 reveal">
-        <div style="background: #fff; padding: 40px; border-radius: var(--radius-md); border-left: 5px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-          <p style="font-style: italic; font-size: 1.1rem; margin-bottom: 20px;">"The most authentic safari experience I've ever had. Pentagon Quest's attention to detail and knowledge of the land is unparalleled."</p>
-          <h5 style="margin-bottom: 0;">Sarah Jenkins</h5>
-          <span style="font-size: 0.8rem; opacity: 0.6;">United Kingdom</span>
+        <div style="background: #fff; padding: 40px; border-radius: var(--radius-md); border-left: 5px solid var(--<?php echo htmlspecialchars($accent); ?>); box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+          <p style="font-style: italic; font-size: 1.1rem; margin-bottom: 20px;">"<?php echo htmlspecialchars($testimonial['quote']); ?>"</p>
+          <h5 style="margin-bottom: 0;"><?php echo htmlspecialchars($testimonial['author_name']); ?></h5>
+          <span style="font-size: 0.8rem; opacity: 0.6;"><?php echo htmlspecialchars($testimonial['author_location'] ?? ''); ?></span>
         </div>
       </div>
-      <div class="col-md-6 reveal">
-        <div style="background: #fff; padding: 40px; border-radius: var(--radius-md); border-left: 5px solid var(--green); box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-          <p style="font-style: italic; font-size: 1.1rem; margin-bottom: 20px;">"From the moment we landed in Nairobi, everything was seamless. The 4x4 expedition was rugged yet incredibly comfortable."</p>
-          <h5 style="margin-bottom: 0;">Mark Thompson</h5>
-          <span style="font-size: 0.8rem; opacity: 0.6;">USA</span>
-        </div>
-      </div>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>

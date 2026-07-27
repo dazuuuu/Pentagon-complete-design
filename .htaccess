@@ -26,11 +26,17 @@ AddDefaultCharset UTF-8
   Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
-# Protect includes directory
-<Files "*.php">
-  Order Allow,Deny
-  Allow from all
-</Files>
+# API routing
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+  RewriteRule ^handlers/(.*)$ handlers/index.php [QSA,L]
+</IfModule>
+
+# Protect apps directory from direct web access
+<IfModule mod_rewrite.c>
+  RewriteRule ^apps/ - [F,L]
+</IfModule>
 
 # Redirect www to non-www (update domain as needed)
 # RewriteEngine On

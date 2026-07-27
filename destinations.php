@@ -2,24 +2,18 @@
 /**
  * Pentagon Quest — Destinations Page (Modern Redesign)
  */
+require_once __DIR__ . '/includes/bootstrap.php';
+
+use App\Services\TourService;
+
+$tourService = new TourService();
+$tours = $tourService->getActive();
+
 $page_title       = 'Safari Destinations — Kenya, Tanzania, Uganda, Rwanda & Beyond';
 $page_description = 'Explore Pentagon Quest\'s safari destinations across Africa. From Kenya\'s Masai Mara and Tanzania\'s Serengeti to Uganda\'s gorilla forests and Rwanda\'s volcanic highlands — discover your perfect African adventure.';
 $current_page     = 'destinations.php';
 $base_path        = '';
 include 'includes/header.php';
-
-// Tour data array
-$tours = [
-  ['id' => 1, 'title' => 'Masai Mara Great Migration Safari', 'dest' => 'Kenya', 'type' => 'Wildlife Safari', 'dur' => '7 Days', 'price' => '$1,850', 'badge' => 'Best Seller'],
-  ['id' => 2, 'title' => 'Serengeti & Ngorongoro Crater', 'dest' => 'Tanzania', 'type' => 'Wildlife Safari', 'dur' => '9 Days', 'price' => '$2,200', 'badge' => 'Popular'],
-  ['id' => 3, 'title' => 'Bwindi Gorilla Trekking Expedition', 'dest' => 'Uganda', 'type' => 'Gorilla Trekking', 'dur' => '5 Days', 'price' => '$2,400', 'badge' => 'Adventure'],
-  ['id' => 4, 'title' => 'Kilimanjaro Summit — Machame Route', 'dest' => 'Tanzania', 'type' => 'Mountain Trek', 'dur' => '8 Days', 'price' => '$2,100', 'badge' => 'Trekking'],
-  ['id' => 5, 'title' => 'Rwanda Gorillas & Volcanoes', 'dest' => 'Rwanda', 'type' => 'Gorilla Trekking', 'dur' => '4 Days', 'price' => '$2,800', 'badge' => 'Exclusive'],
-  ['id' => 6, 'title' => 'Zanzibar Beach & Spice Retreat', 'dest' => 'Tanzania', 'type' => 'Beach & Coastal', 'dur' => '6 Days', 'price' => '$1,400', 'badge' => 'Relaxation'],
-  ['id' => 7, 'title' => 'Amboseli & Tsavo Safari Circuit', 'dest' => 'Kenya', 'type' => 'Wildlife Safari', 'dur' => '6 Days', 'price' => '$1,650', 'badge' => 'Value'],
-  ['id' => 8, 'title' => 'Victoria Falls & Botswana Safari', 'dest' => 'Botswana', 'type' => 'Wildlife Safari', 'dur' => '10 Days', 'price' => '$3,200', 'badge' => 'Premium'],
-  ['id' => 9, 'title' => 'Namibia Desert & Sossusvlei Dunes', 'dest' => 'Namibia', 'type' => 'Wildlife Safari', 'dur' => '12 Days', 'price' => '$3,600', 'badge' => 'Luxury'],
-];
 ?>
 
 <!-- Page Hero -->

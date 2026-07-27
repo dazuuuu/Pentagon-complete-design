@@ -55,12 +55,19 @@
       <div class="col-lg-4 col-md-4">
         <h4 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Newsletter</h4>
         <p style="font-size: 0.9rem; opacity: 0.6; margin-bottom: 20px;">Get safari inspiration and exclusive offers.</p>
-        <div style="display: flex; gap: 10px;">
-          <input type="email" placeholder="Email address" style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 10px 20px; color: #fff; outline: none;">
-          <button style="background: var(--gold); border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--charcoal);">
+        <?php if (isset($_GET['subscribed'])): ?>
+        <p style="font-size: 0.85rem; color: var(--gold-soft); margin-bottom: 12px;">Thanks for subscribing!</p>
+        <?php endif; ?>
+        <?php if (isset($_GET['subscribe_error'])): ?>
+        <p style="font-size: 0.85rem; color: #ffb4a9; margin-bottom: 12px;">Subscription failed. Please try again.</p>
+        <?php endif; ?>
+        <form method="POST" action="handlers/subscribe" style="display: flex; gap: 10px;">
+          <input type="hidden" name="redirect" value="<?php echo htmlspecialchars(basename($_SERVER['PHP_SELF'] ?? 'index.php')); ?>">
+          <input type="email" name="email" placeholder="Email address" required style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 10px 20px; color: #fff; outline: none;">
+          <button type="submit" style="background: var(--gold); border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--charcoal);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
-        </div>
+        </form>
       </div>
     </div>
 

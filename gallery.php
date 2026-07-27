@@ -2,23 +2,18 @@
 /**
  * Pentagon Quest — Gallery Page (Modern Redesign)
  */
+require_once __DIR__ . '/includes/bootstrap.php';
+
+use App\Services\GalleryService;
+
+$galleryService = new GalleryService();
+$gallery = $galleryService->getActive();
+
 $page_title       = 'Safari Gallery — Pentagon Quest';
 $page_description = 'A visual journey through Africa\'s wildlife and landscapes.';
 $current_page     = 'gallery.php';
 $base_path        = '';
 include 'includes/header.php';
-
-$gallery = [
-  ['title' => 'Lion at Sunrise', 'cat' => 'Wildlife'],
-  ['title' => 'Elephant Herd', 'cat' => 'Wildlife'],
-  ['title' => 'Kilimanjaro Peak', 'cat' => 'Landscape'],
-  ['title' => 'Maasai Culture', 'cat' => 'Culture'],
-  ['title' => 'Gorilla Trek', 'cat' => 'Adventure'],
-  ['title' => 'Zanzibar Shores', 'cat' => 'Coastal'],
-  ['title' => 'Serengeti Plains', 'cat' => 'Wildlife'],
-  ['title' => 'Victoria Falls', 'cat' => 'Landscape'],
-  ['title' => 'Cheetah Hunt', 'cat' => 'Wildlife']
-];
 ?>
 
 <!-- Page Hero -->
