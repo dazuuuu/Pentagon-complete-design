@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Helpers\Path;
 use PDO;
 use PDOException;
 
@@ -12,7 +13,7 @@ class Database
     public static function connection(): PDO
     {
         if (self::$instance === null) {
-            $config = require __DIR__ . '/../config/database.php';
+            $config = require Path::config('database.php');
 
             $dsn = sprintf(
                 'mysql:host=%s;port=%d;dbname=%s;charset=%s',

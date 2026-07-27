@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Path;
 use PHPMailer\PHPMailer\Exception as MailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -11,7 +12,7 @@ class MailService
 
     public function __construct()
     {
-        $this->config = require __DIR__ . '/../config/mail.php';
+        $this->config = require Path::config('mail.php');
     }
 
     public function sendEnquiryNotification(array $data): bool

@@ -6,21 +6,22 @@
  * Usage: php apps/database/migrate.php
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-use Dotenv\Dotenv;
 use App\Core\Database;
+use App\Helpers\Path;
+use Dotenv\Dotenv;
+use PDOException;
 
-$root = dirname(__DIR__, 2);
-if (file_exists($root . '/.env')) {
-    Dotenv::createImmutable($root)->safeLoad();
+require_once Path::vendor('autoload.php');
+
+if (file_exists(Path::env())) {
+    Dotenv::createImmutable(Path::root())->safeLoad();
 }
 
 echo "Running migrations...\n";
 
 $db = Database::connection();
-$migrationDir = __DIR__ . '/migrations';
-$files = glob($migrationDir . '/*.sql');
+$migrationDir = Path::database('migrations');
+$files = glob($migrationDir . DIRECTORY_SEPARATOR . '*.sql');
 sort($files);
 
 foreach ($files as $file) {
@@ -29,7 +30,7 @@ foreach ($files as $file) {
     echo '  ✓ ' . basename($file) . "\n";
 }
 
-$seedFile = __DIR__ . '/seeds/seed_initial_data.sql';
+$seedFile = Path::database('seeds', 'seed_initial_data.sql');
 if (file_exists($seedFile)) {
     echo "Seeding data...\n";
     $seedSql = file_get_contents($seedFile);

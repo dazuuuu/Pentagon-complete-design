@@ -4,13 +4,13 @@
  * Application bootstrap — loads Composer autoloader and environment.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
+use App\Helpers\Path;
 use Dotenv\Dotenv;
 
-$dotenvPath = dirname(__DIR__);
-if (file_exists($dotenvPath . '/.env')) {
-    Dotenv::createImmutable($dotenvPath)->safeLoad();
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+if (file_exists(Path::env())) {
+    Dotenv::createImmutable(Path::root())->safeLoad();
 }
 
 date_default_timezone_set('Africa/Nairobi');

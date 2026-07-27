@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use PDO;
+
 class Destination extends BaseModel
 {
     public function allActive(): array
