@@ -12,7 +12,7 @@ use App\Helpers\Response;
 
 $method = $_SERVER['REQUEST_METHOD'];
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-$path = preg_replace('#^api/#', '', $path);
+$path = preg_replace('#^.*api/#', '', $path);
 
 $routes = [
     'GET' => [

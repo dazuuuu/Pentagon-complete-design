@@ -33,6 +33,11 @@ class TestimonialService
         return $this->model->find($id);
     }
 
+    public function getForClient(int $clientId): array
+    {
+        return $this->model->findByClient($clientId);
+    }
+
     public function create(array $data): int
     {
         return $this->model->create($data);

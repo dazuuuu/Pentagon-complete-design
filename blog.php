@@ -3,20 +3,18 @@
  * Pentagon Quest — Blog Page
  * SEO-optimised standalone page
  */
+require_once __DIR__ . '/includes/bootstrap.php';
+
+use App\Services\BlogService;
+
+$blogService = new BlogService();
+$posts = $blogService->getActive();
+
 $page_title       = 'Safari Stories & Insights | Pentagon Quest Blog';
 $page_description = 'Explore the wild heart of Africa through our stories. Photography tips, packing guides, and deep dives into the Great Migration.';
 $current_page     = 'blog.php';
 $base_path        = '';
 include 'includes/header.php';
-
-$posts = [
-  ['title' => 'Top 10 Safari Photography Tips', 'date' => 'July 15, 2026', 'cat' => 'Photography', 'desc' => 'Capture the perfect shot with our expert guide to wildlife photography in the African bush.'],
-  ['title' => 'What to Pack for Your First Safari', 'date' => 'July 10, 2026', 'cat' => 'Travel Guide', 'desc' => 'From neutral clothing to essential gear, here is everything you need to pack for your adventure.'],
-  ['title' => 'Understanding the Great Migration', 'date' => 'July 05, 2026', 'cat' => 'Wildlife', 'desc' => 'A deep dive into one of nature\'s greatest spectacles: the annual trek of millions of wildebeest.'],
-  ['title' => 'The Hidden Gems of Namibia', 'date' => 'June 28, 2026', 'cat' => 'Destinations', 'desc' => 'Beyond the dunes: discovering the secret landscapes and wildlife of the Namib desert.'],
-  ['title' => 'A Guide to Cultural Etiquette', 'cat' => 'Culture', 'date' => 'June 20, 2026', 'desc' => 'How to respectfully engage with local communities during your African safari.'],
-  ['title' => 'Sustainable Safari: Our Commitment', 'cat' => 'Sustainability', 'date' => 'June 15, 2026', 'desc' => 'Learn how Pentagon Quest is working to preserve Africa\'s wild spaces for future generations.']
-];
 ?>
 
 <!-- Page Hero -->
@@ -32,35 +30,36 @@ $posts = [
 <section class="section-pad">
   <div class="container">
     <div class="row g-4">
-      <?php foreach ($posts as $post): ?>
+      <?php foreach ($posts as $post):
+        $img = $post['image_url'] ?? '';
+        $hasPhoto = $img !== '' && (str_starts_with($img, 'assets/') || str_starts_with($img, 'http'));
+      ?>
       <div class="col-lg-4 col-md-6 reveal">
-        <div class="blog-card">
+        <a href="blog-details.php?id=<?php echo (int) $post['id']; ?>" class="blog-card d-block" style="color: inherit;">
           <div style="height: 230px; background: var(--sand); position: relative;">
-            <svg width="100%" height="100%" viewBox="0 0 400 230" opacity="0.1">
-              <rect width="400" height="230" fill="var(--green)"/>
-            </svg>
-            <span style="position: absolute; top: 20px; left: 20px; background: var(--gold); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;"><?php echo $post['cat']; ?></span>
+            <?php if ($hasPhoto): ?>
+              <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width:100%; height:100%; object-fit: cover; position: absolute; inset: 0;">
+            <?php else: ?>
+              <svg width="100%" height="100%" viewBox="0 0 400 230" opacity="0.1">
+                <rect width="400" height="230" fill="var(--green)"/>
+              </svg>
+            <?php endif; ?>
+            <span style="position: absolute; top: 20px; left: 20px; background: var(--gold); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;"><?php echo htmlspecialchars($post['category']); ?></span>
           </div>
           <div style="padding: 30px;">
-            <span style="font-size: 0.8rem; opacity: 0.5; display: block; margin-bottom: 10px;"><?php echo $post['date']; ?></span>
-            <h3 style="font-size: 1.25rem; margin-bottom: 15px;"><?php echo $post['title']; ?></h3>
-            <p style="font-size: 0.95rem; margin-bottom: 25px;"><?php echo $post['desc']; ?></p>
-            <a href="#" style="font-weight: 700; color: var(--gold); font-size: 0.9rem; border-bottom: 2px solid var(--gold); padding-bottom: 2px;">Read Full Story</a>
+            <span style="font-size: 0.8rem; opacity: 0.5; display: block; margin-bottom: 10px;"><?php echo htmlspecialchars(date('F j, Y', strtotime($post['created_at']))); ?></span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 15px;"><?php echo htmlspecialchars($post['title']); ?></h3>
+            <p style="font-size: 0.95rem; margin-bottom: 25px;"><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></p>
+            <span style="font-weight: 700; color: var(--gold); font-size: 0.9rem; border-bottom: 2px solid var(--gold); padding-bottom: 2px;">Read Full Story</span>
           </div>
-        </div>
+        </a>
       </div>
       <?php endforeach; ?>
-    </div>
-    
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-5">
-      <nav aria-label="Page navigation">
-        <ul class="pagination" style="gap: 10px;">
-          <li class="page-item"><a class="page-link active" href="#" style="background: var(--gold); border-color: var(--gold); color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">1</a></li>
-          <li class="page-item"><a class="page-link" href="#" style="background: transparent; border-color: #ddd; color: var(--charcoal); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">2</a></li>
-          <li class="page-item"><a class="page-link" href="#" style="background: transparent; border-color: #ddd; color: var(--charcoal); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">3</a></li>
-        </ul>
-      </nav>
+      <?php if (empty($posts)): ?>
+      <div class="col-12 text-center reveal">
+        <p>No stories published yet — check back soon.</p>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -73,8 +72,15 @@ $posts = [
         <span class="section-tag">Newsletter</span>
         <h2 class="section-title-modern">Join the Pride</h2>
         <p>Get monthly safari inspiration, wildlife updates, and exclusive offers delivered to your inbox.</p>
-        <form class="mt-4 d-flex gap-2">
-          <input type="email" placeholder="Your email address" style="flex: 1; padding: 15px 25px; border-radius: 40px; border: 1px solid #ddd; outline: none;">
+        <?php if (isset($_GET['subscribed'])): ?>
+        <p style="color: var(--green); font-weight: 600; margin-top: 16px;">Thanks for subscribing!</p>
+        <?php endif; ?>
+        <?php if (isset($_GET['subscribe_error'])): ?>
+        <p style="color: #b42318; font-weight: 600; margin-top: 16px;">Subscription failed. Please try again.</p>
+        <?php endif; ?>
+        <form method="POST" action="handlers/subscribe" class="mt-4 d-flex gap-2">
+          <input type="hidden" name="redirect" value="/blog.php">
+          <input type="email" name="email" placeholder="Your email address" required style="flex: 1; padding: 15px 25px; border-radius: 40px; border: 1px solid #ddd; outline: none;">
           <button type="submit" class="btn-hero btn-hero-primary" style="border: none;">Subscribe</button>
         </form>
       </div>

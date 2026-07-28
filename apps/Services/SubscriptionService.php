@@ -57,4 +57,22 @@ class SubscriptionService
     {
         return $this->model->unsubscribe($id);
     }
+
+    public function countSince(string $datetime): int
+    {
+        try {
+            return $this->model->countSince($datetime);
+        } catch (PDOException) {
+            return 0;
+        }
+    }
+
+    public function monthlyCounts(int $months = 6): array
+    {
+        try {
+            return $this->model->monthlyCounts($months);
+        } catch (PDOException) {
+            return [];
+        }
+    }
 }

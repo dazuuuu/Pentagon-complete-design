@@ -2,8 +2,8 @@
 /**
  * Pentagon Quest — Contact Page (Modern Redesign)
  */
-$page_title       = 'Contact Us — Plan Your African Safari';
-$page_description = 'Get in touch with Pentagon Quest to start planning your dream African safari. Our specialists are ready to help.';
+$page_title       = 'Contact Us — Pentagon Quest';
+$page_description = 'Reach Pentagon Quest for local tours, international trips, MICE programs, transfers, air ticketing, and custom travel planning.';
 $current_page     = 'contact.php';
 $base_path        = '';
 
@@ -42,7 +42,7 @@ include 'includes/header.php';
           <?php endif; ?>
 
           <form method="POST" action="handlers/contact">
-            <input type="hidden" name="redirect" value="contact.php">
+            <input type="hidden" name="redirect" value="/contact.php">
             <div class="row g-3">
               <div class="col-md-6">
                 <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 8px;">Full Name</label>
@@ -70,17 +70,17 @@ include 'includes/header.php';
           
           <div style="margin-bottom: 32px;">
             <h5 style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--gold-soft);">Phone & WhatsApp</h5>
-            <p style="font-size: 1.2rem; font-weight: 700;">+254 700 000 000</p>
+            <p style="font-size: 1.2rem; font-weight: 700;">+254 726 528015<br>+254 718 620982</p>
           </div>
-          
+
           <div style="margin-bottom: 32px;">
             <h5 style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--gold-soft);">Email</h5>
             <p style="font-size: 1.2rem; font-weight: 700;">info@pentagonquest.com</p>
           </div>
-          
+
           <div>
             <h5 style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--gold-soft);">Office Address</h5>
-            <p style="font-size: 1.1rem;">Westlands Business Park<br>Nairobi, Kenya</p>
+            <p style="font-size: 1.1rem;">P.O. Box 23575-00100, Nairobi, Kenya<br>Offices in Nairobi, Kericho &amp; Eldoret</p>
           </div>
         </div>
       </div>

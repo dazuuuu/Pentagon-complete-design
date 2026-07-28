@@ -21,7 +21,7 @@ $base = isset($base_path) ? $base_path : '';
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="<?php echo $base; ?>assets/css/style.css">
+  <link rel="stylesheet" href="<?php echo $base; ?>assets/css/style.css?v=<?php echo @filemtime(dirname(__DIR__) . '/assets/css/style.css') ?: time(); ?>">
   
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="<?php echo $base; ?>assets/svgs/favicon.svg">
@@ -44,8 +44,11 @@ $base = isset($base_path) ? $base_path : '';
           <li class="nav-item">
             <a class="nav-link <?php echo ($current_page === 'index.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>index.php">Home</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle <?php echo ($current_page === 'destinations.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>destinations.php">Destinations</a>
+          <li class="nav-item">
+            <a class="nav-link <?php echo ($current_page === 'destinations.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>destinations.php">Destinations</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <?php echo ($current_page === 'tours.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>tours.php">Tours</a>
           </li>
           <li class="nav-item">
             <a class="nav-link <?php echo ($current_page === 'services.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>services.php">What We Do</a>

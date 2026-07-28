@@ -6,8 +6,20 @@ use App\Services\EnquiryService;
 use App\Services\SubscriptionService;
 
 $method = $_SERVER['REQUEST_METHOD'];
-$path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-$path = preg_replace('#^handlers/#', '', $path);
+$requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path = preg_replace('#^.*handlers/#', '', trim($requestPath, '/'));
+
+// Site may be hosted in a subdirectory (e.g. /pentagon-quest/handlers/contact)
+// rather than at the domain root — recover that prefix so root-absolute
+// redirects below land back in the same subdirectory.
+$basePath = '';
+if (preg_match('#^(.*)/handlers/#', $requestPath, $m)) {
+    $basePath = $m[1];
+}
+
+$resolveRedirect = static function (string $redirect) use ($basePath): string {
+    return str_starts_with($redirect, '/') ? $basePath . $redirect : $redirect;
+};
 
 if ($method === 'POST' && $path === 'contact') {
     $service = new EnquiryService();
@@ -19,9 +31,10 @@ if ($method === 'POST' && $path === 'contact') {
         exit;
     }
 
-    $redirect = $_POST['redirect'] ?? '../contact.php';
+    $redirect = $resolveRedirect($_POST['redirect'] ?? '/contact.php');
     $param = $result['success'] ? 'success=1' : 'error=1';
-    header('Location: ' . $redirect . '?' . $param);
+    $separator = str_contains($redirect, '?') ? '&' : '?';
+    header('Location: ' . $redirect . $separator . $param);
     exit;
 }
 
@@ -35,9 +48,10 @@ if ($method === 'POST' && $path === 'subscribe') {
         exit;
     }
 
-    $redirect = $_POST['redirect'] ?? '../index.php';
+    $redirect = $resolveRedirect($_POST['redirect'] ?? '/index.php');
     $param = $result['success'] ? 'subscribed=1' : 'subscribe_error=1';
-    header('Location: ' . $redirect . '?' . $param);
+    $separator = str_contains($redirect, '?') ? '&' : '?';
+    header('Location: ' . $redirect . $separator . $param);
     exit;
 }
 

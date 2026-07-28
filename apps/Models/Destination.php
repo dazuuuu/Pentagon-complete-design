@@ -39,11 +39,12 @@ class Destination extends BaseModel
     public function create(array $data): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO destinations (name, country, image_url, is_featured, sort_order, status) VALUES (?, ?, ?, ?, ?, ?)'
+            'INSERT INTO destinations (name, country, description, image_url, is_featured, sort_order, status) VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $data['name'],
             $data['country'],
+            $data['description'] ?? null,
             $data['image_url'] ?? null,
             $data['is_featured'] ?? 0,
             $data['sort_order'] ?? 0,
@@ -55,11 +56,12 @@ class Destination extends BaseModel
     public function update(int $id, array $data): bool
     {
         $stmt = $this->db->prepare(
-            'UPDATE destinations SET name = ?, country = ?, image_url = ?, is_featured = ?, sort_order = ?, status = ? WHERE id = ?'
+            'UPDATE destinations SET name = ?, country = ?, description = ?, image_url = ?, is_featured = ?, sort_order = ?, status = ? WHERE id = ?'
         );
         return $stmt->execute([
             $data['name'],
             $data['country'],
+            $data['description'] ?? null,
             $data['image_url'] ?? null,
             $data['is_featured'] ?? 0,
             $data['sort_order'] ?? 0,

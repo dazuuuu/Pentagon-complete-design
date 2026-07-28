@@ -2,8 +2,18 @@
 /**
  * Pentagon Quest — Services Page (Modern Redesign)
  */
+require_once __DIR__ . '/includes/bootstrap.php';
+
+use App\Services\OfferingService;
+use App\Services\ServiceTierService;
+
+$offeringService = new OfferingService();
+$tierService = new ServiceTierService();
+$offerings = $offeringService->getActive();
+$tiers = $tierService->getActive();
+
 $page_title       = 'Our Services — Pentagon Quest Tours & Safaris';
-$page_description = 'From wildlife game drives to cultural immersions, explore the full range of safari services offered by Pentagon Quest.';
+$page_description = 'From airport transfers and air ticketing to hotels, safaris, group logistics, and international tours, we coordinate the moving parts.';
 $current_page     = 'services.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -25,26 +35,19 @@ include 'includes/header.php';
       <span class="section-tag">Core Offerings</span>
       <h2 class="section-title-modern">Everything You Need for Africa</h2>
     </div>
-    
+
     <div class="row g-4">
-      <?php
-      $services = [
-        ['title' => 'Wildlife Game Drives', 'desc' => 'Track the Big Five across Africa\'s finest reserves with expert naturalist guides.'],
-        ['title' => 'Gorilla Trekking', 'desc' => 'Secure permits and handle all logistics for profound encounters in Uganda and Rwanda.'],
-        ['title' => 'Mountain Climbing', 'desc' => 'Guided ascents of Kilimanjaro and Mount Kenya with KPAP-certified porter welfare.'],
-        ['title' => 'Cultural Immersions', 'desc' => 'Authentic encounters with Maasai and other communities connecting you to living heritage.'],
-        ['title' => 'Photography Safaris', 'desc' => 'Specialist expeditions led by professionals with photography-optimised vehicles.'],
-        ['title' => 'Luxury Lodge Bookings', 'desc' => 'Exclusive access to Africa\'s finest eco-lodges and private conservancies.']
-      ];
-      foreach ($services as $s):
-      ?>
+      <?php foreach ($offerings as $s): ?>
       <div class="col-lg-4 col-md-6 reveal">
         <div style="background: #fff; padding: 40px; border-radius: var(--radius-md); height: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 4px solid var(--green);">
-          <h4 style="margin-bottom: 16px; color: var(--green);"><?php echo $s['title']; ?></h4>
-          <p style="font-size: 0.95rem;"><?php echo $s['desc']; ?></p>
+          <h4 style="margin-bottom: 16px; color: var(--green);"><?php echo htmlspecialchars($s['title']); ?></h4>
+          <p style="font-size: 0.95rem;"><?php echo htmlspecialchars($s['description'] ?? ''); ?></p>
         </div>
       </div>
       <?php endforeach; ?>
+      <?php if (empty($offerings)): ?>
+      <div class="col-12 text-center"><p>No services listed yet.</p></div>
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -56,44 +59,28 @@ include 'includes/header.php';
       <span class="section-tag">Investment</span>
       <h2 class="section-title-modern" style="color: #fff;">Safari Tiers</h2>
     </div>
-    
+
     <div class="row g-4">
-      <div class="col-md-4 reveal">
-        <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.1);">
-          <h4 style="color: var(--gold);">Essential</h4>
-          <div style="font-size: 2rem; font-weight: 800; margin: 20px 0;">$800<span style="font-size: 0.8rem; opacity: 0.6;">/person</span></div>
-          <ul class="list-unstyled" style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 30px;">
-            <li>✓ Shared 4WD Vehicle</li>
-            <li>✓ Tented Camp Stay</li>
-            <li>✓ Full Board Meals</li>
+      <?php foreach ($tiers as $tier): $popular = !empty($tier['is_popular']); ?>
+      <div class="col-md-4 reveal" <?php echo $popular ? 'style="transform: scale(1.05);"' : ''; ?>>
+        <div style="<?php echo $popular ? 'background: var(--gold); color: var(--charcoal);' : 'background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);'; ?> padding: 40px; border-radius: var(--radius-md);">
+          <h4 style="<?php echo $popular ? 'font-weight: 800;' : 'color: var(--gold);'; ?>"><?php echo htmlspecialchars($tier['name']); ?></h4>
+          <div style="font-size: 2rem; font-weight: 800; margin: 20px 0;">$<?php echo number_format((float) $tier['price'], 0); ?><span style="font-size: 0.8rem; opacity: 0.6;">/person</span></div>
+          <ul class="list-unstyled" style="font-size: 0.9rem; <?php echo $popular ? 'font-weight: 600;' : 'opacity: 0.7;'; ?> margin-bottom: 30px;">
+            <?php foreach ($tier['feature_list'] as $feature): ?>
+            <li>✓ <?php echo htmlspecialchars($feature); ?></li>
+            <?php endforeach; ?>
           </ul>
-          <a href="contact.php" class="btn-hero btn-hero-primary" style="width: 100%; justify-content: center;">Get Quote</a>
+          <?php if ($popular): ?>
+          <span style="display: block; text-align: center; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">★ Most Popular</span>
+          <?php endif; ?>
+          <a href="request-quote.php?tier=<?php echo (int) $tier['id']; ?>" class="btn-hero <?php echo $popular ? '' : 'btn-hero-primary'; ?>" style="<?php echo $popular ? 'background: var(--charcoal); color: #fff;' : ''; ?> width: 100%; justify-content: center;">Get Quote</a>
         </div>
       </div>
-      <div class="col-md-4 reveal" style="transform: scale(1.05);">
-        <div style="background: var(--gold); padding: 40px; border-radius: var(--radius-md); color: var(--charcoal);">
-          <h4 style="font-weight: 800;">Classic</h4>
-          <div style="font-size: 2rem; font-weight: 800; margin: 20px 0;">$1,800<span style="font-size: 0.8rem; opacity: 0.6;">/person</span></div>
-          <ul class="list-unstyled" style="font-size: 0.9rem; font-weight: 600; margin-bottom: 30px;">
-            <li>✓ Private 4WD Vehicle</li>
-            <li>✓ Mid-range Lodges</li>
-            <li>✓ All Park Fees</li>
-          </ul>
-          <a href="contact.php" class="btn-hero" style="background: var(--charcoal); color: #fff; width: 100%; justify-content: center;">Most Popular</a>
-        </div>
-      </div>
-      <div class="col-md-4 reveal">
-        <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.1);">
-          <h4 style="color: var(--gold);">Premium</h4>
-          <div style="font-size: 2rem; font-weight: 800; margin: 20px 0;">$3,500<span style="font-size: 0.8rem; opacity: 0.6;">/person</span></div>
-          <ul class="list-unstyled" style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 30px;">
-            <li>✓ Luxury Fly-in Safari</li>
-            <li>✓ Exclusive Conservancies</li>
-            <li>✓ All-Inclusive Drinks</li>
-          </ul>
-          <a href="contact.php" class="btn-hero btn-hero-primary" style="width: 100%; justify-content: center;">Get Quote</a>
-        </div>
-      </div>
+      <?php endforeach; ?>
+      <?php if (empty($tiers)): ?>
+      <div class="col-12 text-center"><p style="color: rgba(255,255,255,0.7);">Pricing tiers coming soon.</p></div>
+      <?php endif; ?>
     </div>
   </div>
 </section>

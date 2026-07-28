@@ -96,7 +96,6 @@ a { text-decoration: none; transition: var(--transition); color: inherit; }
 .navbar-brand img {
   height: 48px;
   width: auto;
-  filter: brightness(0) invert(1);
 }
 
 .btn-contact-pill {
@@ -158,9 +157,23 @@ a { text-decoration: none; transition: var(--transition); color: inherit; }
 .hero-subtitle {
   font-size: 1.25rem;
   font-weight: 400;
+  color: #fff;
   opacity: 0.9;
   margin-bottom: 48px;
 }
+
+/* ── SECONDARY PAGE HERO (About, Tours, Destinations, Gallery, Services, Contact, Blog, detail pages) ── */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-hero .container { position: relative; z-index: 2; }
+.page-hero .hero-title { color: #fff; }
 
 .hero-btns {
   display: flex;

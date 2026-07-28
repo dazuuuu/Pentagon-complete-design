@@ -24,12 +24,20 @@ class Testimonial extends BaseModel
         return $row ?: null;
     }
 
+    public function findByClient(int $clientId): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM testimonials WHERE client_id = ? ORDER BY id DESC');
+        $stmt->execute([$clientId]);
+        return $stmt->fetchAll();
+    }
+
     public function create(array $data): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO testimonials (author_name, author_location, quote, accent_color, sort_order, status) VALUES (?, ?, ?, ?, ?, ?)'
+            'INSERT INTO testimonials (client_id, author_name, author_location, quote, accent_color, sort_order, status) VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
+            $data['client_id'] ?? null,
             $data['author_name'],
             $data['author_location'] ?? null,
             $data['quote'],

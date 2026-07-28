@@ -34,4 +34,22 @@ class Subscriber extends BaseModel
         $stmt = $this->db->prepare("UPDATE subscribers SET status = 'unsubscribed' WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function countSince(string $datetime): int
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM subscribers WHERE subscribed_at >= ?');
+        $stmt->execute([$datetime]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function monthlyCounts(int $months = 6): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT DATE_FORMAT(subscribed_at, '%Y-%m') AS ym, COUNT(*) AS c FROM subscribers
+             WHERE subscribed_at >= DATE_SUB(CURDATE(), INTERVAL ? MONTH)
+             GROUP BY ym ORDER BY ym ASC"
+        );
+        $stmt->execute([$months]);
+        return $stmt->fetchAll();
+    }
 }
