@@ -7,7 +7,7 @@ class Client extends BaseModel
     public function create(array $data): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO clients (enquiry_id, full_name, email, phone, interest, status) VALUES (?, ?, ?, ?, ?, ?)'
+            'INSERT INTO clients (enquiry_id, full_name, email, phone, interest, status, scheduled_date) VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $data['enquiry_id'] ?? null,
@@ -16,6 +16,7 @@ class Client extends BaseModel
             $data['phone'] ?? null,
             $data['interest'] ?? null,
             $data['status'] ?? 'scheduled',
+            $data['scheduled_date'] ?? null,
         ]);
         return (int) $this->db->lastInsertId();
     }
@@ -33,10 +34,10 @@ class Client extends BaseModel
         return $row ?: null;
     }
 
-    public function updateStatus(int $id, string $status): bool
+    public function updateStatus(int $id, string $status, ?string $scheduledDate = null): bool
     {
-        $stmt = $this->db->prepare('UPDATE clients SET status = ? WHERE id = ?');
-        return $stmt->execute([$status, $id]);
+        $stmt = $this->db->prepare('UPDATE clients SET status = ?, scheduled_date = ? WHERE id = ?');
+        return $stmt->execute([$status, $scheduledDate, $id]);
     }
 
     public function delete(int $id): bool

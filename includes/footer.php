@@ -39,6 +39,7 @@
           <li><a href="destinations.php">Destinations</a></li>
           <li><a href="tours.php">Tours</a></li>
           <li><a href="services.php">What We Do</a></li>
+          <li><a href="mice.php">MICE Tourism</a></li>
           <li><a href="gallery.php">Gallery</a></li>
         </ul>
       </div>

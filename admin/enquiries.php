@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] 
   $id = (int) ($_POST['id'] ?? 0);
 
   if ($action === 'accept') {
-    $service->accept($id);
+    $service->accept($id, trim($_POST['scheduled_date'] ?? '') ?: null);
     Session::flash('message', 'Enquiry accepted — client notified and added to Clients.');
   } elseif ($action === 'reject') {
     $service->reject($id);
@@ -46,7 +46,7 @@ include __DIR__ . '/includes/header.php';
       <tr>
         <td><?php echo htmlspecialchars($item['created_at']); ?></td>
         <td><?php echo htmlspecialchars($item['full_name']); ?></td>
-        <td><?php echo htmlspecialchars($item['email']); ?></td>
+        <td><?php echo htmlspecialchars($item['email'] ?? ''); ?></td>
         <td><?php echo htmlspecialchars($item['phone'] ?? ''); ?></td>
         <td><?php echo htmlspecialchars($item['interest'] ?? ''); ?></td>
         <td><?php echo htmlspecialchars($item['message'] ?? ''); ?></td>
@@ -59,10 +59,11 @@ include __DIR__ . '/includes/header.php';
         </td>
         <td class="d-flex gap-1">
           <?php if (($item['status'] ?? 'pending') === 'pending'): ?>
-          <form method="POST" onsubmit="return confirm('Accept this enquiry? The customer will be emailed and added to Clients.');">
+          <form method="POST" class="d-flex gap-1 align-items-center" onsubmit="return confirm('Accept this enquiry? The customer will be emailed and added to Clients.');">
             <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
             <input type="hidden" name="action" value="accept">
             <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
+            <input type="date" class="form-control form-control-sm" name="scheduled_date" title="Scheduled trip date (optional)" style="width: 145px;">
             <button class="btn btn-sm btn-success">Accept</button>
           </form>
           <form method="POST" onsubmit="return confirm('Reject this enquiry? The customer will be emailed.');">

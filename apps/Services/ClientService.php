@@ -8,10 +8,12 @@ use PDOException;
 class ClientService
 {
     private Client $model;
+    private MailService $mail;
 
     public function __construct()
     {
         $this->model = new Client();
+        $this->mail = new MailService();
     }
 
     public function getAll(): array
@@ -29,9 +31,20 @@ class ClientService
         return $this->model->create($data);
     }
 
-    public function updateStatus(int $id, string $status): bool
+    /**
+     * Update a client's status/scheduled date and email them the change
+     * (skipped silently when the client has no email on file).
+     */
+    public function updateStatus(int $id, string $status, ?string $scheduledDate = null): bool
     {
-        return $this->model->updateStatus($id, $status);
+        $updated = $this->model->updateStatus($id, $status, $scheduledDate);
+        if ($updated) {
+            $client = $this->model->find($id);
+            if ($client) {
+                $this->mail->sendClientStatusUpdate($client, $status, $scheduledDate);
+            }
+        }
+        return $updated;
     }
 
     public function delete(int $id): bool

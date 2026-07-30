@@ -74,4 +74,8 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+$enquiryInterest = $experience['title'];
+include 'includes/enquiry-section.php';
+include 'includes/footer.php';
+?>

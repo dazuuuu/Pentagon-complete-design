@@ -85,4 +85,7 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+include 'includes/enquiry-section.php';
+include 'includes/footer.php';
+?>

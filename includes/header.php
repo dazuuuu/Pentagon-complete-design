@@ -54,6 +54,9 @@ $base = isset($base_path) ? $base_path : '';
             <a class="nav-link <?php echo ($current_page === 'services.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>services.php">What We Do</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link <?php echo ($current_page === 'mice.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>mice.php">MICE</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link <?php echo ($current_page === 'blog.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>blog.php">Blog</a>
           </li>
           <li class="nav-item">

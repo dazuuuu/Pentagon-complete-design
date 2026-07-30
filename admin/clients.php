@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] 
   $id = (int) ($_POST['id'] ?? 0);
 
   if ($action === 'update_status') {
-    $service->updateStatus($id, $_POST['status'] ?? 'scheduled');
-    Session::flash('message', 'Client status updated.');
+    $service->updateStatus($id, $_POST['status'] ?? 'scheduled', trim($_POST['scheduled_date'] ?? '') ?: null);
+    Session::flash('message', 'Client status updated — customer notified by email.');
   } elseif ($action === 'delete') {
     $service->delete($id);
     Session::flash('message', 'Client removed.');
@@ -59,13 +59,13 @@ include __DIR__ . '/includes/header.php';
   <p class="text-muted small">Clients are created automatically when you accept an enquiry.</p>
   <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
   <table class="table table-sm align-middle">
-    <thead><tr><th>Since</th><th>Name</th><th>Email</th><th>Phone</th><th>Interested In</th><th>Status</th><th></th></tr></thead>
+    <thead><tr><th>Since</th><th>Name</th><th>Email</th><th>Phone</th><th>Interested In</th><th>Status / Scheduled Date</th><th></th></tr></thead>
     <tbody>
       <?php foreach ($items as $item): ?>
       <tr>
         <td><?php echo htmlspecialchars($item['created_at']); ?></td>
         <td><?php echo htmlspecialchars($item['full_name']); ?></td>
-        <td><?php echo htmlspecialchars($item['email']); ?></td>
+        <td><?php echo htmlspecialchars($item['email'] ?? ''); ?></td>
         <td><?php echo htmlspecialchars($item['phone'] ?? ''); ?></td>
         <td><?php echo htmlspecialchars($item['interest'] ?? ''); ?></td>
         <td class="d-flex gap-1">
@@ -78,6 +78,7 @@ include __DIR__ . '/includes/header.php';
               <option value="completed" <?php echo $item['status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
               <option value="cancelled" <?php echo $item['status'] === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
             </select>
+            <input type="date" class="form-control form-control-sm" name="scheduled_date" value="<?php echo htmlspecialchars($item['scheduled_date'] ?? ''); ?>" style="width: 145px;">
             <button class="btn btn-sm btn-primary">Save</button>
           </form>
         </td>
