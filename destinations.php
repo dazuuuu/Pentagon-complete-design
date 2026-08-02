@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — Destinations Page (Modern Redesign)
+ * Pentagon Safaris — Destinations Page (Modern Redesign)
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
@@ -10,7 +10,7 @@ $destinationService = new DestinationService();
 $destinations = $destinationService->getActive();
 
 $page_title       = 'Safari Destinations — Kenya, Tanzania, Uganda, Rwanda & Beyond';
-$page_description = 'Explore Pentagon Quest\'s safari destinations across Africa. From Kenya\'s Masai Mara and Tanzania\'s Serengeti to Uganda\'s gorilla forests and Rwanda\'s volcanic highlands — discover your perfect African adventure.';
+$page_description = 'Explore Pentagon Safaris\'s safari destinations across Africa. From Kenya\'s Masai Mara and Tanzania\'s Serengeti to Uganda\'s gorilla forests and Rwanda\'s volcanic highlands — discover your perfect African adventure.';
 $current_page     = 'destinations.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -54,7 +54,7 @@ include 'includes/header.php';
         $swatch = $hasPhoto ? 'var(--green)' : ($img !== '' ? $img : 'var(--green)');
       ?>
       <div class="col-lg-4 col-md-6 reveal">
-        <a href="destination-details.php?id=<?php echo (int) $d['id']; ?>" class="blog-card d-block" style="color: inherit;">
+        <a href="<?php echo $base; ?>destinations/<?php echo (int) $d['id']; ?>" class="blog-card d-block" style="color: inherit;">
           <div style="height: 260px; <?php echo $hasPhoto ? '' : 'background: ' . htmlspecialchars($swatch) . ';'; ?> position: relative;">
             <?php if ($hasPhoto): ?>
               <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($d['name']); ?>" style="width:100%; height:100%; object-fit: cover; position: absolute; inset: 0;">

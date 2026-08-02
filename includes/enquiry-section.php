@@ -15,8 +15,12 @@ $enquiryOfferId = $enquiryOfferId ?? null;
 $enquiryOfferLabel = $enquiryOfferLabel ?? '';
 $enquiryTravelTypeOptions = ['Local Tour (Kenya)', 'International Trip', 'Safari', 'Beach Holiday', 'MICE / Corporate Travel', 'Other'];
 
-$enquiryPath = '/' . ltrim(basename($_SERVER['PHP_SELF'] ?? 'index.php'), '/');
-parse_str($_SERVER['QUERY_STRING'] ?? '', $enquiryQueryParams);
+// Built from the actual browser-visible URL (REQUEST_URI), not PHP_SELF —
+// PHP_SELF reflects the internally-rewritten script (e.g. tour-details.php)
+// even when the address bar shows a clean URL like /tours/12, which would
+// otherwise bounce the user back to the ugly URL after submitting.
+$enquiryPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+parse_str(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_QUERY) ?? '', $enquiryQueryParams);
 unset($enquiryQueryParams['success'], $enquiryQueryParams['error']);
 $enquiryQueryClean = http_build_query($enquiryQueryParams);
 $enquiryRedirect = $enquiryPath . ($enquiryQueryClean !== '' ? '?' . $enquiryQueryClean : '');
@@ -36,7 +40,7 @@ $enquiryRedirect = $enquiryPath . ($enquiryQueryClean !== '' ? '?' . $enquiryQue
     <div class="row g-4 align-items-stretch">
       <div class="col-lg-5 reveal">
         <div class="enquiry-visual">
-          <img src="assets/images/start-here.jpeg" alt="Pentagon Quest" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
+          <img src="<?php echo $base; ?>assets/images/start-here.jpeg" alt="Pentagon Safaris" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
           <div class="enquiry-visual-overlay"></div>
           <div class="enquiry-visual-content">
             <span style="color: var(--gold); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px;">Start Here</span>
@@ -52,7 +56,7 @@ $enquiryRedirect = $enquiryPath . ($enquiryQueryClean !== '' ? '?' . $enquiryQue
               <div class="enquiry-info-tile">
                 <div class="icon-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
                 <span>Call</span>
-                <p>+254718620982 / +254726528015</p>
+                <p>+254 718 620982<br>+254 726 528015<br>+1 717 381 1225</p>
               </div>
             </div>
             <div class="col-md-4">
@@ -77,7 +81,7 @@ $enquiryRedirect = $enquiryPath . ($enquiryQueryClean !== '' ? '?' . $enquiryQue
           </div>
           <?php endif; ?>
 
-          <form method="POST" action="handlers/contact">
+          <form method="POST" action="<?php echo $base; ?>handlers/contact">
             <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($enquiryRedirect); ?>">
             <?php if ($enquiryOfferId): ?>
             <input type="hidden" name="offer_id" value="<?php echo (int) $enquiryOfferId; ?>">

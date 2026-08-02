@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — Tours Page
+ * Pentagon Safaris — Tours Page
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
@@ -16,7 +16,7 @@ $directions = array_slice($destinationService->getActive(), 0, 4);
 $galleryPreview = array_slice($galleryService->getActive(), 0, 12);
 
 $page_title       = 'Safari Tours — Kenya, Tanzania, Uganda, Rwanda & Beyond';
-$page_description = 'Browse Pentagon Quest\'s safari tours across Africa. From Masai Mara migration safaris to Serengeti and gorilla trekking expeditions — find your perfect African adventure.';
+$page_description = 'Browse Pentagon Safaris\'s safari tours across Africa. From Masai Mara migration safaris to Serengeti and gorilla trekking expeditions — find your perfect African adventure.';
 $current_page     = 'tours.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -58,10 +58,10 @@ include 'includes/header.php';
       <div class="col-lg-7">
         <span class="section-tag">Current Offers</span>
         <h2 class="section-title-modern" style="color: #fff;">Featured packages ready for booking.</h2>
-        <p style="color: rgba(255,255,255,0.6); max-width: 520px;">Select an offer poster, view the key package details, then call or WhatsApp Pentagon Quest to reserve your spot.</p>
+        <p style="color: rgba(255,255,255,0.6); max-width: 520px;">Select an offer poster, view the key package details, then call or WhatsApp Pentagon Safaris to reserve your spot.</p>
       </div>
       <div class="col-lg-5 text-lg-end">
-        <a href="index.php#exclusive-offers" class="btn-hero" style="background: #fff; color: var(--charcoal); display: inline-flex;">View All Offers</a>
+        <a href="<?php echo $base; ?>#exclusive-offers" class="btn-hero" style="background: #fff; color: var(--charcoal); display: inline-flex;">View All Offers</a>
       </div>
     </div>
 
@@ -70,10 +70,10 @@ include 'includes/header.php';
         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 32px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
             <div>
-              <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 700;">Pentagon Quest &middot; The Safari Xplus</span>
+              <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 700;">Pentagon Safaris &middot; The Safari Xplus</span>
               <h3 style="margin-top: 6px; margin-bottom: 0;">Coast Kenya</h3>
             </div>
-            <a href="https://wa.me/254733238091" class="btn-hero" style="background: var(--gold); color: var(--charcoal); padding: 12px 24px;">Book Now</a>
+            <a href="https://wa.me/254718620982" class="btn-hero" style="background: var(--gold); color: var(--charcoal); padding: 12px 24px;">Book Now</a>
           </div>
           <div style="overflow-x: auto;">
             <table class="pq-table">
@@ -83,30 +83,30 @@ include 'includes/header.php';
               <tbody>
                 <?php
                 $coastOffers = [
-                  ['Turtle Bay Beach Club', 'All Inclusive', 'Watamu', '26,672', '37,508'],
-                  ['Papillon Lagoon Reef', 'All Inclusive', 'Diani', '33,896', '68,344'],
-                  ['Diani Reef Beach Resort & Spa', 'Breakfast', 'Diani', '47,570', '68,888'],
-                  ['Neptune Beach Hotel', 'All Inclusive', 'Bamburi', '48,344', '70,016'],
-                  ['Diani Sea Resort', 'All Inclusive', 'Diani', '50,924', '73,886'],
-                  ['Bamburi Beach Hotel', 'All Inclusive', 'Bamburi', '57,890', '84,335'],
-                  ['Diani Sea Lodge', 'All Inclusive', 'Diani', '35,702', '51,053'],
-                  ['Southern Pal Beach Resort', 'All Inclusive', 'Diani', '65,888', '96,332'],
-                  ['Leopard Beach Resort & Spa', 'Breakfast', 'Diani', '27,962', '39,443'],
+                  ['Turtle Bay Beach Club', 'All Inclusive', 'Watamu', '205', '289'],
+                  ['Papillon Lagoon Reef', 'All Inclusive', 'Diani', '261', '526'],
+                  ['Diani Reef Beach Resort & Spa', 'Breakfast', 'Diani', '366', '530'],
+                  ['Neptune Beach Hotel', 'All Inclusive', 'Bamburi', '372', '539'],
+                  ['Diani Sea Resort', 'All Inclusive', 'Diani', '392', '568'],
+                  ['Bamburi Beach Hotel', 'All Inclusive', 'Bamburi', '445', '649'],
+                  ['Diani Sea Lodge', 'All Inclusive', 'Diani', '275', '393'],
+                  ['Southern Pal Beach Resort', 'All Inclusive', 'Diani', '507', '741'],
+                  ['Leopard Beach Resort & Spa', 'Breakfast', 'Diani', '215', '303'],
                 ];
                 foreach ($coastOffers as $row): ?>
                 <tr>
                   <td style="font-weight: 600;"><?php echo htmlspecialchars($row[0]); ?></td>
                   <td style="color: var(--gold-soft);"><?php echo htmlspecialchars($row[1]); ?></td>
                   <td><?php echo htmlspecialchars($row[2]); ?></td>
-                  <td><?php echo htmlspecialchars($row[3]); ?></td>
-                  <td><?php echo htmlspecialchars($row[4]); ?></td>
+                  <td>$<?php echo htmlspecialchars($row[3]); ?></td>
+                  <td>$<?php echo htmlspecialchars($row[4]); ?></td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>
             </table>
           </div>
           <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; color: rgba(255,255,255,0.6);">
-            @pentagonquest &nbsp;|&nbsp; 0733 238091 / 0708 420952 &nbsp;|&nbsp; pentagonquest@gmail.com &nbsp;|&nbsp; www.pentagonquest.com
+            @pentagonsafaris &nbsp;|&nbsp; +254 718 620982 / +254 726 528015 &nbsp;|&nbsp; pentagonquest@gmail.com &nbsp;|&nbsp; www.pentagonquest.com
           </div>
         </div>
       </div>
@@ -119,18 +119,18 @@ include 'includes/header.php';
         <table class="pq-table" style="margin-bottom: 24px;">
           <thead><tr><th>Offer</th><th>Detail</th><th>Price</th></tr></thead>
           <tbody>
-            <tr><td style="font-weight: 600;">Turtle Bay Beach Club</td><td style="color: var(--gold-soft);">Watamu</td><td>From 26,672</td></tr>
-            <tr><td style="font-weight: 600;">Papillon Lagoon Reef</td><td style="color: var(--gold-soft);">Diani</td><td>From 33,896</td></tr>
-            <tr><td style="font-weight: 600;">Diani Reef Beach Resort & Spa</td><td style="color: var(--gold-soft);">Diani</td><td>From 47,570</td></tr>
+            <tr><td style="font-weight: 600;">Turtle Bay Beach Club</td><td style="color: var(--gold-soft);">Watamu</td><td>From $205</td></tr>
+            <tr><td style="font-weight: 600;">Papillon Lagoon Reef</td><td style="color: var(--gold-soft);">Diani</td><td>From $261</td></tr>
+            <tr><td style="font-weight: 600;">Diani Reef Beach Resort & Spa</td><td style="color: var(--gold-soft);">Diani</td><td>From $366</td></tr>
           </tbody>
         </table>
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="tel:+254733238091" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
+          <a href="tel:+254718620982" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Call to Book
           </a>
-          <a href="https://wa.me/254733238091" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
+          <a href="https://wa.me/254718620982" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             WhatsApp
           </a>
@@ -149,7 +149,7 @@ include 'includes/header.php';
         <h2 class="section-title-modern">Start local. Go global. Keep the planning sharp.</h2>
       </div>
       <div class="col-lg-4 text-lg-end">
-        <a href="request-quote.php" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">Request an Itinerary →</a>
+        <a href="<?php echo $base; ?>request-quote" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">Request an Itinerary →</a>
       </div>
     </div>
     <div class="row g-4">
@@ -157,7 +157,7 @@ include 'includes/header.php';
         $dImg = $dir['image_url'] ?? '';
         $dHasPhoto = $dImg !== '' && (str_starts_with($dImg, 'assets/') || str_starts_with($dImg, 'http'));
         $dSwatch = $dHasPhoto ? 'var(--green)' : ($dImg !== '' ? $dImg : 'var(--green)');
-        $dUrl = !empty($dir['id']) ? 'destination-details.php?id=' . (int) $dir['id'] : 'destinations.php';
+        $dUrl = !empty($dir['id']) ? $base . 'destinations/' . (int) $dir['id'] : $base . 'destinations';
       ?>
       <div class="col-lg-3 col-md-6 reveal">
         <a href="<?php echo htmlspecialchars($dUrl); ?>" class="direction-card" <?php echo $dHasPhoto ? '' : 'style="background: ' . htmlspecialchars($dSwatch) . ';"'; ?>>
@@ -192,7 +192,7 @@ include 'includes/header.php';
         <p style="max-width: 520px;">Browse a preview of the places, groups, routes, and travel moments connected to our tours and safaris.</p>
       </div>
       <div class="col-lg-4 text-lg-end">
-        <a href="gallery.php" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View Full Gallery →</a>
+        <a href="<?php echo $base; ?>gallery" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View Full Gallery →</a>
       </div>
     </div>
     <div class="row g-4">
@@ -236,7 +236,7 @@ include 'includes/header.php';
       ?>
       <div class="col-lg-4 col-md-6 reveal">
         <div style="background: #fff; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition);" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
-          <a href="tour-details.php?id=<?php echo (int) $tour['id']; ?>" style="display: block; color: inherit;">
+          <a href="<?php echo $base; ?>tours/<?php echo (int) $tour['id']; ?>" style="display: block; color: inherit;">
           <div style="height: 230px; background: var(--green); position: relative;">
              <?php if ($hasPhoto): ?>
                <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($tour['title']); ?>" style="width:100%; height:100%; object-fit: cover; position: absolute; inset: 0;">

@@ -1,9 +1,11 @@
 <?php
 /**
- * Pentagon Quest — MICE Tourism Page
+ * Pentagon Safaris — MICE Tourism Page
  * Meetings, Incentives, Conferences, and Exhibitions.
  */
-$page_title       = 'MICE Tourism — Pentagon Quest';
+require_once __DIR__ . '/includes/bootstrap.php';
+
+$page_title       = 'MICE Tourism — Pentagon Safaris';
 $page_description = 'We design and manage corporate travel programs that motivate teams, support business goals, and keep group logistics clean.';
 $current_page     = 'mice.php';
 $base_path        = '';
@@ -27,7 +29,7 @@ include 'includes/header.php';
       <div class="col-lg-6 reveal">
         <span class="section-tag">MICE Tourism</span>
         <h2 class="section-title-modern" style="color: #fff;">Corporate travel that moves people and business forward.</h2>
-        <p style="color: rgba(255,255,255,0.6); margin-bottom: 32px;">East Africa offers exceptional venues for meetings, incentives, conferences, and exhibitions. Pentagon Quest helps design, plan, and manage programs that motivate teams, reward performance, and keep logistics calm.</p>
+        <p style="color: rgba(255,255,255,0.6); margin-bottom: 32px;">East Africa offers exceptional venues for meetings, incentives, conferences, and exhibitions. Pentagon Safaris helps design, plan, and manage programs that motivate teams, reward performance, and keep logistics calm.</p>
 
         <div class="row g-3">
           <?php

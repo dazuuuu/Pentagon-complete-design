@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /includes/
+Disallow: /admin/
+Disallow: /apps/
+Disallow: /handlers/
+Disallow: /vendor/
 
 Sitemap: https://pentagonquest.com/sitemap.xml

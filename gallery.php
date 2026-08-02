@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — Gallery Page (Modern Redesign)
+ * Pentagon Safaris — Gallery Page (Modern Redesign)
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
@@ -9,7 +9,7 @@ use App\Services\GalleryService;
 $galleryService = new GalleryService();
 $gallery = $galleryService->getActive();
 
-$page_title       = 'Safari Gallery — Pentagon Quest';
+$page_title       = 'Safari Gallery — Pentagon Safaris';
 $page_description = 'Browse travel memories, group experiences, safaris, destinations, and the visual story behind the journeys we help shape.';
 $current_page     = 'gallery.php';
 $base_path        = '';

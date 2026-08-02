@@ -1,9 +1,10 @@
 <?php
 /**
- * Pentagon Quest — Blog Post Details Page
+ * Pentagon Safaris — Blog Post Details Page
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
+use App\Helpers\Path;
 use App\Services\BlogService;
 
 $blogService = new BlogService();
@@ -11,15 +12,15 @@ $postId = (int) ($_GET['id'] ?? 0);
 $post = $postId ? $blogService->find($postId) : null;
 
 if (!$post || $post['status'] !== 'active') {
-    header('Location: blog.php');
+    header('Location: ' . Path::baseUrl() . 'blog');
     exit;
 }
 
 $cover = $post['image_url'] ?? '';
 $hasCoverPhoto = $cover !== '' && (str_starts_with($cover, 'assets/') || str_starts_with($cover, 'http'));
 
-$page_title       = $post['title'] . ' — Pentagon Quest Blog';
-$page_description = !empty($post['excerpt']) ? mb_strimwidth(strip_tags($post['excerpt']), 0, 160, '...') : 'Read ' . $post['title'] . ' on the Pentagon Quest blog.';
+$page_title       = $post['title'] . ' — Pentagon Safaris Blog';
+$page_description = !empty($post['excerpt']) ? mb_strimwidth(strip_tags($post['excerpt']), 0, 160, '...') : 'Read ' . $post['title'] . ' on the Pentagon Safaris blog.';
 $current_page     = 'blog.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -59,7 +60,7 @@ include 'includes/header.php';
           <p>Full story coming soon.</p>
         <?php endif; ?>
 
-        <a href="blog.php" style="display: inline-block; margin-top: 32px; font-weight: 600; font-size: 0.9rem; color: var(--green);">← Back to all stories</a>
+        <a href="<?php echo $base; ?>blog" style="display: inline-block; margin-top: 32px; font-weight: 600; font-size: 0.9rem; color: var(--green);">← Back to all stories</a>
       </div>
     </div>
   </div>
@@ -73,8 +74,8 @@ include 'includes/header.php';
         <span class="section-tag">Newsletter</span>
         <h2 class="section-title-modern">Join the Pride</h2>
         <p>Get monthly safari inspiration, wildlife updates, and exclusive offers delivered to your inbox.</p>
-        <form method="POST" action="handlers/subscribe" class="mt-4 d-flex gap-2">
-          <input type="hidden" name="redirect" value="/blog-details.php?id=<?php echo (int) $post['id']; ?>">
+        <form method="POST" action="<?php echo $base; ?>handlers/subscribe" class="mt-4 d-flex gap-2">
+          <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($base . 'blog/' . (int) $post['id']); ?>">
           <input type="email" name="email" placeholder="Your email address" required style="flex: 1; padding: 15px 25px; border-radius: 40px; border: 1px solid #ddd; outline: none;">
           <button type="submit" class="btn-hero btn-hero-primary" style="border: none;">Subscribe</button>
         </form>

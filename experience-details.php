@@ -1,11 +1,12 @@
 <?php
 /**
- * Pentagon Quest — Experience Details Page
+ * Pentagon Safaris — Experience Details Page
  * Not linked from the main navigation — reachable only via the homepage
  * "Previous Experiences" cards.
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
+use App\Helpers\Path;
 use App\Services\ExperienceService;
 
 $experienceService = new ExperienceService();
@@ -13,14 +14,14 @@ $experienceId = (int) ($_GET['id'] ?? 0);
 $experience = $experienceId ? $experienceService->find($experienceId) : null;
 
 if (!$experience || $experience['status'] !== 'active') {
-    header('Location: index.php');
+    header('Location: ' . Path::baseUrl());
     exit;
 }
 
 $images = $experienceService->getImages($experienceId);
 
-$page_title       = $experience['title'] . ' — Pentagon Quest';
-$page_description = !empty($experience['description']) ? mb_strimwidth(strip_tags($experience['description']), 0, 160, '...') : 'A Pentagon Quest travel experience.';
+$page_title       = $experience['title'] . ' — Pentagon Safaris';
+$page_description = !empty($experience['description']) ? mb_strimwidth(strip_tags($experience['description']), 0, 160, '...') : 'A Pentagon Safaris travel experience.';
 $current_page     = '';
 $base_path        = '';
 include 'includes/header.php';
@@ -67,7 +68,7 @@ include 'includes/header.php';
         <?php endif; ?>
 
         <div class="text-center mt-4">
-          <a href="contact.php" class="btn-hero btn-hero-primary" style="display: inline-flex;">Plan Your Own Journey</a>
+          <a href="<?php echo $base; ?>contact" class="btn-hero btn-hero-primary" style="display: inline-flex;">Plan Your Own Journey</a>
         </div>
       </div>
     </div>

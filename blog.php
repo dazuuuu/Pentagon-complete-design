@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — Blog Page
+ * Pentagon Safaris — Blog Page
  * SEO-optimised standalone page
  */
 require_once __DIR__ . '/includes/bootstrap.php';
@@ -10,7 +10,7 @@ use App\Services\BlogService;
 $blogService = new BlogService();
 $posts = $blogService->getActive();
 
-$page_title       = 'Safari Stories & Insights | Pentagon Quest Blog';
+$page_title       = 'Safari Stories & Insights | Pentagon Safaris Blog';
 $page_description = 'Explore the wild heart of Africa through our stories. Photography tips, packing guides, and deep dives into the Great Migration.';
 $current_page     = 'blog.php';
 $base_path        = '';
@@ -35,7 +35,7 @@ include 'includes/header.php';
         $hasPhoto = $img !== '' && (str_starts_with($img, 'assets/') || str_starts_with($img, 'http'));
       ?>
       <div class="col-lg-4 col-md-6 reveal">
-        <a href="blog-details.php?id=<?php echo (int) $post['id']; ?>" class="blog-card d-block" style="color: inherit;">
+        <a href="<?php echo $base; ?>blog/<?php echo (int) $post['id']; ?>" class="blog-card d-block" style="color: inherit;">
           <div style="height: 230px; background: var(--sand); position: relative;">
             <?php if ($hasPhoto): ?>
               <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width:100%; height:100%; object-fit: cover; position: absolute; inset: 0;">
@@ -78,8 +78,8 @@ include 'includes/header.php';
         <?php if (isset($_GET['subscribe_error'])): ?>
         <p style="color: #b42318; font-weight: 600; margin-top: 16px;">Subscription failed. Please try again.</p>
         <?php endif; ?>
-        <form method="POST" action="handlers/subscribe" class="mt-4 d-flex gap-2">
-          <input type="hidden" name="redirect" value="/blog.php">
+        <form method="POST" action="<?php echo $base; ?>handlers/subscribe" class="mt-4 d-flex gap-2">
+          <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($base . 'blog'); ?>">
           <input type="email" name="email" placeholder="Your email address" required style="flex: 1; padding: 15px 25px; border-radius: 40px; border: 1px solid #ddd; outline: none;">
           <button type="submit" class="btn-hero btn-hero-primary" style="border: none;">Subscribe</button>
         </form>

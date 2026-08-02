@@ -59,7 +59,7 @@ class TestimonialService
             [
                 'author_name' => 'Sarah Jenkins',
                 'author_location' => 'United Kingdom',
-                'quote' => "The most authentic safari experience I've ever had. Pentagon Quest's attention to detail and knowledge of the land is unparalleled.",
+                'quote' => "The most authentic safari experience I've ever had. Pentagon Safaris's attention to detail and knowledge of the land is unparalleled.",
                 'accent_color' => 'gold',
             ],
             [

@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../includes/bootstrap.php';
 
+use App\Helpers\Path;
 use App\Services\EnquiryService;
 use App\Services\SubscriptionService;
 
@@ -9,16 +10,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = preg_replace('#^.*handlers/#', '', trim($requestPath, '/'));
 
-// Site may be hosted in a subdirectory (e.g. /pentagon-quest/handlers/contact)
-// rather than at the domain root — recover that prefix so root-absolute
-// redirects below land back in the same subdirectory.
-$basePath = '';
-if (preg_match('#^(.*)/handlers/#', $requestPath, $m)) {
-    $basePath = $m[1];
-}
+// Callers (includes/enquiry-section.php, includes/footer.php, etc.) already
+// build a fully-correct absolute redirect path via App\Helpers\Path::baseUrl()
+// or REQUEST_URI, so it already accounts for a subdirectory install (e.g.
+// /pentagon-quest/tours/12) — it just needs a same-site sanity check here,
+// not another prefix on top (that would double it).
+$resolveRedirect = static function (string $redirect): string {
+    $isSameSitePath = str_starts_with($redirect, '/')
+        && !str_starts_with($redirect, '//')
+        && !str_contains($redirect, '://');
 
-$resolveRedirect = static function (string $redirect) use ($basePath): string {
-    return str_starts_with($redirect, '/') ? $basePath . $redirect : $redirect;
+    return $isSameSitePath ? $redirect : Path::baseUrl();
 };
 
 if ($method === 'POST' && $path === 'contact') {
@@ -31,7 +33,7 @@ if ($method === 'POST' && $path === 'contact') {
         exit;
     }
 
-    $redirect = $resolveRedirect($_POST['redirect'] ?? '/contact.php');
+    $redirect = $resolveRedirect($_POST['redirect'] ?? Path::baseUrl() . 'contact');
     $param = $result['success'] ? 'success=1' : 'error=1';
     $separator = str_contains($redirect, '?') ? '&' : '?';
     header('Location: ' . $redirect . $separator . $param);
@@ -48,7 +50,7 @@ if ($method === 'POST' && $path === 'subscribe') {
         exit;
     }
 
-    $redirect = $resolveRedirect($_POST['redirect'] ?? '/index.php');
+    $redirect = $resolveRedirect($_POST['redirect'] ?? Path::baseUrl());
     $param = $result['success'] ? 'subscribed=1' : 'subscribe_error=1';
     $separator = str_contains($redirect, '?') ? '&' : '?';
     header('Location: ' . $redirect . $separator . $param);

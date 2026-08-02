@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — Home Page (Refined & Restructured)
+ * Pentagon Safaris — Home Page (Refined & Restructured)
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
@@ -27,8 +27,8 @@ $offers = array_slice($offerService->getActive(), 0, 2);
 $blogs = array_slice($blogService->getActive(), 0, 3);
 $galleryPreview = array_slice($galleryService->getActive(), 0, 12);
 
-$page_title       = 'Pentagon Quest - Top Roadtrips & Tours Travel Company';
-$page_description = 'Pentagon Quest provides leisure, business, safari, and exclusive travel services for clients who want reliable planning and memorable experiences.';
+$page_title       = 'Pentagon Safaris - Top Roadtrips & Tours Travel Company';
+$page_description = 'Pentagon Safaris provides leisure, business, safari, and exclusive travel services for clients who want reliable planning and memorable experiences.';
 $current_page     = 'index.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -36,23 +36,25 @@ include 'includes/header.php';
 
 <!-- Refined Hero Section -->
 <section class="modern-hero">
-  <div class="hero-video-bg"></div>
-  
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="<?php echo $base; ?>assets/videos/safaris.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-10">
-        
+
         <div class="reveal">
           <span class="section-tag" style="color: var(--gold-soft); text-align: center;">Groups, Couples, Families</span>
-          <h1 class="hero-title" style="font-family: var(--font-display);">Trips with rhythm, detail, and a little wonder.</h1>
-          <p class="hero-subtitle">Whether it is a honeymoon, team retreat, family holiday, or private adventure, we design the route so the experience feels effortless.</p>
+          <h1 class="hero-title" style="font-family: var(--font-display);">We make every safari a wonderful experience &amp; memories.</h1>
 
           <div class="hero-btns">
-            <a href="request-quote.php" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
+            <a href="<?php echo $base; ?>request-quote" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
               Plan a Custom Tour
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
-            <a href="tours.php" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
+            <a href="<?php echo $base; ?>tours" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
               See Packages
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -90,7 +92,7 @@ include 'includes/header.php';
       <div class="col-lg-7">
         <span class="section-tag">Current Offers</span>
         <h2 class="section-title-modern" style="color: #fff;">Featured packages ready for booking.</h2>
-        <p style="color: rgba(255,255,255,0.6); max-width: 520px;">Select an offer poster, view the key package details, then call or WhatsApp Pentagon Quest to reserve your spot.</p>
+        <p style="color: rgba(255,255,255,0.6); max-width: 520px;">Select an offer poster, view the key package details, then call or WhatsApp Pentagon Safaris to reserve your spot.</p>
       </div>
       <div class="col-lg-5 text-lg-end">
         <a href="#exclusive-offers" class="btn-hero" style="background: #fff; color: var(--charcoal); display: inline-flex;">View All Offers</a>
@@ -102,10 +104,10 @@ include 'includes/header.php';
         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 32px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
             <div>
-              <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 700;">Pentagon Quest &middot; The Safari Xplus</span>
+              <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 700;">Pentagon Safaris &middot; The Safari Xplus</span>
               <h3 style="margin-top: 6px; margin-bottom: 0;">Coast Kenya</h3>
             </div>
-            <a href="https://wa.me/254733238091" class="btn-hero" style="background: var(--gold); color: var(--charcoal); padding: 12px 24px;">Book Now</a>
+            <a href="https://wa.me/254718620982" class="btn-hero" style="background: var(--gold); color: var(--charcoal); padding: 12px 24px;">Book Now</a>
           </div>
           <div style="overflow-x: auto;">
             <table class="pq-table">
@@ -115,30 +117,30 @@ include 'includes/header.php';
               <tbody>
                 <?php
                 $coastOffers = [
-                  ['Turtle Bay Beach Club', 'All Inclusive', 'Watamu', '26,672', '37,508'],
-                  ['Papillon Lagoon Reef', 'All Inclusive', 'Diani', '33,896', '68,344'],
-                  ['Diani Reef Beach Resort & Spa', 'Breakfast', 'Diani', '47,570', '68,888'],
-                  ['Neptune Beach Hotel', 'All Inclusive', 'Bamburi', '48,344', '70,016'],
-                  ['Diani Sea Resort', 'All Inclusive', 'Diani', '50,924', '73,886'],
-                  ['Bamburi Beach Hotel', 'All Inclusive', 'Bamburi', '57,890', '84,335'],
-                  ['Diani Sea Lodge', 'All Inclusive', 'Diani', '35,702', '51,053'],
-                  ['Southern Pal Beach Resort', 'All Inclusive', 'Diani', '65,888', '96,332'],
-                  ['Leopard Beach Resort & Spa', 'Breakfast', 'Diani', '27,962', '39,443'],
+                  ['Turtle Bay Beach Club', 'All Inclusive', 'Watamu', '205', '289'],
+                  ['Papillon Lagoon Reef', 'All Inclusive', 'Diani', '261', '526'],
+                  ['Diani Reef Beach Resort & Spa', 'Breakfast', 'Diani', '366', '530'],
+                  ['Neptune Beach Hotel', 'All Inclusive', 'Bamburi', '372', '539'],
+                  ['Diani Sea Resort', 'All Inclusive', 'Diani', '392', '568'],
+                  ['Bamburi Beach Hotel', 'All Inclusive', 'Bamburi', '445', '649'],
+                  ['Diani Sea Lodge', 'All Inclusive', 'Diani', '275', '393'],
+                  ['Southern Pal Beach Resort', 'All Inclusive', 'Diani', '507', '741'],
+                  ['Leopard Beach Resort & Spa', 'Breakfast', 'Diani', '215', '303'],
                 ];
                 foreach ($coastOffers as $row): ?>
                 <tr>
                   <td style="font-weight: 600;"><?php echo htmlspecialchars($row[0]); ?></td>
                   <td style="color: var(--gold-soft);"><?php echo htmlspecialchars($row[1]); ?></td>
                   <td><?php echo htmlspecialchars($row[2]); ?></td>
-                  <td><?php echo htmlspecialchars($row[3]); ?></td>
-                  <td><?php echo htmlspecialchars($row[4]); ?></td>
+                  <td>$<?php echo htmlspecialchars($row[3]); ?></td>
+                  <td>$<?php echo htmlspecialchars($row[4]); ?></td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>
             </table>
           </div>
           <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; color: rgba(255,255,255,0.6);">
-            @pentagonquest &nbsp;|&nbsp; 0733 238091 / 0708 420952 &nbsp;|&nbsp; pentagonquest@gmail.com &nbsp;|&nbsp; www.pentagonquest.com
+            @pentagonsafaris &nbsp;|&nbsp; +254 718 620982 / +254 726 528015 &nbsp;|&nbsp; pentagonquest@gmail.com &nbsp;|&nbsp; www.pentagonquest.com
           </div>
         </div>
       </div>
@@ -151,18 +153,18 @@ include 'includes/header.php';
         <table class="pq-table" style="margin-bottom: 24px;">
           <thead><tr><th>Offer</th><th>Detail</th><th>Price</th></tr></thead>
           <tbody>
-            <tr><td style="font-weight: 600;">Turtle Bay Beach Club</td><td style="color: var(--gold-soft);">Watamu</td><td>From 26,672</td></tr>
-            <tr><td style="font-weight: 600;">Papillon Lagoon Reef</td><td style="color: var(--gold-soft);">Diani</td><td>From 33,896</td></tr>
-            <tr><td style="font-weight: 600;">Diani Reef Beach Resort & Spa</td><td style="color: var(--gold-soft);">Diani</td><td>From 47,570</td></tr>
+            <tr><td style="font-weight: 600;">Turtle Bay Beach Club</td><td style="color: var(--gold-soft);">Watamu</td><td>From $205</td></tr>
+            <tr><td style="font-weight: 600;">Papillon Lagoon Reef</td><td style="color: var(--gold-soft);">Diani</td><td>From $261</td></tr>
+            <tr><td style="font-weight: 600;">Diani Reef Beach Resort & Spa</td><td style="color: var(--gold-soft);">Diani</td><td>From $366</td></tr>
           </tbody>
         </table>
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="tel:+254733238091" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
+          <a href="tel:+254718620982" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Call to Book
           </a>
-          <a href="https://wa.me/254733238091" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
+          <a href="https://wa.me/254718620982" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             WhatsApp
           </a>
@@ -184,7 +186,7 @@ include 'includes/header.php';
         $img = $d['image_url'] ?? '';
         $hasPhoto = $img !== '' && (str_starts_with($img, 'assets/') || str_starts_with($img, 'http'));
         $swatch = $hasPhoto ? 'var(--green)' : ($img !== '' ? $img : 'var(--green)');
-        $detailUrl = !empty($d['id']) ? 'destination-details.php?id=' . (int) $d['id'] : null;
+        $detailUrl = !empty($d['id']) ? $base . 'destinations/' . (int) $d['id'] : null;
       ?>
       <div class="col-lg-4 col-md-6 reveal">
         <a href="<?php echo $detailUrl ? htmlspecialchars($detailUrl) : '#'; ?>" class="blog-card d-block" style="color: inherit;">
@@ -210,13 +212,13 @@ include 'includes/header.php';
   </div>
 </section>
 
-<!-- About Pentagon Quest -->
+<!-- About Pentagon Safaris -->
 <section class="section-pad" style="background: var(--sand);">
   <div class="container">
     <div class="row g-5 align-items-center">
       <div class="col-lg-6 reveal">
         <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); min-height: 480px;">
-          <img src="assets/images/climbing-mt-kenya.jpg" alt="Pentagon Quest" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
+          <img src="assets/images/climbing-mt-kenya.jpg" alt="Pentagon Safaris" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
           <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(18,18,18,0.75), transparent 55%);"></div>
           <div class="promise-badge">
             <span>Our Promise</span>
@@ -225,9 +227,9 @@ include 'includes/header.php';
         </div>
       </div>
       <div class="col-lg-6 reveal">
-        <span class="section-tag">About Pentagon Quest</span>
+        <span class="section-tag">About Pentagon Safaris</span>
         <h2 class="section-title-modern">A Kenyan travel company built around care, flexibility, and detail.</h2>
-        <p style="margin-bottom: 32px;">Based in Nairobi, Pentagon Quest provides leisure, business, safari, and exclusive travel services for individuals and groups. Our work is rooted in professional standards, ethical service, and the belief that excellent travel is created through near-obsessive attention to detail.</p>
+        <p style="margin-bottom: 32px;">Based in Nairobi, Pentagon Safaris provides leisure, business, safari, and exclusive travel services for individuals and groups. Our work is rooted in professional standards, ethical service, and the belief that excellent travel is created through near-obsessive attention to detail.</p>
 
         <div class="row g-3 mb-4">
           <div class="col-4"><div class="stat-box"><h4>KE.</h4><span>Proudly Kenyan</span></div></div>
@@ -269,7 +271,7 @@ include 'includes/header.php';
     <div class="text-center mb-5">
       <span class="section-tag">Our Services</span>
       <h2 class="section-title-modern">Travel support for the whole journey, not just the booking.</h2>
-      <p style="max-width: 640px; margin: 0 auto;">Pentagon Quest brings together transport, stays, ticketing, tours, and group logistics so every moving part feels intentional.</p>
+      <p style="max-width: 640px; margin: 0 auto;">Pentagon Safaris brings together transport, stays, ticketing, tours, and group logistics so every moving part feels intentional.</p>
     </div>
     <div class="row g-4">
       <?php
@@ -305,7 +307,7 @@ include 'includes/header.php';
         <h2 class="section-title-modern">Start local. Go global. Keep the planning sharp.</h2>
       </div>
       <div class="col-lg-4 text-lg-end">
-        <a href="request-quote.php" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">Request an Itinerary →</a>
+        <a href="<?php echo $base; ?>request-quote" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">Request an Itinerary →</a>
       </div>
     </div>
     <div class="row g-4">
@@ -313,7 +315,7 @@ include 'includes/header.php';
         $dImg = $dir['image_url'] ?? '';
         $dHasPhoto = $dImg !== '' && (str_starts_with($dImg, 'assets/') || str_starts_with($dImg, 'http'));
         $dSwatch = $dHasPhoto ? 'var(--green)' : ($dImg !== '' ? $dImg : 'var(--green)');
-        $dUrl = !empty($dir['id']) ? 'destination-details.php?id=' . (int) $dir['id'] : 'destinations.php';
+        $dUrl = !empty($dir['id']) ? $base . 'destinations/' . (int) $dir['id'] : $base . 'destinations';
       ?>
       <div class="col-lg-3 col-md-6 reveal">
         <a href="<?php echo htmlspecialchars($dUrl); ?>" class="direction-card" <?php echo $dHasPhoto ? '' : 'style="background: ' . htmlspecialchars($dSwatch) . ';"'; ?>>
@@ -345,10 +347,10 @@ include 'includes/header.php';
       <div class="col-lg-8">
         <span class="section-tag">Travel Gallery</span>
         <h2 class="section-title-modern">Seen on the road.</h2>
-        <p style="max-width: 520px;">A curated preview of trips, places, and experiences from the Pentagon Quest gallery.</p>
+        <p style="max-width: 520px;">A curated preview of trips, places, and experiences from the Pentagon Safaris gallery.</p>
       </div>
       <div class="col-lg-4 text-lg-end">
-        <a href="gallery.php" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View Full Gallery →</a>
+        <a href="<?php echo $base; ?>gallery" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View Full Gallery →</a>
       </div>
     </div>
     <div class="row g-4">
@@ -393,7 +395,7 @@ include 'includes/header.php';
     <div class="row g-4">
       <div class="col-lg-8 reveal">
         <?php if ($featuredExperience): ?>
-        <a href="experience-details.php?id=<?php echo (int) $featuredExperience['id']; ?>" class="experience-item d-block" style="background: var(--green); color: inherit;">
+        <a href="<?php echo $base; ?>experiences/<?php echo (int) $featuredExperience['id']; ?>" class="experience-item d-block" style="background: var(--green); color: inherit;">
           <?php if (!empty($featuredExperience['images'])): ?>
           <div id="expFeatured" class="carousel slide h-100" data-bs-ride="carousel" data-bs-pause="false" style="position:absolute; inset:0;">
             <div class="carousel-inner h-100">
@@ -429,7 +431,7 @@ include 'includes/header.php';
       <div class="col-lg-4 d-flex flex-column gap-4">
         <?php if (!empty($otherExperiences)): ?>
           <?php foreach ($otherExperiences as $exp): ?>
-          <a href="experience-details.php?id=<?php echo (int) $exp['id']; ?>" class="experience-item d-block reveal flex-fill" style="background: var(--gold); color: inherit; min-height: 130px;">
+          <a href="<?php echo $base; ?>experiences/<?php echo (int) $exp['id']; ?>" class="experience-item d-block reveal flex-fill" style="background: var(--gold); color: inherit; min-height: 130px;">
             <?php if (!empty($exp['images'])): ?>
             <div id="expSmall<?php echo (int) $exp['id']; ?>" class="carousel slide h-100" data-bs-ride="carousel" data-bs-pause="false" style="position:absolute; inset:0;">
               <div class="carousel-inner h-100">
@@ -469,17 +471,17 @@ include 'includes/header.php';
     <div class="row g-5 align-items-center">
       <div class="col-lg-4 reveal">
         <div class="director-photo-wrap">
-          <img src="assets/images/pentagon-director.jpeg" alt="Director, Pentagon Quest" style="width: 100%; height: 420px; object-fit: cover; display: block;">
+          <img src="assets/images/pentagon-director.jpeg" alt="Director, Pentagon Safaris" style="width: 100%; height: 420px; object-fit: cover; display: block;">
           <div class="director-tag">
             <span>Director</span>
-            <h5>Pentagon Quest</h5>
+            <h5>Pentagon Safaris</h5>
           </div>
         </div>
       </div>
       <div class="col-lg-8 reveal">
         <span class="section-tag">Message from the Director</span>
         <h2 class="section-title-modern">Every journey deserves thoughtful planning, honest guidance, and a team that truly cares.</h2>
-        <p style="margin-bottom: 20px;">Thank you for trusting Pentagon Quest as your travel partner. It is a privilege to help you, your family, your team, or your clients discover places and experiences that stay with you long after the journey ends.</p>
+        <p style="margin-bottom: 20px;">Thank you for trusting Pentagon Safaris as your travel partner. It is a privilege to help you, your family, your team, or your clients discover places and experiences that stay with you long after the journey ends.</p>
         <p style="margin-bottom: 32px;">Whether you are planning a weekend escape, a family holiday, a safari, an international trip, or a corporate program, my promise is simple: we will listen carefully, plan professionally, and handle the details with the seriousness your travel deserves.</p>
 
         <div class="mb-4">
@@ -522,7 +524,7 @@ include 'includes/header.php';
       <div class="col-lg-6 reveal">
         <span class="section-tag">MICE Tourism</span>
         <h2 class="section-title-modern" style="color: #fff;">Corporate travel that moves people and business forward.</h2>
-        <p style="color: rgba(255,255,255,0.6); margin-bottom: 32px;">East Africa offers exceptional venues for meetings, incentives, conferences, and exhibitions. Pentagon Quest helps design, plan, and manage programs that motivate teams, reward performance, and keep logistics calm.</p>
+        <p style="color: rgba(255,255,255,0.6); margin-bottom: 32px;">East Africa offers exceptional venues for meetings, incentives, conferences, and exhibitions. Pentagon Safaris helps design, plan, and manage programs that motivate teams, reward performance, and keep logistics calm.</p>
 
         <div class="row g-3">
           <?php
@@ -643,7 +645,7 @@ include 'includes/header.php';
         <h2 class="section-title-modern">Latest from the Blog</h2>
       </div>
       <div class="col-lg-6 text-lg-end">
-        <a href="blog.php" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View All Stories</a>
+        <a href="<?php echo $base; ?>blog" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View All Stories</a>
       </div>
     </div>
     <div class="row g-4">
@@ -652,7 +654,7 @@ include 'includes/header.php';
         $bHasPhoto = $bImg !== '' && (str_starts_with($bImg, 'assets/') || str_starts_with($bImg, 'http'));
       ?>
       <div class="col-lg-4 col-md-6 reveal">
-        <a href="blog-details.php?id=<?php echo (int) $b['id']; ?>" class="blog-card d-block" style="color: inherit;">
+        <a href="<?php echo $base; ?>blog/<?php echo (int) $b['id']; ?>" class="blog-card d-block" style="color: inherit;">
           <div style="height: 200px; background: var(--sand); position: relative;">
             <?php if ($bHasPhoto): ?>
               <img src="<?php echo htmlspecialchars($bImg); ?>" alt="<?php echo htmlspecialchars($b['title']); ?>" style="width:100%; height:100%; object-fit: cover; position: absolute; inset: 0;">

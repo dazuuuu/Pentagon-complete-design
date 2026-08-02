@@ -1,9 +1,11 @@
 <?php
 /**
- * Pentagon Quest — Contact Page (Modern Redesign)
+ * Pentagon Safaris — Contact Page (Modern Redesign)
  */
-$page_title       = 'Contact Us — Pentagon Quest';
-$page_description = 'Reach Pentagon Quest for local tours, international trips, MICE programs, transfers, air ticketing, and custom travel planning.';
+require_once __DIR__ . '/includes/bootstrap.php';
+
+$page_title       = 'Contact Us — Pentagon Safaris';
+$page_description = 'Reach Pentagon Safaris for local tours, international trips, MICE programs, transfers, air ticketing, and custom travel planning.';
 $current_page     = 'contact.php';
 $base_path        = '';
 

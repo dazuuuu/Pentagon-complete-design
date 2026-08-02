@@ -41,10 +41,10 @@ class MailService
 
     public function sendEnquiryConfirmation(array $data): bool
     {
-        $subject = 'We received your enquiry — Pentagon Quest';
+        $subject = 'We received your enquiry — Pentagon Safaris';
         $content = sprintf(
             '<p style="margin:0 0 16px;">Hi %s,</p>'
-            . '<p style="margin:0 0 16px; line-height:1.6;">Thank you for reaching out to Pentagon Quest. We have received your trip enquiry and one of our travel specialists will be in touch with you within 24 hours.</p>'
+            . '<p style="margin:0 0 16px; line-height:1.6;">Thank you for reaching out to Pentagon Safaris. We have received your trip enquiry and one of our travel specialists will be in touch with you within 24 hours.</p>'
             . '<p style="margin:0 0 16px; line-height:1.6;">In the meantime, feel free to browse our tours and destinations for inspiration.</p>',
             htmlspecialchars($data['full_name'])
         );
@@ -52,7 +52,7 @@ class MailService
         return $this->send(
             $data['email'],
             $subject,
-            $this->template('Thank You for Reaching Out', $content, ['label' => 'Explore Our Tours', 'url' => $this->siteUrl('tours.php')])
+            $this->template('Thank You for Reaching Out', $content, ['label' => 'Explore Our Tours', 'url' => $this->siteUrl('tours')])
         );
     }
 
@@ -90,7 +90,7 @@ class MailService
         ];
         $label = $labels[$status] ?? $status;
 
-        $subject = 'Update on your Pentagon Quest trip';
+        $subject = 'Update on your Pentagon Safaris trip';
         $interestLine = !empty($client['interest'])
             ? sprintf(' for <strong>%s</strong>', htmlspecialchars($client['interest']))
             : '';
@@ -112,10 +112,10 @@ class MailService
 
     public function sendEnquiryRejected(array $data): bool
     {
-        $subject = 'Update on your enquiry — Pentagon Quest';
+        $subject = 'Update on your enquiry — Pentagon Safaris';
         $content = sprintf(
             '<p style="margin:0 0 16px;">Hi %s,</p>'
-            . '<p style="margin:0 0 16px; line-height:1.6;">Thank you for your interest in Pentagon Quest. Unfortunately we are unable to accommodate your enquiry at this time.</p>'
+            . '<p style="margin:0 0 16px; line-height:1.6;">Thank you for your interest in Pentagon Safaris. Unfortunately we are unable to accommodate your enquiry at this time.</p>'
             . '<p style="margin:0; line-height:1.6;">Please feel free to reach out again or explore our other tours and destinations — we would love to help you plan a future trip.</p>',
             htmlspecialchars($data['full_name'])
         );
@@ -123,13 +123,13 @@ class MailService
         return $this->send(
             $data['email'],
             $subject,
-            $this->template('Enquiry Update', $content, ['label' => 'View Other Tours', 'url' => $this->siteUrl('tours.php')])
+            $this->template('Enquiry Update', $content, ['label' => 'View Other Tours', 'url' => $this->siteUrl('tours')])
         );
     }
 
     public function sendCustomQuote(array $data, string $priceText, string $quoteMessage): bool
     {
-        $subject = 'Your Pentagon Quest Quote' . (!empty($data['interest']) ? ' — ' . $data['interest'] : '');
+        $subject = 'Your Pentagon Safaris Quote' . (!empty($data['interest']) ? ' — ' . $data['interest'] : '');
         $content = sprintf('<p style="margin:0 0 16px;">Hi %s,</p>', htmlspecialchars($data['full_name']));
 
         if (!empty($data['interest'])) {
@@ -147,14 +147,14 @@ class MailService
 
     public function sendSubscriptionWelcome(string $email): bool
     {
-        $subject = 'Welcome to Pentagon Quest';
-        $content = '<p style="margin:0 0 16px;">Thank you for subscribing to Pentagon Quest!</p>'
+        $subject = 'Welcome to Pentagon Safaris';
+        $content = '<p style="margin:0 0 16px;">Thank you for subscribing to Pentagon Safaris!</p>'
             . '<p style="margin:0; line-height:1.6;">Expect safari inspiration, destination guides, and exclusive travel offers straight to your inbox.</p>';
 
         return $this->send(
             $email,
             $subject,
-            $this->template('Welcome Aboard', $content, ['label' => 'Explore Destinations', 'url' => $this->siteUrl('destinations.php')])
+            $this->template('Welcome Aboard', $content, ['label' => 'Explore Destinations', 'url' => $this->siteUrl('destinations')])
         );
     }
 
@@ -210,7 +210,7 @@ class MailService
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pentagon Quest</title>
+<title>Pentagon Safaris</title>
 </head>
 <body style="margin:0; padding:0; background:#F4F1EA; font-family: Arial, Helvetica, sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA; padding:40px 16px;">
@@ -219,7 +219,7 @@ class MailService
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:100%; background:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.08);">
           <tr>
             <td style="background:#FAF9F6; padding:28px 40px; text-align:center;">
-              <img src="cid:pq-logo" alt="Pentagon Quest" width="150" style="display:inline-block; height:auto; max-width:150px;">
+              <img src="cid:pq-logo" alt="Pentagon Safaris" width="150" style="display:inline-block; height:auto; max-width:150px;">
             </td>
           </tr>
           <tr>
@@ -227,7 +227,7 @@ class MailService
           </tr>
           <tr>
             <td style="padding:40px;">
-              <p style="margin:0 0 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#D4AF37;">Pentagon Quest</p>
+              <p style="margin:0 0 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#D4AF37;">Pentagon Safaris</p>
               <h1 style="margin:0 0 20px; font-size:24px; line-height:1.3; color:#121212; font-family: Georgia, 'Times New Roman', serif;">{$heading}</h1>
               <div style="font-size:15px; color:#333;">
                 {$contentHtml}
@@ -237,9 +237,9 @@ class MailService
           </tr>
           <tr>
             <td style="background:#121212; padding:32px 40px; text-align:center;">
-              <p style="margin:0 0 8px; color:#D4AF37; font-weight:700; font-size:14px;">Pentagon Quest Tours &amp; Safaris</p>
+              <p style="margin:0 0 8px; color:#D4AF37; font-weight:700; font-size:14px;">Pentagon Safaris</p>
               <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">Nairobi, Kenya &middot; Offices in Nairobi, Eldoret and Kericho</p>
-              <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">+254 718 620982 &middot; +254 726 528015</p>
+              <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">+254 718 620982 &middot; +254 726 528015 &middot; +1 717 381 1225</p>
               <p style="margin:0; color:rgba(255,255,255,0.65); font-size:12px;">pentagonquest@gmail.com &middot; www.pentagonquest.com</p>
             </td>
           </tr>

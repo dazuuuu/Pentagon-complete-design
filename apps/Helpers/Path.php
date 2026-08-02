@@ -70,4 +70,23 @@ class Path
     {
         return self::join(...$segments);
     }
+
+    /**
+     * Absolute, site-root-relative base URL path — e.g. "/" when the app is
+     * hosted at a domain root, or "/pentagon-quest/" when it lives in a
+     * subdirectory (as it does locally). Always ends with a trailing slash.
+     *
+     * Computed from SCRIPT_NAME (the internally-rewritten script, which
+     * always lives in the same flat project directory) rather than the
+     * request path, so it stays correct for clean URLs with extra segments
+     * such as /tours/12 — a link built relative to that path would otherwise
+     * resolve against the "/12" segment and 404.
+     */
+    public static function baseUrl(): string
+    {
+        $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php');
+        $scriptDir = rtrim(str_replace('\\', '/', $scriptDir), '/');
+
+        return $scriptDir . '/';
+    }
 }

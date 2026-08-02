@@ -7,6 +7,6 @@ return [
     'password' => $_ENV['SMTP_PASS'] ?? '',
     'encryption' => $_ENV['SMTP_ENCRYPTION'] ?? 'tls',
     'from_email' => $_ENV['MAIL_FROM_EMAIL'] ?? 'noreply@pentagonquest.com',
-    'from_name' => $_ENV['MAIL_FROM_NAME'] ?? 'Pentagon Quest',
+    'from_name' => $_ENV['MAIL_FROM_NAME'] ?? 'Pentagon Safaris',
     'admin_email' => $_ENV['MAIL_ADMIN_EMAIL'] ?? 'info@pentagonquest.com',
 ];

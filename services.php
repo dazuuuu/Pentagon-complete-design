@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — Services Page (Modern Redesign)
+ * Pentagon Safaris — Services Page (Modern Redesign)
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
@@ -9,7 +9,7 @@ use App\Services\ServiceTierService;
 $tierService = new ServiceTierService();
 $tiers = $tierService->getActive();
 
-$page_title       = 'Our Services — Pentagon Quest Tours & Safaris';
+$page_title       = 'Our Services — Pentagon Safaris';
 $page_description = 'From airport transfers and air ticketing to hotels, safaris, group logistics, and international tours, we coordinate the moving parts.';
 $current_page     = 'services.php';
 $base_path        = '';
@@ -32,7 +32,7 @@ include 'includes/header.php';
     <div class="text-center mb-5">
       <span class="section-tag">Our Services</span>
       <h2 class="section-title-modern">Travel support for the whole journey, not just the booking.</h2>
-      <p style="max-width: 640px; margin: 0 auto;">Pentagon Quest brings together transport, stays, ticketing, tours, and group logistics so every moving part feels intentional.</p>
+      <p style="max-width: 640px; margin: 0 auto;">Pentagon Safaris brings together transport, stays, ticketing, tours, and group logistics so every moving part feels intentional.</p>
     </div>
     <div class="row g-4">
       <?php
@@ -110,7 +110,7 @@ include 'includes/header.php';
           <?php if ($popular): ?>
           <span style="display: block; text-align: center; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">★ Most Popular</span>
           <?php endif; ?>
-          <a href="request-quote.php?tier=<?php echo (int) $tier['id']; ?>" class="btn-hero <?php echo $popular ? '' : 'btn-hero-primary'; ?>" style="<?php echo $popular ? 'background: var(--charcoal); color: #fff;' : ''; ?> width: 100%; justify-content: center;">Get Quote</a>
+          <a href="<?php echo $base; ?>request-quote?tier=<?php echo (int) $tier['id']; ?>" class="btn-hero <?php echo $popular ? '' : 'btn-hero-primary'; ?>" style="<?php echo $popular ? 'background: var(--charcoal); color: #fff;' : ''; ?> width: 100%; justify-content: center;">Get Quote</a>
         </div>
       </div>
       <?php endforeach; ?>

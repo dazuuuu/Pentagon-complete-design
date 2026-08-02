@@ -1,9 +1,10 @@
 <?php
 /**
- * Pentagon Quest — Destination Details Page
+ * Pentagon Safaris — Destination Details Page
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
+use App\Helpers\Path;
 use App\Services\DestinationService;
 use App\Services\OfferService;
 
@@ -12,7 +13,7 @@ $destinationId = (int) ($_GET['id'] ?? 0);
 $destination = $destinationId ? $destinationService->find($destinationId) : null;
 
 if (!$destination || $destination['status'] !== 'active') {
-    header('Location: index.php');
+    header('Location: ' . Path::baseUrl());
     exit;
 }
 
@@ -30,8 +31,8 @@ $images = $destinationService->getImages($destinationId);
 $cover = $destination['image_url'] ?? '';
 $hasCoverPhoto = $cover !== '' && (str_starts_with($cover, 'assets/') || str_starts_with($cover, 'http'));
 
-$page_title       = $destination['name'] . ' — Pentagon Quest';
-$page_description = !empty($destination['description']) ? mb_strimwidth(strip_tags($destination['description']), 0, 160, '...') : 'Discover ' . $destination['name'] . ' with Pentagon Quest.';
+$page_title       = $destination['name'] . ' — Pentagon Safaris';
+$page_description = !empty($destination['description']) ? mb_strimwidth(strip_tags($destination['description']), 0, 160, '...') : 'Discover ' . $destination['name'] . ' with Pentagon Safaris.';
 $current_page     = 'destinations.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -78,10 +79,10 @@ include 'includes/header.php';
         <?php if (!empty($destination['description'])): ?>
           <p style="white-space: pre-line;"><?php echo nl2br(htmlspecialchars($destination['description'])); ?></p>
         <?php else: ?>
-          <p>Discover the beauty of <?php echo htmlspecialchars($destination['name']); ?>, <?php echo htmlspecialchars($destination['country']); ?> — one of Pentagon Quest's signature safari destinations.</p>
+          <p>Discover the beauty of <?php echo htmlspecialchars($destination['name']); ?>, <?php echo htmlspecialchars($destination['country']); ?> — one of Pentagon Safaris's signature safari destinations.</p>
         <?php endif; ?>
 
-        <a href="tours.php" style="display: inline-block; margin-top: 16px; font-weight: 600; font-size: 0.9rem; color: var(--green);">← View tours in this region</a>
+        <a href="<?php echo $base; ?>tours" style="display: inline-block; margin-top: 16px; font-weight: 600; font-size: 0.9rem; color: var(--green);">← View tours in this region</a>
       </div>
 
       <!-- Enquiry CTA -->

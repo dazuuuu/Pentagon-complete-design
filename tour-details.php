@@ -1,9 +1,10 @@
 <?php
 /**
- * Pentagon Quest — Tour Details Page
+ * Pentagon Safaris — Tour Details Page
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
+use App\Helpers\Path;
 use App\Services\TourService;
 use App\Services\OfferService;
 
@@ -12,7 +13,7 @@ $tourId = (int) ($_GET['id'] ?? 0);
 $tour = $tourId ? $tourService->find($tourId) : null;
 
 if (!$tour || $tour['status'] !== 'active') {
-    header('Location: tours.php');
+    header('Location: ' . Path::baseUrl() . 'tours');
     exit;
 }
 
@@ -30,8 +31,8 @@ $images = $tourService->getImages($tourId);
 $cover = $tour['image_url'] ?? '';
 $hasCoverPhoto = $cover !== '' && (str_starts_with($cover, 'assets/') || str_starts_with($cover, 'http'));
 
-$page_title       = $tour['title'] . ' — Pentagon Quest';
-$page_description = !empty($tour['description']) ? mb_strimwidth(strip_tags($tour['description']), 0, 160, '...') : 'Discover ' . $tour['title'] . ' with Pentagon Quest.';
+$page_title       = $tour['title'] . ' — Pentagon Safaris';
+$page_description = !empty($tour['description']) ? mb_strimwidth(strip_tags($tour['description']), 0, 160, '...') : 'Discover ' . $tour['title'] . ' with Pentagon Safaris.';
 $current_page     = 'tours.php';
 $base_path        = '';
 include 'includes/header.php';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Pentagon Quest — About Us Page (Modern Redesign)
+ * Pentagon Safaris — About Us Page (Modern Redesign)
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
@@ -9,8 +9,8 @@ use App\Services\TestimonialService;
 $testimonialService = new TestimonialService();
 $testimonials = $testimonialService->getActive();
 
-$page_title       = 'Our Story — Pentagon Quest Tours & Safaris';
-$page_description = 'Based in Nairobi, Pentagon Quest provides leisure, business, safari, and exclusive travel services for individuals and groups.';
+$page_title       = 'Our Story — Pentagon Safaris';
+$page_description = 'Based in Nairobi, Pentagon Safaris provides leisure, business, safari, and exclusive travel services for individuals and groups.';
 $current_page     = 'about.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -21,17 +21,17 @@ include 'includes/header.php';
   <div class="hero-video-bg"></div>
   <div class="container text-center" style="position: relative; z-index: 2;">
     <span class="section-tag" style="color: var(--gold-soft);">Our Story</span>
-    <h1 class="hero-title" style="font-size: clamp(2rem, 6vw, 4rem);">About Pentagon Quest</h1>
+    <h1 class="hero-title" style="font-size: clamp(2rem, 6vw, 4rem);">About Pentagon Safaris</h1>
   </div>
 </section>
 
-<!-- About Pentagon Quest -->
+<!-- About Pentagon Safaris -->
 <section class="section-pad">
   <div class="container">
     <div class="row g-5 align-items-center">
       <div class="col-lg-6 reveal">
         <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); min-height: 480px;">
-          <img src="assets/images/climbing-mt-kenya.jpg" alt="Pentagon Quest" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
+          <img src="assets/images/climbing-mt-kenya.jpg" alt="Pentagon Safaris" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
           <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(18,18,18,0.75), transparent 55%);"></div>
           <div class="promise-badge">
             <span>Our Promise</span>
@@ -40,9 +40,9 @@ include 'includes/header.php';
         </div>
       </div>
       <div class="col-lg-6 reveal">
-        <span class="section-tag">About Pentagon Quest</span>
+        <span class="section-tag">About Pentagon Safaris</span>
         <h2 class="section-title-modern">A Kenyan travel company built around care, flexibility, and detail.</h2>
-        <p style="margin-bottom: 32px;">Based in Nairobi, Pentagon Quest provides leisure, business, safari, and exclusive travel services for individuals and groups. Our work is rooted in professional standards, ethical service, and the belief that excellent travel is created through near-obsessive attention to detail.</p>
+        <p style="margin-bottom: 32px;">Based in Nairobi, Pentagon Safaris provides leisure, business, safari, and exclusive travel services for individuals and groups. Our work is rooted in professional standards, ethical service, and the belief that excellent travel is created through near-obsessive attention to detail.</p>
 
         <div class="row g-3 mb-4">
           <div class="col-4"><div class="stat-box"><h4>KE.</h4><span>Proudly Kenyan</span></div></div>
@@ -113,17 +113,17 @@ include 'includes/header.php';
     <div class="row g-5 align-items-center">
       <div class="col-lg-4 reveal">
         <div class="director-photo-wrap">
-          <img src="assets/images/pentagon-director.jpeg" alt="Director, Pentagon Quest" style="width: 100%; height: 420px; object-fit: cover; display: block;">
+          <img src="assets/images/pentagon-director.jpeg" alt="Director, Pentagon Safaris" style="width: 100%; height: 420px; object-fit: cover; display: block;">
           <div class="director-tag">
             <span>Director</span>
-            <h5>Pentagon Quest</h5>
+            <h5>Pentagon Safaris</h5>
           </div>
         </div>
       </div>
       <div class="col-lg-8 reveal">
         <span class="section-tag">Message from the Director</span>
         <h2 class="section-title-modern">Every journey deserves thoughtful planning, honest guidance, and a team that truly cares.</h2>
-        <p style="margin-bottom: 20px;">Thank you for trusting Pentagon Quest as your travel partner. It is a privilege to help you, your family, your team, or your clients discover places and experiences that stay with you long after the journey ends.</p>
+        <p style="margin-bottom: 20px;">Thank you for trusting Pentagon Safaris as your travel partner. It is a privilege to help you, your family, your team, or your clients discover places and experiences that stay with you long after the journey ends.</p>
         <p style="margin-bottom: 32px;">Whether you are planning a weekend escape, a family holiday, a safari, an international trip, or a corporate program, my promise is simple: we will listen carefully, plan professionally, and handle the details with the seriousness your travel deserves.</p>
 
         <div class="mb-4">

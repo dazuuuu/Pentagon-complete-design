@@ -1,12 +1,13 @@
 <?php
 /**
- * Pentagon Quest — Service Quote Request Page
+ * Pentagon Safaris — Service Quote Request Page
  * A dedicated form (separate from the general contact form) for requesting
  * a quote on a specific Safari Tier. Lands in the admin Enquiries CRM, where
  * an admin can email the customer a custom quote.
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
+use App\Helpers\Path;
 use App\Services\ServiceTierService;
 
 $tierService = new ServiceTierService();
@@ -14,15 +15,15 @@ $tierId = (int) ($_GET['tier'] ?? 0);
 $tier = $tierId ? $tierService->find($tierId) : null;
 
 if (!$tier || $tier['status'] !== 'active') {
-    header('Location: services.php');
+    header('Location: ' . Path::baseUrl() . 'services');
     exit;
 }
 
 $form_success = isset($_GET['success']);
 $form_error = isset($_GET['error']);
 
-$page_title       = 'Request a Quote — ' . $tier['name'] . ' — Pentagon Quest';
-$page_description = 'Request a personalised quote for the ' . $tier['name'] . ' safari tier from Pentagon Quest.';
+$page_title       = 'Request a Quote — ' . $tier['name'] . ' — Pentagon Safaris';
+$page_description = 'Request a personalised quote for the ' . $tier['name'] . ' safari tier from Pentagon Safaris.';
 $current_page     = 'services.php';
 $base_path        = '';
 include 'includes/header.php';
@@ -57,8 +58,8 @@ include 'includes/header.php';
           </div>
           <?php endif; ?>
 
-          <form method="POST" action="handlers/contact">
-            <input type="hidden" name="redirect" value="/request-quote.php?tier=<?php echo (int) $tier['id']; ?>">
+          <form method="POST" action="<?php echo $base; ?>handlers/contact">
+            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($base . 'request-quote?tier=' . (int) $tier['id']); ?>">
             <input type="hidden" name="interest" value="<?php echo htmlspecialchars($tier['name']); ?> (Safari Tier Quote)">
             <div class="mb-3">
               <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;">Full Name</label>
