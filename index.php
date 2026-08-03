@@ -107,7 +107,7 @@ include 'includes/header.php';
               <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 700;">Pentagon Safaris &middot; The Safari Xplus</span>
               <h3 style="margin-top: 6px; margin-bottom: 0;">Coast Kenya</h3>
             </div>
-            <a href="https://wa.me/254718620982" class="btn-hero" style="background: var(--gold); color: var(--charcoal); padding: 12px 24px;">Book Now</a>
+            <a href="https://wa.me/254720090751" class="btn-hero" style="background: var(--gold); color: var(--charcoal); padding: 12px 24px;">Book Now</a>
           </div>
           <div style="overflow-x: auto;">
             <table class="pq-table">
@@ -140,7 +140,7 @@ include 'includes/header.php';
             </table>
           </div>
           <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; color: rgba(255,255,255,0.6);">
-            @pentagonsafaris &nbsp;|&nbsp; +254 718 620982 / +254 726 528015 &nbsp;|&nbsp; pentagonquest@gmail.com &nbsp;|&nbsp; www.pentagonquest.com
+            @pentagonsafaris &nbsp;|&nbsp; +254 720 090751 &nbsp;|&nbsp; info@pentagonsafaris.com &nbsp;|&nbsp; www.pentagonsafaris.com
           </div>
         </div>
       </div>
@@ -160,11 +160,11 @@ include 'includes/header.php';
         </table>
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="tel:+254718620982" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
+          <a href="tel:+254720090751" class="btn-hero" style="background: var(--gold); color: var(--charcoal);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Call to Book
           </a>
-          <a href="https://wa.me/254718620982" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
+          <a href="https://wa.me/254720090751" class="btn-hero" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             WhatsApp
           </a>
@@ -508,9 +508,9 @@ include 'includes/header.php';
           </div>
         </div>
 
-        <a href="mailto:pentagonquest@gmail.com" class="btn-hero" style="background: var(--charcoal); color: #fff; display: inline-flex;">
+        <a href="mailto:info@pentagonsafaris.com" class="btn-hero" style="background: var(--charcoal); color: #fff; display: inline-flex;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6 12 13 2 6"/></svg>
-          pentagonquest@gmail.com
+          info@pentagonsafaris.com
         </a>
       </div>
     </div>

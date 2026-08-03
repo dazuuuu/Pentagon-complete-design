@@ -1,3 +1,0 @@
-ALTER TABLE testimonials
-  ADD COLUMN client_id INT UNSIGNED NULL AFTER id,
-  ADD FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL;

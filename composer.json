@@ -1,6 +1,6 @@
 {
-  "name": "pentagon-quest/website",
-  "description": "Pentagon Quest Tours & Safaris website backend",
+  "name": "pentagon-safaris/website",
+  "description": "Pentagon Safaris website backend",
   "type": "project",
   "require": {
     "php": ">=8.1",

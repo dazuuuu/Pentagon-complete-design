@@ -1,4 +1,0 @@
-ALTER TABLE enquiries
-  ADD COLUMN phone VARCHAR(30) NULL AFTER email,
-  ADD COLUMN interest VARCHAR(200) NULL AFTER phone,
-  MODIFY COLUMN message TEXT NULL;

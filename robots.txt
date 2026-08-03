@@ -6,4 +6,4 @@ Disallow: /apps/
 Disallow: /handlers/
 Disallow: /vendor/
 
-Sitemap: https://pentagonquest.com/sitemap.xml
+Sitemap: https://pentagonsafaris.com/sitemap.xml

@@ -89,7 +89,7 @@ $footerRedirectPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?:
       <div>&copy; <?php echo date('Y'); ?> Pentagon Safaris. All rights reserved.</div>
       <div style="display: flex; gap: 24px;">
         <span>Nairobi, Kenya</span>
-        <span>+254 718 620982 &middot; +254 726 528015 &middot; +1 717 381 1225</span>
+        <span>+254 720 090751</span>
       </div>
     </div>
   </div>

@@ -12,7 +12,7 @@ use App\Services\TourService;
 use App\Services\DestinationService;
 use App\Services\BlogService;
 
-$domain = 'https://pentagonquest.com';
+$domain = 'https://pentagonsafaris.com';
 $today = date('Y-m-d');
 
 $staticPages = [

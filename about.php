@@ -150,9 +150,9 @@ include 'includes/header.php';
           </div>
         </div>
 
-        <a href="mailto:pentagonquest@gmail.com" class="btn-hero" style="background: var(--charcoal); color: #fff; display: inline-flex;">
+        <a href="mailto:info@pentagonsafaris.com" class="btn-hero" style="background: var(--charcoal); color: #fff; display: inline-flex;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6 12 13 2 6"/></svg>
-          pentagonquest@gmail.com
+          info@pentagonsafaris.com
         </a>
       </div>
     </div>

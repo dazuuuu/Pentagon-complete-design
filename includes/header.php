@@ -17,7 +17,7 @@ $canonicalPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo htmlspecialchars($page_title); ?> | Pentagon Safaris</title>
   <meta name="description" content="<?php echo htmlspecialchars($page_description); ?>">
-  <link rel="canonical" href="https://pentagonquest.com<?php echo htmlspecialchars($canonicalPath); ?>">
+  <link rel="canonical" href="https://pentagonsafaris.com<?php echo htmlspecialchars($canonicalPath); ?>">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

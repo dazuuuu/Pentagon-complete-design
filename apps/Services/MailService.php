@@ -239,8 +239,8 @@ class MailService
             <td style="background:#121212; padding:32px 40px; text-align:center;">
               <p style="margin:0 0 8px; color:#D4AF37; font-weight:700; font-size:14px;">Pentagon Safaris</p>
               <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">Nairobi, Kenya &middot; Offices in Nairobi, Eldoret and Kericho</p>
-              <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">+254 718 620982 &middot; +254 726 528015 &middot; +1 717 381 1225</p>
-              <p style="margin:0; color:rgba(255,255,255,0.65); font-size:12px;">pentagonquest@gmail.com &middot; www.pentagonquest.com</p>
+              <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">+254 720 090751</p>
+              <p style="margin:0; color:rgba(255,255,255,0.65); font-size:12px;">info@pentagonsafaris.com &middot; www.pentagonsafaris.com</p>
             </td>
           </tr>
         </table>
