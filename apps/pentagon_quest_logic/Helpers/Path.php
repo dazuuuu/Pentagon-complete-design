@@ -8,6 +8,7 @@ class Path
 
     /**
      * Project root directory (contains apps/ and publics/).
+     * On hosting this is the parent of public_html and apps/.
      */
     public static function root(): string
     {
@@ -71,12 +72,12 @@ class Path
 
     public static function vendor(string $file = ''): string
     {
-        return $file === '' ? self::join('vendor') : self::join('vendor', $file);
+        return $file === '' ? self::logic('vendor') : self::logic('vendor', $file);
     }
 
     public static function env(): string
     {
-        return self::join('.env');
+        return self::logic('.env');
     }
 
     public static function publicPath(string ...$segments): string
@@ -89,7 +90,7 @@ class Path
      * Always ends with a trailing slash.
      *
      * Strips /publics and /admin from SCRIPT_NAME so asset URLs stay correct
-     * whether the document root is the repo or the publics/ folder.
+     * whether the document root is the repo or the publics/ folder (public_html).
      */
     public static function baseUrl(): string
     {

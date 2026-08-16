@@ -12,10 +12,10 @@ use App\Services\UpdateService;
 use Dotenv\Dotenv;
 use PDOException;
 
-require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 if (file_exists(Path::env())) {
-    Dotenv::createImmutable(Path::root())->safeLoad();
+    Dotenv::createImmutable(Path::logic())->safeLoad();
 }
 
 echo "Running migrations...\n";

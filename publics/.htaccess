@@ -1,5 +1,6 @@
-# Pentagon Quest — public web root
+# Pentagon Quest — public web root (upload this folder as public_html)
 Options -Indexes
+DirectoryIndex index.php
 
 AddDefaultCharset UTF-8
 

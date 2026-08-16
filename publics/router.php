@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Front controller for `php -S localhost:8080 router.php`
- * when the document root is the repository root.
+ * Front controller for the PHP built-in server.
+ * Run from this folder (the public_html equivalent):
+ *
+ *   php -S localhost:8080 router.php
  */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
-$public = __DIR__ . '/publics';
+$public = __DIR__;
 $path = $public . $uri;
 
 if ($uri !== '/' && is_file($path)) {

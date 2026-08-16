@@ -2,6 +2,7 @@
 
 /**
  * Application bootstrap — loads Composer autoloader and environment.
+ * Composer, vendor, and .env live in this same folder (pentagon_quest_logic).
  */
 
 use App\Helpers\Path;
@@ -14,10 +15,10 @@ if (defined('PENTAGON_BOOTSTRAPPED')) {
 
 define('PENTAGON_BOOTSTRAPPED', true);
 
-require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 if (file_exists(Path::env())) {
-    Dotenv::createImmutable(Path::root())->safeLoad();
+    Dotenv::createImmutable(Path::logic())->safeLoad();
 }
 
 $app = require Path::config('app.php');

@@ -1,5 +1,5 @@
-/vendor/
-.env
+apps/pentagon_quest_logic/vendor/
+apps/pentagon_quest_logic/.env
 *.log
 publics/assets/images/uploads/**
 !publics/assets/images/uploads/**/.gitkeep
