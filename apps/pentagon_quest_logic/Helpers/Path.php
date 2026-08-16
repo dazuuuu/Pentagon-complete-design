@@ -60,6 +60,14 @@ class Path
         return self::logic('database', ...$segments);
     }
 
+    /**
+     * Complete CREATE TABLE files derived from Models/, parent tables first.
+     */
+    public static function requiredMigrations(string ...$segments): string
+    {
+        return self::database('required_migrations', ...$segments);
+    }
+
     public static function updates(string ...$segments): string
     {
         return self::logic('updates', ...$segments);

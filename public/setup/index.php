@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$installed) {
 
         try {
             $setup->prepareDatabase($dbDefaults);
-            $log = $setup->runMigrations();
+            $log = $setup->runMigrations(true);
             $setup->seed();
             $setup->runUpdates();
             $step = 'admin';
@@ -175,7 +175,7 @@ if ($installed) {
     <h1><?php echo $step === 'done' ? 'Setup complete' : 'Install the website'; ?></h1>
     <p class="lead">
       <?php if ($step === 'database'): ?>
-        Connect MySQL, then we will run every migration and seed the site content.
+        Connect MySQL, then we will rebuild the schema from required_migrations (this replaces existing Pentagon Quest tables in that database) and seed the site content.
       <?php elseif ($step === 'admin'): ?>
         Migrations finished. Create the administrator account used at <code>/admin/</code>.
       <?php else: ?>

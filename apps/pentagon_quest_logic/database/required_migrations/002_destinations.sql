@@ -1,0 +1,13 @@
+-- Schema for App\Models\Destination
+CREATE TABLE IF NOT EXISTS destinations (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  description TEXT NULL,
+  image_url VARCHAR(255) NULL,
+  is_featured TINYINT(1) DEFAULT 0,
+  sort_order INT DEFAULT 0,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

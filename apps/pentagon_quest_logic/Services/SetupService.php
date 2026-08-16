@@ -122,17 +122,29 @@ class SetupService
     }
 
     /**
+     * Apply complete CREATE TABLE files from database/required_migrations.
+     * Setup passes $resetSchema = true so leftover mixed/partial tables are dropped first.
+     *
      * @return list<string>
      */
-    public function runMigrations(): array
+    public function runMigrations(bool $resetSchema = false): array
     {
         $db = Database::connection();
         $updateService = new UpdateService();
         $updateService->ensureTrackingTables();
 
+        if ($resetSchema) {
+            $this->resetSchema($db);
+            $updateService->ensureTrackingTables();
+        }
+
         $applied = [];
-        $files = glob(Path::database('migrations') . DIRECTORY_SEPARATOR . '*.sql') ?: [];
+        $files = glob(Path::requiredMigrations() . DIRECTORY_SEPARATOR . '*.sql') ?: [];
         sort($files);
+
+        if ($files === []) {
+            throw new RuntimeException('No SQL files found in database/required_migrations.');
+        }
 
         foreach ($files as $file) {
             $filename = basename($file);
@@ -161,8 +173,9 @@ class SetupService
 
         $db = Database::connection();
         $seedSql = file_get_contents($seedFile) ?: '';
-        foreach (array_filter(array_map('trim', explode(';', $seedSql))) as $statement) {
-            if ($statement === '' || str_starts_with($statement, '--')) {
+        foreach (explode(';', $seedSql) as $raw) {
+            $statement = $this->stripSqlComments(trim($raw));
+            if ($statement === '') {
                 continue;
             }
             try {
@@ -241,6 +254,52 @@ class SetupService
         }
 
         return $parsed;
+    }
+
+    /**
+     * Drop app tables so CREATE IF NOT EXISTS cannot skip an incomplete leftover schema.
+     */
+    private function resetSchema(PDO $db): void
+    {
+        $tables = [
+            'testimonials',
+            'clients',
+            'enquiries',
+            'offers',
+            'experience_images',
+            'destination_images',
+            'tour_images',
+            'tours',
+            'destinations',
+            'gallery',
+            'subscribers',
+            'blog_posts',
+            'service_offerings',
+            'service_tiers',
+            'experiences',
+            'admins',
+            'schema_migrations',
+            'schema_updates',
+        ];
+
+        $db->exec('SET FOREIGN_KEY_CHECKS=0');
+        foreach ($tables as $table) {
+            $db->exec('DROP TABLE IF EXISTS `' . $table . '`');
+        }
+        $db->exec('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+    private function stripSqlComments(string $statement): string
+    {
+        $lines = [];
+        foreach (preg_split('/\R/', $statement) ?: [] as $line) {
+            if (str_starts_with(ltrim($line), '--')) {
+                continue;
+            }
+            $lines[] = $line;
+        }
+
+        return trim(implode("\n", $lines));
     }
 
     private function safeDatabaseName(string $name): string

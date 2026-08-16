@@ -18,8 +18,9 @@ if (file_exists(Path::env())) {
 
 $setup = new SetupService();
 
-echo "Running migrations...\n";
-foreach ($setup->runMigrations() as $file) {
+$reset = !$setup->isInstalled();
+echo $reset ? "Rebuilding schema from required_migrations...\n" : "Running pending required migrations...\n";
+foreach ($setup->runMigrations($reset) as $file) {
     echo "  ✓ {$file}\n";
 }
 

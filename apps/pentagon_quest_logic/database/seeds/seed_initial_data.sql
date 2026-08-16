@@ -1,19 +1,43 @@
--- Seed initial content matching the existing site
+-- Seed initial content matching the existing site.
+-- Tours look up destination_id by name so auto-increment gaps cannot break the FK.
+
 INSERT INTO destinations (name, country, image_url, is_featured, sort_order, status) VALUES
 ('Masai Mara', 'Kenya', 'var(--green)', 1, 1, 'active'),
 ('Serengeti', 'Tanzania', 'var(--charcoal)', 1, 2, 'active'),
 ('Bwindi Forest', 'Uganda', 'var(--green-light)', 1, 3, 'active');
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status) VALUES
-('Masai Mara Great Migration Safari', 1, 'Kenya', 'Wildlife Safari', '7 Days', 1850.00, 'Best Seller', 'Experience the best of Kenya with our expert guides.', 'active'),
-('Serengeti & Ngorongoro Crater', 2, 'Tanzania', 'Wildlife Safari', '9 Days', 2200.00, 'Popular', 'Experience the best of Tanzania with our expert guides.', 'active'),
-('Bwindi Gorilla Trekking Expedition', 3, 'Uganda', 'Gorilla Trekking', '5 Days', 2400.00, 'Adventure', 'Experience the best of Uganda with our expert guides.', 'active'),
-('Kilimanjaro Summit — Machame Route', 2, 'Tanzania', 'Mountain Trek', '8 Days', 2100.00, 'Trekking', 'Experience the best of Tanzania with our expert guides.', 'active'),
-('Rwanda Gorillas & Volcanoes', NULL, 'Rwanda', 'Gorilla Trekking', '4 Days', 2800.00, 'Exclusive', 'Experience the best of Rwanda with our expert guides.', 'active'),
-('Zanzibar Beach & Spice Retreat', 2, 'Tanzania', 'Beach & Coastal', '6 Days', 1400.00, 'Relaxation', 'Experience the best of Tanzania with our expert guides.', 'active'),
-('Amboseli & Tsavo Safari Circuit', 1, 'Kenya', 'Wildlife Safari', '6 Days', 1650.00, 'Value', 'Experience the best of Kenya with our expert guides.', 'active'),
-('Victoria Falls & Botswana Safari', NULL, 'Botswana', 'Wildlife Safari', '10 Days', 3200.00, 'Premium', 'Experience the best of Botswana with our expert guides.', 'active'),
-('Namibia Desert & Sossusvlei Dunes', NULL, 'Namibia', 'Wildlife Safari', '12 Days', 3600.00, 'Luxury', 'Experience the best of Namibia with our expert guides.', 'active');
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+SELECT 'Masai Mara Great Migration Safari', id, 'Kenya', 'Wildlife Safari', '7 Days', 1850.00, 'Best Seller', 'Experience the best of Kenya with our expert guides.', 'active'
+FROM destinations WHERE name = 'Masai Mara' LIMIT 1;
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+SELECT 'Serengeti & Ngorongoro Crater', id, 'Tanzania', 'Wildlife Safari', '9 Days', 2200.00, 'Popular', 'Experience the best of Tanzania with our expert guides.', 'active'
+FROM destinations WHERE name = 'Serengeti' LIMIT 1;
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+SELECT 'Bwindi Gorilla Trekking Expedition', id, 'Uganda', 'Gorilla Trekking', '5 Days', 2400.00, 'Adventure', 'Experience the best of Uganda with our expert guides.', 'active'
+FROM destinations WHERE name = 'Bwindi Forest' LIMIT 1;
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+SELECT 'Kilimanjaro Summit — Machame Route', id, 'Tanzania', 'Mountain Trek', '8 Days', 2100.00, 'Trekking', 'Experience the best of Tanzania with our expert guides.', 'active'
+FROM destinations WHERE name = 'Serengeti' LIMIT 1;
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+VALUES ('Rwanda Gorillas & Volcanoes', NULL, 'Rwanda', 'Gorilla Trekking', '4 Days', 2800.00, 'Exclusive', 'Experience the best of Rwanda with our expert guides.', 'active');
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+SELECT 'Zanzibar Beach & Spice Retreat', id, 'Tanzania', 'Beach & Coastal', '6 Days', 1400.00, 'Relaxation', 'Experience the best of Tanzania with our expert guides.', 'active'
+FROM destinations WHERE name = 'Serengeti' LIMIT 1;
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+SELECT 'Amboseli & Tsavo Safari Circuit', id, 'Kenya', 'Wildlife Safari', '6 Days', 1650.00, 'Value', 'Experience the best of Kenya with our expert guides.', 'active'
+FROM destinations WHERE name = 'Masai Mara' LIMIT 1;
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+VALUES ('Victoria Falls & Botswana Safari', NULL, 'Botswana', 'Wildlife Safari', '10 Days', 3200.00, 'Premium', 'Experience the best of Botswana with our expert guides.', 'active');
+
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
+VALUES ('Namibia Desert & Sossusvlei Dunes', NULL, 'Namibia', 'Wildlife Safari', '12 Days', 3600.00, 'Luxury', 'Experience the best of Namibia with our expert guides.', 'active');
 
 INSERT INTO gallery (title, category, image_url, sort_order, status) VALUES
 ('Lion at Sunrise', 'Wildlife', '', 1, 'active'),
@@ -58,4 +82,3 @@ INSERT INTO service_tiers (name, price, features, is_popular, status, sort_order
 ('Essential', 800.00, 'Shared 4WD Vehicle\nTented Camp Stay\nFull Board Meals', 0, 'active', 1),
 ('Classic', 1800.00, 'Private 4WD Vehicle\nMid-range Lodges\nAll Park Fees', 1, 'active', 2),
 ('Premium', 3500.00, 'Luxury Fly-in Safari\nExclusive Conservancies\nAll-Inclusive Drinks', 0, 'active', 3);
-
