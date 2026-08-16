@@ -4,7 +4,7 @@
  * Front controller for the PHP built-in server.
  * Run from this folder (the public_html equivalent):
  *
- *   php -S localhost:8080 router.php
+ *   php -S localhost:8000 router.php
  */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
@@ -17,6 +17,11 @@ if ($uri !== '/' && is_file($path)) {
 
 if (is_dir($path) && is_file($path . '/index.php')) {
     require $path . '/index.php';
+    return true;
+}
+
+if (preg_match('#^/setup(/index\.php)?/?$#', $uri)) {
+    require $public . '/setup/index.php';
     return true;
 }
 

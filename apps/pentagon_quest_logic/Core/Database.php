@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use App\Helpers\Path;
 use PDO;
 use PDOException;
 
@@ -13,7 +12,14 @@ class Database
     public static function connection(): PDO
     {
         if (self::$instance === null) {
-            $config = require Path::config('database.php');
+            $config = [
+                'host' => $_ENV['DB_HOST'] ?? 'localhost',
+                'port' => (int) ($_ENV['DB_PORT'] ?? 3306),
+                'name' => $_ENV['DB_NAME'] ?? 'pentagon_quest',
+                'user' => $_ENV['DB_USER'] ?? 'root',
+                'pass' => $_ENV['DB_PASS'] ?? '',
+                'charset' => 'utf8mb4',
+            ];
 
             $dsn = sprintf(
                 'mysql:host=%s;port=%d;dbname=%s;charset=%s',
@@ -35,5 +41,10 @@ class Database
         }
 
         return self::$instance;
+    }
+
+    public static function reset(): void
+    {
+        self::$instance = null;
     }
 }

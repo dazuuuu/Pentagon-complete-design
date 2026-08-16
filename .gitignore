@@ -3,6 +3,7 @@
 
 # Secrets and logs
 apps/pentagon_quest_logic/.env
+apps/pentagon_quest_logic/installed.lock
 *.log
 
 # Leftover folders from earlier layouts — do not use

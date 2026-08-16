@@ -26,6 +26,7 @@ AddDefaultCharset UTF-8
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  RewriteRule ^setup/?$ setup/index.php [L,QSA]
   RewriteRule ^api/(.*)$ api/index.php [QSA,L]
   RewriteRule ^handlers/(.*)$ handlers/index.php [QSA,L]
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
