@@ -1,13 +1,15 @@
-# Composer lives only in apps/pentagon_quest_logic
+# Unused leftover vendor at the repo root (do not use)
 /vendor/
-apps/pentagon_quest_logic/vendor/
+
+# Secrets and logs
 apps/pentagon_quest_logic/.env
+*.log
 
 # Leftover folders from earlier layouts — do not use
 /assets/
 /pages/
 /publics/
 
-*.log
+# User uploads generated at runtime
 public/assets/images/uploads/**
 !public/assets/images/uploads/**/.gitkeep
