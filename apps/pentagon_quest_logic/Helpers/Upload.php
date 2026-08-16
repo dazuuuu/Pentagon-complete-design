@@ -14,7 +14,7 @@ class Upload
     private const MAX_BYTES = 8 * 1024 * 1024;
 
     /**
-     * Store a single uploaded file under publics/assets/images/uploads/{subdir}/.
+     * Store a single uploaded file under public/assets/images/uploads/{subdir}/.
      * Returns the web-relative path, or null if no file was submitted.
      * Throws \RuntimeException on invalid/oversized/failed uploads.
      */

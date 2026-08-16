@@ -7,7 +7,7 @@ class Path
     private static ?string $root = null;
 
     /**
-     * Project root directory (contains apps/ and publics/).
+     * Project root directory (contains apps/ and public/).
      * On hosting this is the parent of public_html and apps/.
      */
     public static function root(): string
@@ -67,7 +67,7 @@ class Path
 
     public static function includes(string ...$segments): string
     {
-        return self::join('publics', 'includes', ...$segments);
+        return self::join('public', 'includes', ...$segments);
     }
 
     public static function vendor(string $file = ''): string
@@ -82,21 +82,21 @@ class Path
 
     public static function publicPath(string ...$segments): string
     {
-        return self::join('publics', ...$segments);
+        return self::join('public', ...$segments);
     }
 
     /**
      * Absolute, site-root-relative base URL path.
      * Always ends with a trailing slash.
      *
-     * Strips /publics and /admin from SCRIPT_NAME so asset URLs stay correct
-     * whether the document root is the repo or the publics/ folder (public_html).
+     * Strips /public and /admin from SCRIPT_NAME so asset URLs stay correct
+     * whether the document root is the repo or the public/ folder (public_html).
      */
     public static function baseUrl(): string
     {
         $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php');
         $scriptDir = str_replace('\\', '/', $scriptDir);
-        $scriptDir = preg_replace('#(?:^|/)publics(?:/admin)?$#', '', $scriptDir) ?? $scriptDir;
+        $scriptDir = preg_replace('#(?:^|/)publics?(?:/admin)?$#', '', $scriptDir) ?? $scriptDir;
         $scriptDir = preg_replace('#(?:^|/)admin$#', '', $scriptDir) ?? $scriptDir;
         $scriptDir = rtrim($scriptDir, '/');
 

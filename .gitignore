@@ -1,5 +1,13 @@
+# Composer lives only in apps/pentagon_quest_logic
+/vendor/
 apps/pentagon_quest_logic/vendor/
 apps/pentagon_quest_logic/.env
+
+# Leftover folders from earlier layouts — do not use
+/assets/
+/pages/
+/publics/
+
 *.log
-publics/assets/images/uploads/**
-!publics/assets/images/uploads/**/.gitkeep
+public/assets/images/uploads/**
+!public/assets/images/uploads/**/.gitkeep

@@ -1,6 +1,6 @@
 {
   "name": "pentagon-quest/website",
-  "description": "Pentagon Quest backend — Composer, vendor, and .env live in this package; UI lives in publics/",
+  "description": "Pentagon Quest backend — Composer, vendor, and .env live in this package; UI lives in public/",
   "type": "project",
   "require": {
     "php": ">=8.1",
