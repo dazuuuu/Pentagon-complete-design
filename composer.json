@@ -1,0 +1,15 @@
+{
+  "name": "pentagon-quest/website",
+  "description": "Pentagon Quest website — public UI in publics/, backend in apps/pentagon_quest_logic/",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "phpmailer/phpmailer": "^6.9",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "apps/pentagon_quest_logic/"
+    }
+  }
+}
