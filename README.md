@@ -95,9 +95,15 @@ composer install
 
 ## Local PHP server
 
+Any of these work (the path handler finds `public/` or `public_html/`):
+
 ```bash
-cd public
-php -S localhost:8000 router.php
+php -S localhost:8000 public/router.php
+php -S localhost:8000 -t public public/router.php
+php -S localhost:8000 -t public router.php
+cd public && php -S localhost:8000 router.php
 ```
 
 Then open `http://localhost:8000/setup/`.
+
+If the backend is not next to the web root, set `PQ_APP_PATH` to the absolute path of `pentagon_quest_logic` and optionally `PQ_PUBLIC_PATH` to `public_html`.

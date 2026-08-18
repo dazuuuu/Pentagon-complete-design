@@ -13,7 +13,7 @@ $page_title       = 'Safari Gallery — Pentagon Quest';
 $page_description = 'A visual journey through Africa\'s wildlife and landscapes.';
 $current_page     = 'gallery.php';
 $base_path        = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Page Hero -->
@@ -50,4 +50,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

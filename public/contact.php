@@ -11,7 +11,7 @@ $base_path        = '';
 $form_success     = !empty($_GET['success']);
 $form_error       = !empty($_GET['error']);
 
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Page Hero -->
@@ -90,4 +90,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

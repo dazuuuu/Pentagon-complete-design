@@ -40,7 +40,7 @@ $page_title       = 'Pentagon Quest — Authentic African Safari Expeditions';
 $page_description = 'Discover the heart of Africa with Pentagon Quest. Bespoke 4x4 wildlife expeditions, cultural immersions, and luxury safari experiences.';
 $current_page     = 'index.php';
 $base_path        = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Refined Hero Section -->
@@ -371,4 +371,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

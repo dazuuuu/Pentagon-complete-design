@@ -13,7 +13,7 @@ $page_title       = 'Safari Stories & Insights | Pentagon Quest Blog';
 $page_description = 'Explore the wild heart of Africa through our stories. Photography tips, packing guides, and deep dives into the Great Migration.';
 $current_page     = 'blog.php';
 $base_path        = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Page Hero -->
@@ -79,4 +79,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

@@ -17,7 +17,7 @@ $page_title = $post ? $post['title'] : 'Story Not Found';
 $page_description = $post ? ($post['excerpt'] ?? '') : 'The requested story could not be found.';
 $current_page = 'blog.php';
 $base_path = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <section class="page-hero" style="min-height: 420px; padding: 120px 0 70px;">
@@ -53,4 +53,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

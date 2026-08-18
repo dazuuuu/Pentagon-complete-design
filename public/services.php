@@ -16,7 +16,7 @@ $page_title       = 'Our Services — Pentagon Quest Tours & Safaris';
 $page_description = 'From wildlife game drives to cultural immersions, explore the full range of safari services offered by Pentagon Quest.';
 $current_page     = 'services.php';
 $base_path        = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Page Hero -->
@@ -94,4 +94,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>
