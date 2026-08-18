@@ -1,5 +1,5 @@
 /**
- * Pentagon Quest Tours & Safaris — Main JS
+ * Pentagon Safaris — Main JS
  */
 (function () {
   'use strict';
