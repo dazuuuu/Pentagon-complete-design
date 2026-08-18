@@ -1,0 +1,3 @@
+ALTER TABLE enquiries
+  ADD COLUMN offer_id INT UNSIGNED NULL AFTER interest,
+  ADD FOREIGN KEY (offer_id) REFERENCES offers(id) ON DELETE SET NULL;

@@ -1,0 +1,16 @@
+# Unused leftover vendor at the repo root (do not use)
+/vendor/
+
+# Secrets and logs
+apps/pentagon_quest_logic/.env
+apps/pentagon_quest_logic/installed.lock
+*.log
+
+# Leftover folders from earlier layouts — do not use
+/assets/
+/pages/
+/publics/
+
+# User uploads generated at runtime
+public/assets/images/uploads/**
+!public/assets/images/uploads/**/.gitkeep
