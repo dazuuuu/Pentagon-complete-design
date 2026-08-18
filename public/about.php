@@ -8,7 +8,7 @@ $page_title       = 'Our Story — Pentagon Quest Tours & Safaris';
 $page_description = 'Learn about Pentagon Quest — our history, values, and the people who make your African safari dreams come true.';
 $current_page     = 'about.php';
 $base_path        = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Page Hero -->
@@ -87,4 +87,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

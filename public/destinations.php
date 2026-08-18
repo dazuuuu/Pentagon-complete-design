@@ -39,7 +39,7 @@ $page_title       = 'Safari Destinations — Kenya, Tanzania, Uganda, Rwanda & B
 $page_description = 'Explore Pentagon Quest\'s safari destinations across Africa. From Kenya\'s Masai Mara and Tanzania\'s Serengeti to Uganda\'s gorilla forests and Rwanda\'s volcanic highlands — discover your perfect African adventure.';
 $current_page     = 'destinations.php';
 $base_path        = '';
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Page Hero -->
@@ -164,4 +164,4 @@ include 'includes/header.php';
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>
