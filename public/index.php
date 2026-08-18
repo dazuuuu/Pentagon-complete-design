@@ -7,38 +7,34 @@ require_once __DIR__ . '/includes/bootstrap.php';
 use App\Services\BlogService;
 use App\Services\DestinationService;
 use App\Services\ExperienceService;
+use App\Services\FeaturedPackageService;
 use App\Services\HomeMediaService;
 use App\Services\OfferService;
 use App\Services\TestimonialService;
+use App\Services\TourService;
 
 $destinationService = new DestinationService();
 $testimonialService = new TestimonialService();
 $experienceService = new ExperienceService();
+$featuredPackageService = new FeaturedPackageService();
 $homeMediaService = new HomeMediaService();
 $offerService = new OfferService();
 $blogService = new BlogService();
+$tourService = new TourService();
 
 $destinations = $destinationService->getFeatured(3);
 $testimonials = $testimonialService->getActive();
 $experiences = $experienceService->getActive();
 $offers = array_slice($offerService->getActive(), 0, 2);
 $blogs = array_slice($blogService->getActive(), 0, 3);
+$activeTours = $tourService->getActive();
+$tourTypes = array_values(array_unique(array_filter(array_map(static fn (array $tour): string => (string) ($tour['type'] ?? ''), $activeTours))));
+$tourDurations = array_values(array_unique(array_filter(array_map(static fn (array $tour): string => (string) ($tour['dur'] ?? ''), $activeTours))));
+sort($tourTypes);
+sort($tourDurations);
 $homeHeroVideo = $homeMediaService->heroVideoPath();
 $posters = $homeMediaService->showPosters() ? $homeMediaService->activePosters() : [];
-
-if ($experiences === []) {
-    $experiences = [
-        ['title' => 'The Great Migration Expedition', 'description' => 'A glimpse into the authentic African journeys we craft.'],
-        ['title' => 'Cultural Immersion', 'description' => 'Respectful encounters connected to Africa\'s living culture.'],
-    ];
-}
-
-if ($offers === []) {
-    $offers = [
-        ['title' => 'Early Bird Safari 2026', 'badge' => 'Limited Time', 'description' => 'Book your 2026 safari by December and enjoy 15% off all inclusive packages.', 'target_url' => 'contact'],
-        ['title' => 'Self-Drive Expedition', 'badge' => 'New Launch', 'description' => 'Experience the freedom of Africa with our new fully-equipped 4x4 self-drive rentals.', 'target_url' => 'services'],
-    ];
-}
+$featuredPackageRows = $featuredPackageService->getActive();
 
 $page_title       = 'Pentagon Quest — Authentic African Safari Expeditions';
 $page_description = 'Discover the heart of Africa with Pentagon Quest. Bespoke 4x4 wildlife expeditions, cultural immersions, and luxury safari experiences.';
@@ -93,15 +89,19 @@ include 'includes/header.php';
           <div class="search-field">
             <label>Experience</label>
             <select name="type">
-              <option value="">Wildlife Safari</option>
-              <option>Cultural Tour</option>
-              <option>Gorilla Trekking</option>
+              <option value="">All Experiences</option>
+              <?php foreach ($tourTypes as $type): ?>
+              <option value="<?php echo htmlspecialchars($type); ?>"><?php echo htmlspecialchars($type); ?></option>
+              <?php endforeach; ?>
             </select>
           </div>
           <div class="search-field">
             <label>Duration</label>
             <select name="duration">
-              <option value="">7-14 Days</option>
+              <option value="">Any Duration</option>
+              <?php foreach ($tourDurations as $duration): ?>
+              <option value="<?php echo htmlspecialchars($duration); ?>"><?php echo htmlspecialchars($duration); ?></option>
+              <?php endforeach; ?>
             </select>
           </div>
           <button class="btn-search-go" type="submit">
@@ -113,6 +113,92 @@ include 'includes/header.php';
     </div>
   </div>
 </section>
+
+<?php if ($featuredPackageRows !== []): ?>
+<!-- Featured Packages -->
+<section class="featured-packages-section" id="featured-packages">
+  <div class="container">
+    <div class="featured-packages-head reveal">
+      <div>
+        <h2>Featured packages ready<br>for booking.</h2>
+        <p>Select an offer poster, view the key package details, then call or WhatsApp Pentagon Safaris to reserve your spot.</p>
+      </div>
+      <a class="featured-packages-view" href="#posters">View All Offers</a>
+    </div>
+
+    <div class="featured-package-layout">
+      <div class="package-rate-card reveal">
+        <div class="package-rate-card-top">
+          <div>
+            <span>Pentagon Safaris · The Safari Xplus</span>
+            <h3>Coast Kenya</h3>
+          </div>
+          <a class="package-book-pill" href="<?php echo pq_url('contact.php'); ?>">Book Now</a>
+        </div>
+        <div class="package-rate-scroll">
+          <table class="package-rate-table">
+            <thead>
+              <tr>
+                <th>Hotel</th>
+                <th>Meal</th>
+                <th>Location</th>
+                <th>2 Nights</th>
+                <th>3 Nights</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($featuredPackageRows as $row): ?>
+              <tr>
+                <td><?php echo htmlspecialchars($row['hotel']); ?></td>
+                <td><?php echo htmlspecialchars($row['meal']); ?></td>
+                <td><?php echo htmlspecialchars($row['location']); ?></td>
+                <td><?php echo htmlspecialchars($row['two_nights_price']); ?></td>
+                <td><?php echo htmlspecialchars($row['three_nights_price']); ?></td>
+              </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+        <div class="package-card-footer">@pentagonsafaris | +254720 090751 | info@pentagonsafaris.com | www.pentagonsafaris.com</div>
+      </div>
+
+      <div class="package-summary reveal">
+        <span class="section-tag">Coast Kenya Offers</span>
+        <h3>Beach hotel packages for Watamu, Diani, and Bamburi.</h3>
+        <p>Compare coastal hotel stays for two or three nights, including all-inclusive and breakfast options across selected resorts.</p>
+        <table class="package-summary-table">
+          <thead>
+            <tr>
+              <th>Offer</th>
+              <th>Detail</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach (array_slice($featuredPackageRows, 0, 4) as $row): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($row['hotel']); ?></td>
+              <td><?php echo htmlspecialchars($row['location']); ?></td>
+              <td>From <?php echo htmlspecialchars($row['two_nights_price']); ?></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+        <div class="package-actions">
+          <a class="package-action-primary" href="tel:+254720090751">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.08 5.18 2 2 0 0 1 5.06 3h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L9 10.64a16 16 0 0 0 4.36 4.36l1.2-1.2a2 2 0 0 1 2.11-.45c.84.27 1.71.47 2.61.59A2 2 0 0 1 22 16.92z"/></svg>
+            Call to Book
+          </a>
+          <a class="package-action-secondary" href="https://wa.me/254720090751">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.71 8.71 0 0 1-4.19-1.06L3 21l1.78-5.53A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 
 <?php if ($posters !== []): ?>
 <!-- Homepage Posters -->
@@ -129,20 +215,33 @@ include 'includes/header.php';
     </div>
     <div class="poster-grid">
       <?php foreach ($posters as $poster): ?>
-      <?php
-        $posterUrl = str_starts_with($poster['image_url'], 'http') ? $poster['image_url'] : $base . ltrim($poster['image_url'], '/');
-        $linkUrl = trim((string) ($poster['link_url'] ?? ''));
-        $posterInner = '<img src="' . htmlspecialchars($posterUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($poster['title'], ENT_QUOTES, 'UTF-8') . '"><div class="poster-caption"><h3>' . htmlspecialchars($poster['title']) . '</h3><p>' . htmlspecialchars($poster['description'] ?? '') . '</p></div>';
-      ?>
-      <?php if ($linkUrl !== ''): ?>
-        <a class="poster-card reveal" href="<?php echo htmlspecialchars(str_starts_with($linkUrl, 'http') ? $linkUrl : pq_url($linkUrl)); ?>"><?php echo $posterInner; ?></a>
-      <?php else: ?>
-        <article class="poster-card reveal"><?php echo $posterInner; ?></article>
-      <?php endif; ?>
+      <?php $posterUrl = str_starts_with($poster['image_url'], 'http') ? $poster['image_url'] : $base . ltrim($poster['image_url'], '/'); ?>
+      <button
+        class="poster-card reveal"
+        type="button"
+        data-poster-lightbox
+        data-poster-src="<?php echo htmlspecialchars($posterUrl, ENT_QUOTES, 'UTF-8'); ?>"
+        data-poster-title="<?php echo htmlspecialchars($poster['title'], ENT_QUOTES, 'UTF-8'); ?>"
+        data-poster-description="<?php echo htmlspecialchars($poster['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+        aria-label="Open <?php echo htmlspecialchars($poster['title'], ENT_QUOTES, 'UTF-8'); ?> poster"
+      >
+        <img src="<?php echo htmlspecialchars($posterUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($poster['title'], ENT_QUOTES, 'UTF-8'); ?>">
+        <div class="poster-caption"><h3><?php echo htmlspecialchars($poster['title']); ?></h3><p><?php echo htmlspecialchars($poster['description'] ?? ''); ?></p></div>
+      </button>
       <?php endforeach; ?>
     </div>
   </div>
 </section>
+<div class="poster-lightbox" id="posterLightbox" aria-hidden="true">
+  <button class="poster-lightbox-close" type="button" aria-label="Close poster">&times;</button>
+  <div class="poster-lightbox-dialog" role="dialog" aria-modal="true" aria-labelledby="posterLightboxTitle">
+    <img src="" alt="" id="posterLightboxImage">
+    <div class="poster-lightbox-copy">
+      <h3 id="posterLightboxTitle"></h3>
+      <p id="posterLightboxDescription"></p>
+    </div>
+  </div>
+</div>
 <?php endif; ?>
 
 <!-- 1. Popular Destinations -->

@@ -19,7 +19,7 @@ class ServiceTierService
         try {
             return array_map([$this, 'formatForView'], $this->model->allActive());
         } catch (PDOException) {
-            return $this->fallbackTiers();
+            return [];
         }
     }
 
@@ -52,14 +52,5 @@ class ServiceTierService
     {
         $tier['feature_list'] = array_filter(array_map('trim', explode("\n", $tier['features'] ?? '')));
         return $tier;
-    }
-
-    private function fallbackTiers(): array
-    {
-        return [
-            ['id' => 0, 'name' => 'Essential', 'price' => 800, 'is_popular' => 0, 'feature_list' => ['Shared 4WD Vehicle', 'Tented Camp Stay', 'Full Board Meals']],
-            ['id' => 0, 'name' => 'Classic', 'price' => 1800, 'is_popular' => 1, 'feature_list' => ['Private 4WD Vehicle', 'Mid-range Lodges', 'All Park Fees']],
-            ['id' => 0, 'name' => 'Premium', 'price' => 3500, 'is_popular' => 0, 'feature_list' => ['Luxury Fly-in Safari', 'Exclusive Conservancies', 'All-Inclusive Drinks']],
-        ];
     }
 }

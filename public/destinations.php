@@ -4,10 +4,36 @@
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 
+use App\Services\DestinationService;
 use App\Services\TourService;
 
+$destinationService = new DestinationService();
 $tourService = new TourService();
+$destinations = $destinationService->getActive();
 $tours = $tourService->getActive();
+$selectedDestination = trim($_GET['destination'] ?? '');
+$selectedType = trim($_GET['type'] ?? '');
+$selectedDuration = trim($_GET['duration'] ?? '');
+
+$countries = array_values(array_unique(array_filter(array_map(static fn (array $d): string => (string) ($d['country'] ?? ''), $destinations))));
+$tourTypes = array_values(array_unique(array_filter(array_map(static fn (array $t): string => (string) ($t['type'] ?? ''), $tours))));
+$tourDurations = array_values(array_unique(array_filter(array_map(static fn (array $t): string => (string) ($t['dur'] ?? ''), $tours))));
+sort($countries);
+sort($tourTypes);
+sort($tourDurations);
+
+$filteredTours = array_values(array_filter($tours, static function (array $tour) use ($selectedDestination, $selectedType, $selectedDuration): bool {
+    if ($selectedDestination !== '' && strcasecmp((string) ($tour['dest'] ?? ''), $selectedDestination) !== 0) {
+        return false;
+    }
+    if ($selectedType !== '' && strcasecmp((string) ($tour['type'] ?? ''), $selectedType) !== 0) {
+        return false;
+    }
+    if ($selectedDuration !== '' && strcasecmp((string) ($tour['dur'] ?? ''), $selectedDuration) !== 0) {
+        return false;
+    }
+    return true;
+}));
 
 $page_title       = 'Safari Destinations — Kenya, Tanzania, Uganda, Rwanda & Beyond';
 $page_description = 'Explore Pentagon Quest\'s safari destinations across Africa. From Kenya\'s Masai Mara and Tanzania\'s Serengeti to Uganda\'s gorilla forests and Rwanda\'s volcanic highlands — discover your perfect African adventure.';
@@ -29,18 +55,27 @@ include 'includes/header.php';
         <label>Destination</label>
         <select name="destination">
           <option value="">All Countries</option>
+          <?php foreach ($countries as $country): ?>
+          <option value="<?php echo htmlspecialchars($country); ?>" <?php echo $selectedDestination === $country ? 'selected' : ''; ?>><?php echo htmlspecialchars($country); ?></option>
+          <?php endforeach; ?>
         </select>
       </div>
       <div class="search-field">
         <label>Tour Type</label>
         <select name="type">
           <option value="">All Types</option>
+          <?php foreach ($tourTypes as $type): ?>
+          <option value="<?php echo htmlspecialchars($type); ?>" <?php echo $selectedType === $type ? 'selected' : ''; ?>><?php echo htmlspecialchars($type); ?></option>
+          <?php endforeach; ?>
         </select>
       </div>
       <div class="search-field">
-        <label>Budget</label>
-        <select name="budget">
-          <option value="">Any Budget</option>
+        <label>Duration</label>
+        <select name="duration">
+          <option value="">Any Duration</option>
+          <?php foreach ($tourDurations as $duration): ?>
+          <option value="<?php echo htmlspecialchars($duration); ?>" <?php echo $selectedDuration === $duration ? 'selected' : ''; ?>><?php echo htmlspecialchars($duration); ?></option>
+          <?php endforeach; ?>
         </select>
       </div>
       <button class="btn-search-go" type="submit">
@@ -50,11 +85,49 @@ include 'includes/header.php';
   </div>
 </section>
 
+<!-- Destinations Grid -->
+<section class="section-pad">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-tag">Where to go</span>
+      <h2 class="section-title-modern">Published Destinations</h2>
+    </div>
+    <div class="row g-4">
+      <?php foreach ($destinations as $destination): ?>
+      <div class="col-lg-4 col-md-6 reveal">
+        <div class="blog-card">
+          <div style="height: 280px; <?php echo pq_cover_style($destination['image_url'] ?? '', 'var(--green)'); ?>; position: relative;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.72));"></div>
+            <div style="position: absolute; bottom: 24px; left: 24px; right: 24px; color: #fff;">
+              <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--gold); letter-spacing: .12em;"><?php echo htmlspecialchars($destination['country']); ?></span>
+              <h3 style="margin: 8px 0 10px; color:#fff;"><?php echo htmlspecialchars($destination['name']); ?></h3>
+              <p style="color: rgba(255,255,255,0.76); font-size: .92rem; margin: 0;"><?php echo htmlspecialchars(mb_strimwidth($destination['description'] ?? '', 0, 120, '...')); ?></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; ?>
+      <?php if ($destinations === []): ?>
+      <div class="col-12">
+        <div class="blog-card p-5 text-center">
+          <h3 class="mb-2">No destinations published yet</h3>
+          <p class="mb-0">Add active destinations from the admin Destinations menu.</p>
+        </div>
+      </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</section>
+
 <!-- Tours Grid -->
 <section class="section-pad">
   <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-tag">Tours</span>
+      <h2 class="section-title-modern">Matching Tours</h2>
+    </div>
     <div class="row g-4">
-      <?php foreach ($tours as $tour): ?>
+      <?php foreach ($filteredTours as $tour): ?>
       <div class="col-lg-4 col-md-6 reveal">
         <div style="background: #fff; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition);" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
           <div style="height: 230px; <?php echo pq_cover_style($tour['image_url'] ?? '', 'var(--green)'); ?>; position: relative;">
@@ -79,6 +152,14 @@ include 'includes/header.php';
         </div>
       </div>
       <?php endforeach; ?>
+      <?php if ($filteredTours === []): ?>
+      <div class="col-12">
+        <div class="blog-card p-5 text-center">
+          <h3 class="mb-2">No tours match this selection</h3>
+          <p class="mb-0">Adjust the filters or add active tours from the admin Tours menu.</p>
+        </div>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>

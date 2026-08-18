@@ -45,6 +45,14 @@ include 'includes/header.php';
         </div>
       </div>
       <?php endforeach; ?>
+      <?php if ($services === []): ?>
+      <div class="col-12">
+        <div class="blog-card p-5 text-center">
+          <h3 class="mb-2">No services published yet</h3>
+          <p class="mb-0">Add active service offerings from the admin Services menu.</p>
+        </div>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -74,6 +82,14 @@ include 'includes/header.php';
         </div>
       </div>
       <?php endforeach; ?>
+      <?php if ($tiers === []): ?>
+      <div class="col-12">
+        <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <h3 style="color:#fff;">No pricing tiers published yet</h3>
+          <p style="color: rgba(255,255,255,0.65); margin: 0;">Add active pricing tiers from the admin Services menu.</p>
+        </div>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>

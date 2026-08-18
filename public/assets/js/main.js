@@ -62,6 +62,55 @@
     revealEls.forEach(function (el) { revealObserver.observe(el); });
   }
 
+  /* ── Poster lightbox ── */
+  const posterLightbox = document.getElementById('posterLightbox');
+  const posterLightboxImage = document.getElementById('posterLightboxImage');
+  const posterLightboxTitle = document.getElementById('posterLightboxTitle');
+  const posterLightboxDescription = document.getElementById('posterLightboxDescription');
+  const posterLightboxClose = posterLightbox ? posterLightbox.querySelector('.poster-lightbox-close') : null;
+
+  function closePosterLightbox() {
+    if (!posterLightbox) return;
+    posterLightbox.classList.remove('is-open');
+    posterLightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (posterLightbox && posterLightboxImage && posterLightboxTitle && posterLightboxDescription) {
+    document.querySelectorAll('[data-poster-lightbox]').forEach(function (poster) {
+      poster.addEventListener('click', function () {
+        const src = poster.getAttribute('data-poster-src') || '';
+        const title = poster.getAttribute('data-poster-title') || 'Featured poster';
+        const description = poster.getAttribute('data-poster-description') || '';
+
+        posterLightboxImage.src = src;
+        posterLightboxImage.alt = title;
+        posterLightboxTitle.textContent = title;
+        posterLightboxDescription.textContent = description;
+        posterLightbox.classList.add('is-open');
+        posterLightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        if (posterLightboxClose) posterLightboxClose.focus();
+      });
+    });
+
+    if (posterLightboxClose) {
+      posterLightboxClose.addEventListener('click', closePosterLightbox);
+    }
+
+    posterLightbox.addEventListener('click', function (event) {
+      if (event.target === posterLightbox) {
+        closePosterLightbox();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && posterLightbox.classList.contains('is-open')) {
+        closePosterLightbox();
+      }
+    });
+  }
+
   /* ── Contact form validation ── */
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {

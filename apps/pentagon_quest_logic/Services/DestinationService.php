@@ -23,7 +23,7 @@ class DestinationService
         try {
             return $this->model->allActive();
         } catch (PDOException) {
-            return $this->fallbackFeatured();
+            return [];
         }
     }
 
@@ -36,7 +36,7 @@ class DestinationService
             }
             return $items;
         } catch (PDOException) {
-            return array_slice($this->fallbackFeatured(), 0, $limit);
+            return [];
         }
     }
 
@@ -117,14 +117,5 @@ class DestinationService
 
         $this->model->update($id, array_merge($destination, ['image_url' => $path]));
         return $path;
-    }
-
-    private function fallbackFeatured(): array
-    {
-        return [
-            ['id' => null, 'name' => 'Masai Mara', 'country' => 'Kenya', 'image_url' => 'var(--green)'],
-            ['id' => null, 'name' => 'Serengeti', 'country' => 'Tanzania', 'image_url' => 'var(--charcoal)'],
-            ['id' => null, 'name' => 'Bwindi Forest', 'country' => 'Uganda', 'image_url' => 'var(--green-light)'],
-        ];
     }
 }

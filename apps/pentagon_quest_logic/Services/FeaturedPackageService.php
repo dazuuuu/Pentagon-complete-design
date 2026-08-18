@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\Offering;
+use App\Models\FeaturedPackage;
 use PDOException;
 
-class OfferingService
+class FeaturedPackageService
 {
-    private Offering $model;
+    private FeaturedPackage $model;
 
     public function __construct()
     {
-        $this->model = new Offering();
+        $this->model = new FeaturedPackage();
     }
 
     public function getActive(): array
@@ -28,11 +28,6 @@ class OfferingService
         return $this->model->all();
     }
 
-    public function find(int $id): ?array
-    {
-        return $this->model->find($id);
-    }
-
     public function create(array $data): int
     {
         return $this->model->create($data);
@@ -46,14 +41,5 @@ class OfferingService
     public function delete(int $id): bool
     {
         return $this->model->delete($id);
-    }
-
-    public function count(): int
-    {
-        try {
-            return $this->model->count();
-        } catch (PDOException) {
-            return 0;
-        }
     }
 }

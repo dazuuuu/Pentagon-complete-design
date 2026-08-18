@@ -15,6 +15,7 @@ $initials = strtoupper(substr($adminName ?: 'A', 0, 1));
 $navItems = [
   'dashboard' => ['label' => 'Dashboard', 'href' => 'dashboard.php', 'icon' => 'bi-grid-1x2-fill'],
   'homepage' => ['label' => 'Homepage Media', 'href' => 'homepage.php', 'icon' => 'bi-house-heart-fill'],
+  'posters' => ['label' => 'Posters', 'href' => 'posters.php', 'icon' => 'bi-file-image-fill'],
   'destinations' => ['label' => 'Destinations', 'href' => 'destinations.php', 'icon' => 'bi-geo-alt-fill'],
   'tours' => ['label' => 'Tours', 'href' => 'tours.php', 'icon' => 'bi-compass-fill'],
   'gallery' => ['label' => 'Gallery', 'href' => 'gallery.php', 'icon' => 'bi-images'],
@@ -23,6 +24,7 @@ $navItems = [
   'blog' => ['label' => 'Blog', 'href' => 'blog.php', 'icon' => 'bi-journal-richtext'],
   'services' => ['label' => 'Services', 'href' => 'services.php', 'icon' => 'bi-briefcase-fill'],
   'offers' => ['label' => 'Offers', 'href' => 'offers.php', 'icon' => 'bi-tags-fill'],
+  'packages' => ['label' => 'Packages', 'href' => 'packages.php', 'icon' => 'bi-table'],
   'enquiries' => ['label' => 'Enquiries', 'href' => 'enquiries.php', 'icon' => 'bi-envelope-fill'],
   'clients' => ['label' => 'Clients', 'href' => 'clients.php', 'icon' => 'bi-people-fill'],
   'subscribers' => ['label' => 'Subscribers', 'href' => 'subscribers.php', 'icon' => 'bi-megaphone-fill'],

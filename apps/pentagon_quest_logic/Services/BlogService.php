@@ -20,7 +20,7 @@ class BlogService
         try {
             return $this->model->allActive();
         } catch (PDOException) {
-            return $this->fallbackPosts();
+            return [];
         }
     }
 
@@ -84,17 +84,5 @@ class BlogService
 
         $this->model->update($id, array_merge($post, ['image_url' => $path]));
         return $path;
-    }
-
-    private function fallbackPosts(): array
-    {
-        return [
-            ['id' => 0, 'title' => 'Top 10 Safari Photography Tips', 'category' => 'Photography', 'excerpt' => 'Capture the perfect shot with our expert guide to wildlife photography in the African bush.', 'image_url' => '', 'created_at' => '2026-07-15'],
-            ['id' => 0, 'title' => 'What to Pack for Your First Safari', 'category' => 'Travel Guide', 'excerpt' => 'From neutral clothing to essential gear, here is everything you need to pack for your adventure.', 'image_url' => '', 'created_at' => '2026-07-10'],
-            ['id' => 0, 'title' => 'Understanding the Great Migration', 'category' => 'Wildlife', 'excerpt' => "A deep dive into one of nature's greatest spectacles: the annual trek of millions of wildebeest.", 'image_url' => '', 'created_at' => '2026-07-05'],
-            ['id' => 0, 'title' => 'The Hidden Gems of Namibia', 'category' => 'Destinations', 'excerpt' => 'Beyond the dunes: discovering the secret landscapes and wildlife of the Namib desert.', 'image_url' => '', 'created_at' => '2026-06-28'],
-            ['id' => 0, 'title' => 'A Guide to Cultural Etiquette', 'category' => 'Culture', 'excerpt' => 'How to respectfully engage with local communities during your African safari.', 'image_url' => '', 'created_at' => '2026-06-20'],
-            ['id' => 0, 'title' => 'Sustainable Safari: Our Commitment', 'category' => 'Sustainability', 'excerpt' => "Learn how Pentagon Quest is working to preserve Africa's wild spaces for future generations.", 'image_url' => '', 'created_at' => '2026-06-15'],
-        ];
     }
 }

@@ -42,11 +42,19 @@ include 'includes/header.php';
             <span style="font-size: 0.8rem; opacity: 0.5; display: block; margin-bottom: 10px;"><?php echo htmlspecialchars(pq_format_date($post['created_at'] ?? $post['date'] ?? '')); ?></span>
             <h3 style="font-size: 1.25rem; margin-bottom: 15px;"><?php echo htmlspecialchars($post['title']); ?></h3>
             <p style="font-size: 0.95rem; margin-bottom: 25px;"><?php echo htmlspecialchars($post['excerpt'] ?? $post['desc'] ?? ''); ?></p>
-            <a href="<?php echo pq_url('contact.php'); ?>" style="font-weight: 700; color: var(--gold); font-size: 0.9rem; border-bottom: 2px solid var(--gold); padding-bottom: 2px;">Read Full Story</a>
+            <a href="<?php echo pq_url('blog-detail.php?id=' . (int) $post['id']); ?>" style="font-weight: 700; color: var(--gold); font-size: 0.9rem; border-bottom: 2px solid var(--gold); padding-bottom: 2px;">Read Full Story</a>
           </div>
         </div>
       </div>
       <?php endforeach; ?>
+      <?php if ($posts === []): ?>
+      <div class="col-12">
+        <div class="blog-card p-5 text-center">
+          <h3 class="mb-2">No blog posts yet</h3>
+          <p class="mb-0">Publish active posts from the admin Blog menu and they will appear here.</p>
+        </div>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>
