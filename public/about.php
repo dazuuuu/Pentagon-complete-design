@@ -51,7 +51,7 @@ include 'includes/header.php';
           </div>
         </div>
 
-        <a href="<?php echo $base; ?>contact.php" class="btn-hero btn-hero-primary" style="display: inline-flex;">Start Your Journey</a>
+        <a href="<?php echo pq_url('contact.php'); ?>" class="btn-hero btn-hero-primary" style="display: inline-flex;">Start Your Journey</a>
       </div>
     </div>
   </div>

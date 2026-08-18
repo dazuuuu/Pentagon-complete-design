@@ -5,10 +5,14 @@
 require_once __DIR__ . '/bootstrap.php';
 
 use App\Helpers\Path;
+use App\Services\HomeMediaService;
 
 $base = !empty($base_path) ? rtrim($base_path, '/') . '/' : Path::baseUrl();
 $cssPath = Path::publicPath('assets', 'css', 'style.css');
 $cssVersion = is_file($cssPath) ? filemtime($cssPath) : time();
+$homeMediaService = new HomeMediaService();
+$siteLogo = $homeMediaService->logoPath();
+$showPosterNav = $homeMediaService->showPosters() && $homeMediaService->activePosters() !== [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,8 +43,8 @@ $cssVersion = is_file($cssPath) ? filemtime($cssPath) : time();
   <div class="container d-flex justify-content-between align-items-center">
 
     <!-- Brand / Logo -->
-    <a class="navbar-brand" href="<?php echo $base; ?>index.php">
-      <img src="<?php echo $base; ?>assets/images/logo.png" alt="Pentagon Quest Logo">
+    <a class="navbar-brand" href="<?php echo pq_url(); ?>">
+      <img src="<?php echo $base . ltrim($siteLogo, '/'); ?>" alt="Pentagon Quest Logo">
     </a>
 
     <!-- Navigation Pill (Centered on Desktop) -->
@@ -48,22 +52,30 @@ $cssVersion = is_file($cssPath) ? filemtime($cssPath) : time();
       <div class="nav-pill-container">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link <?php echo ($current_page === 'index.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>index.php">Home</a>
+            <a class="nav-link <?php echo ($current_page === 'index.php') ? 'active' : ''; ?>" href="<?php echo pq_url(); ?>">Home</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle <?php echo ($current_page === 'destinations.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>destinations.php">Destinations</a>
+            <a class="nav-link dropdown-toggle <?php echo ($current_page === 'destinations.php') ? 'active' : ''; ?>" href="<?php echo pq_url('destinations.php'); ?>">Destinations</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <?php echo ($current_page === 'services.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>services.php">What We Do</a>
+            <a class="nav-link <?php echo ($current_page === 'services.php') ? 'active' : ''; ?>" href="<?php echo pq_url('services.php'); ?>">What We Do</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <?php echo ($current_page === 'blog.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>blog.php">Blog</a>
+            <a class="nav-link <?php echo ($current_page === 'blog.php') ? 'active' : ''; ?>" href="<?php echo pq_url('blog.php'); ?>">Blog</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <?php echo ($current_page === 'gallery.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>gallery.php">Gallery</a>
+            <a class="nav-link <?php echo ($current_page === 'gallery.php') ? 'active' : ''; ?>" href="<?php echo pq_url('gallery.php'); ?>">Gallery</a>
           </li>
+          <?php if ($showPosterNav): ?>
           <li class="nav-item">
-            <a class="nav-link <?php echo ($current_page === 'about.php') ? 'active' : ''; ?>" href="<?php echo $base; ?>about.php">Our Story</a>
+            <a class="nav-link" href="<?php echo pq_url('index.php#posters'); ?>">Posters</a>
+          </li>
+          <?php endif; ?>
+          <li class="nav-item">
+            <a class="nav-link <?php echo ($current_page === 'about.php') ? 'active' : ''; ?>" href="<?php echo pq_url('about.php'); ?>">Our Story</a>
+          </li>
+          <li class="nav-item d-lg-none">
+            <a class="nav-link <?php echo ($current_page === 'contact.php') ? 'active' : ''; ?>" href="<?php echo pq_url('contact.php'); ?>">Contact Us</a>
           </li>
         </ul>
       </div>
@@ -71,7 +83,7 @@ $cssVersion = is_file($cssPath) ? filemtime($cssPath) : time();
 
     <!-- Contact Button -->
     <div class="d-none d-lg-block">
-      <a href="<?php echo $base; ?>contact.php" class="btn-contact-pill">Contact Us</a>
+      <a href="<?php echo pq_url('contact.php'); ?>" class="btn-contact-pill">Contact Us</a>
     </div>
 
     <!-- Mobile Toggler -->

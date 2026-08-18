@@ -42,7 +42,7 @@ include 'includes/header.php';
             <span style="font-size: 0.8rem; opacity: 0.5; display: block; margin-bottom: 10px;"><?php echo htmlspecialchars(pq_format_date($post['created_at'] ?? $post['date'] ?? '')); ?></span>
             <h3 style="font-size: 1.25rem; margin-bottom: 15px;"><?php echo htmlspecialchars($post['title']); ?></h3>
             <p style="font-size: 0.95rem; margin-bottom: 25px;"><?php echo htmlspecialchars($post['excerpt'] ?? $post['desc'] ?? ''); ?></p>
-            <a href="<?php echo $base; ?>contact.php" style="font-weight: 700; color: var(--gold); font-size: 0.9rem; border-bottom: 2px solid var(--gold); padding-bottom: 2px;">Read Full Story</a>
+            <a href="<?php echo pq_url('contact.php'); ?>" style="font-weight: 700; color: var(--gold); font-size: 0.9rem; border-bottom: 2px solid var(--gold); padding-bottom: 2px;">Read Full Story</a>
           </div>
         </div>
       </div>
@@ -59,10 +59,10 @@ include 'includes/header.php';
         <span class="section-tag">Newsletter</span>
         <h2 class="section-title-modern">Join the Pride</h2>
         <p>Get monthly safari inspiration, wildlife updates, and exclusive offers delivered to your inbox.</p>
-        <form class="mt-4 d-flex gap-2" method="POST" action="<?php echo $base; ?>handlers/index.php">
+        <form class="mt-4 d-flex gap-2" method="POST" action="<?php echo pq_url('handlers/index.php'); ?>">
           <?php echo pq_csrf_field(); ?>
           <input type="hidden" name="_action" value="subscribe">
-          <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($base . 'blog.php'); ?>">
+          <input type="hidden" name="redirect" value="<?php echo htmlspecialchars(pq_url('blog.php')); ?>">
           <input type="email" name="email" placeholder="Your email address" required style="flex: 1; padding: 15px 25px; border-radius: 40px; border: 1px solid #ddd; outline: none;">
           <button type="submit" class="btn-hero btn-hero-primary" style="border: none;">Subscribe</button>
         </form>

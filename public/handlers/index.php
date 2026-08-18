@@ -46,7 +46,7 @@ if ($path === 'contact') {
         exit;
     }
 
-    $redirect = $resolveRedirect($_POST['redirect'] ?? Path::baseUrl() . 'contact.php');
+    $redirect = $resolveRedirect($_POST['redirect'] ?? pq_url('contact.php'));
     $param = $result['success'] ? 'success=1' : 'error=1';
     $separator = str_contains($redirect, '?') ? '&' : '?';
     header('Location: ' . $redirect . $separator . $param);

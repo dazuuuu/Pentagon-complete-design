@@ -7,12 +7,14 @@ require_once __DIR__ . '/includes/bootstrap.php';
 use App\Services\BlogService;
 use App\Services\DestinationService;
 use App\Services\ExperienceService;
+use App\Services\HomeMediaService;
 use App\Services\OfferService;
 use App\Services\TestimonialService;
 
 $destinationService = new DestinationService();
 $testimonialService = new TestimonialService();
 $experienceService = new ExperienceService();
+$homeMediaService = new HomeMediaService();
 $offerService = new OfferService();
 $blogService = new BlogService();
 
@@ -21,6 +23,8 @@ $testimonials = $testimonialService->getActive();
 $experiences = $experienceService->getActive();
 $offers = array_slice($offerService->getActive(), 0, 2);
 $blogs = array_slice($blogService->getActive(), 0, 3);
+$homeHeroVideo = $homeMediaService->heroVideoPath();
+$posters = $homeMediaService->showPosters() ? $homeMediaService->activePosters() : [];
 
 if ($experiences === []) {
     $experiences = [
@@ -31,8 +35,8 @@ if ($experiences === []) {
 
 if ($offers === []) {
     $offers = [
-        ['title' => 'Early Bird Safari 2026', 'badge' => 'Limited Time', 'description' => 'Book your 2026 safari by December and enjoy 15% off all inclusive packages.', 'target_url' => 'contact.php'],
-        ['title' => 'Self-Drive Expedition', 'badge' => 'New Launch', 'description' => 'Experience the freedom of Africa with our new fully-equipped 4x4 self-drive rentals.', 'target_url' => 'services.php'],
+        ['title' => 'Early Bird Safari 2026', 'badge' => 'Limited Time', 'description' => 'Book your 2026 safari by December and enjoy 15% off all inclusive packages.', 'target_url' => 'contact'],
+        ['title' => 'Self-Drive Expedition', 'badge' => 'New Launch', 'description' => 'Experience the freedom of Africa with our new fully-equipped 4x4 self-drive rentals.', 'target_url' => 'services'],
     ];
 }
 
@@ -45,22 +49,30 @@ include 'includes/header.php';
 
 <!-- Refined Hero Section -->
 <section class="modern-hero">
-  <div class="hero-video-bg"></div>
+  <div class="hero-video-bg">
+    <video autoplay muted loop playsinline poster="<?php echo $base; ?>assets/images/start-here.jpeg">
+      <?php
+        $heroVideoExt = strtolower(pathinfo($homeHeroVideo, PATHINFO_EXTENSION));
+        $heroVideoType = $heroVideoExt === 'webm' ? 'webm' : ($heroVideoExt === 'mov' ? 'quicktime' : 'mp4');
+      ?>
+      <source src="<?php echo $base . ltrim($homeHeroVideo, '/'); ?>" type="video/<?php echo $heroVideoType; ?>">
+    </video>
+  </div>
 
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-10">
 
         <div class="reveal">
-          <h1 class="hero-title" style="font-family: var(--font-display);">Bespoke African Safari Expeditions</h1>
-          <p class="hero-subtitle">Crafting authentic journeys across the wild heart of the continent.</p>
+          <div class="hero-eyebrow">Groups, Couples, Families</div>
+          <h1 class="hero-title" style="font-family: var(--font-display);">We make every safari a wonderful experience &amp; memories.</h1>
 
           <div class="hero-btns">
-            <a href="<?php echo $base; ?>destinations.php" class="btn-hero btn-hero-primary">
-              Explore Destinations
+            <a href="<?php echo pq_url('destinations.php'); ?>" class="btn-hero btn-hero-primary">
+              Plan a custom Tour
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
-            <a href="<?php echo $base; ?>contact.php" class="btn-hero" style="background: #fff; color: #121212;">
+            <a href="<?php echo pq_url('contact.php'); ?>" class="btn-hero" style="background: #fff; color: #121212;">
               Plan Your Journey
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -68,7 +80,7 @@ include 'includes/header.php';
         </div>
 
         <!-- Search Bar -->
-        <form class="search-row-wrap reveal" style="transition-delay: 0.2s;" action="<?php echo $base; ?>destinations.php" method="get">
+        <form class="search-row-wrap reveal" style="transition-delay: 0.2s;" action="<?php echo pq_url('destinations.php'); ?>" method="get">
           <div class="search-field">
             <label>Destination</label>
             <select name="destination">
@@ -101,6 +113,37 @@ include 'includes/header.php';
     </div>
   </div>
 </section>
+
+<?php if ($posters !== []): ?>
+<!-- Homepage Posters -->
+<section class="section-pad posters-section" id="posters">
+  <div class="container">
+    <div class="row align-items-end mb-5">
+      <div class="col-lg-7">
+        <span class="section-tag">Featured Posters</span>
+        <h2 class="section-title-modern">Safari Highlights</h2>
+      </div>
+      <div class="col-lg-5 text-lg-end">
+        <p>Seasonal trips, signature experiences, and handpicked safari moments.</p>
+      </div>
+    </div>
+    <div class="poster-grid">
+      <?php foreach ($posters as $poster): ?>
+      <?php
+        $posterUrl = str_starts_with($poster['image_url'], 'http') ? $poster['image_url'] : $base . ltrim($poster['image_url'], '/');
+        $linkUrl = trim((string) ($poster['link_url'] ?? ''));
+        $posterInner = '<img src="' . htmlspecialchars($posterUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($poster['title'], ENT_QUOTES, 'UTF-8') . '"><div class="poster-caption"><h3>' . htmlspecialchars($poster['title']) . '</h3><p>' . htmlspecialchars($poster['description'] ?? '') . '</p></div>';
+      ?>
+      <?php if ($linkUrl !== ''): ?>
+        <a class="poster-card reveal" href="<?php echo htmlspecialchars(str_starts_with($linkUrl, 'http') ? $linkUrl : pq_url($linkUrl)); ?>"><?php echo $posterInner; ?></a>
+      <?php else: ?>
+        <article class="poster-card reveal"><?php echo $posterInner; ?></article>
+      <?php endif; ?>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 
 <!-- 1. Popular Destinations -->
 <section class="section-pad">
@@ -188,7 +231,7 @@ include 'includes/header.php';
           <span class="section-tag" style="color: <?php echo $i === 1 ? 'var(--green)' : 'var(--gold-soft)'; ?>;"><?php echo htmlspecialchars($offer['badge'] ?? 'Offer'); ?></span>
           <h3 style="<?php echo $i === 1 ? '' : 'color: #fff; '; ?>margin-bottom: 15px;"><?php echo htmlspecialchars($offer['title']); ?></h3>
           <p style="<?php echo $i === 1 ? 'opacity: 0.8; ' : 'color: rgba(255,255,255,0.7); '; ?>margin-bottom: 25px;"><?php echo htmlspecialchars($offer['description'] ?? ''); ?></p>
-          <a href="<?php echo $base . ltrim($offer['target_url'] ?? 'contact.php', '/'); ?>" class="btn-hero" style="<?php echo $i === 1 ? 'background: var(--charcoal); color: #fff;' : 'background: #fff; color: var(--charcoal);'; ?>"><?php echo $i === 1 ? 'Learn More' : 'Claim Offer'; ?></a>
+          <a href="<?php echo pq_url($offer['target_url'] ?? 'contact.php'); ?>" class="btn-hero" style="<?php echo $i === 1 ? 'background: var(--charcoal); color: #fff;' : 'background: #fff; color: var(--charcoal);'; ?>"><?php echo $i === 1 ? 'Learn More' : 'Claim Offer'; ?></a>
         </div>
       </div>
       <?php endforeach; ?>
@@ -205,7 +248,7 @@ include 'includes/header.php';
         <h2 class="section-title-modern">Latest from the Blog</h2>
       </div>
       <div class="col-lg-6 text-lg-end">
-        <a href="<?php echo $base; ?>blog.php" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View All Stories</a>
+        <a href="<?php echo pq_url('blog.php'); ?>" style="color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">View All Stories</a>
       </div>
     </div>
     <div class="row g-4">
@@ -220,7 +263,7 @@ include 'includes/header.php';
           <div style="padding: 24px;">
             <span style="font-size: 0.75rem; opacity: 0.5;"><?php echo htmlspecialchars(pq_format_date($b['created_at'] ?? $b['date'] ?? '')); ?></span>
             <h4 style="margin: 10px 0 20px; font-size: 1.1rem;"><?php echo htmlspecialchars($b['title']); ?></h4>
-            <a href="<?php echo $base; ?>blog.php" style="font-weight: 700; color: var(--gold); font-size: 0.9rem;">Read Story →</a>
+            <a href="<?php echo pq_url('blog.php'); ?>" style="font-weight: 700; color: var(--gold); font-size: 0.9rem;">Read Story →</a>
           </div>
         </div>
       </div>

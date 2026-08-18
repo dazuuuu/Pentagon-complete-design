@@ -26,6 +26,16 @@ AddDefaultCharset UTF-8
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.php[?\s] [NC]
+  RewriteRule ^(.*/)?index\.php$ /$1 [R=301,L]
+
+  RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[?\s] [NC]
+  RewriteRule ^(.+)\.php$ /$1 [R=301,L,NE]
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
   RewriteRule ^setup/?$ setup/index.php [L,QSA]
   RewriteRule ^api/(.*)$ api/index.php [QSA,L]
   RewriteRule ^handlers/(.*)$ handlers/index.php [QSA,L]
@@ -37,4 +47,7 @@ AddDefaultCharset UTF-8
   RewriteRule ^gallery/?$ gallery.php [L,QSA]
   RewriteRule ^blog/?$ blog.php [L,QSA]
   RewriteRule ^contact/?$ contact.php [L,QSA]
+
+  RewriteCond %{REQUEST_FILENAME}.php -f
+  RewriteRule ^(.+?)/?$ $1.php [L,QSA]
 </IfModule>

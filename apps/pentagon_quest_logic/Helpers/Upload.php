@@ -13,6 +13,14 @@ class Upload
 
     private const MAX_BYTES = 8 * 1024 * 1024;
 
+    private const ALLOWED_VIDEO_MIME = [
+        'video/mp4' => 'mp4',
+        'video/webm' => 'webm',
+        'video/quicktime' => 'mov',
+    ];
+
+    private const MAX_VIDEO_BYTES = 80 * 1024 * 1024;
+
     /**
      * Store a single uploaded file under public/assets/images/uploads/{subdir}/.
      * Returns the web-relative path, or null if no file was submitted.
@@ -87,6 +95,50 @@ class Upload
         }
 
         return $paths;
+    }
+
+    /**
+     * Store a single uploaded video under public/assets/videos/uploads/{subdir}/.
+     * Returns the web-relative path, or null if no file was submitted.
+     */
+    public static function storeVideo(array $file, string $subdir): ?string
+    {
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            throw new \RuntimeException('Video upload failed (error code ' . $file['error'] . ').');
+        }
+
+        if ($file['size'] > self::MAX_VIDEO_BYTES) {
+            throw new \RuntimeException('Video exceeds the 80MB size limit.');
+        }
+
+        if (!is_uploaded_file($file['tmp_name'])) {
+            throw new \RuntimeException('Invalid video upload.');
+        }
+
+        $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+        if (!isset(self::ALLOWED_VIDEO_MIME[$mime])) {
+            throw new \RuntimeException('Only MP4, WEBM, or MOV videos are allowed.');
+        }
+
+        $ext = self::ALLOWED_VIDEO_MIME[$mime];
+        $filename = bin2hex(random_bytes(16)) . '.' . $ext;
+        $subdir = trim($subdir, '/\\');
+        $destDir = Path::publicPath('assets', 'videos', 'uploads', $subdir);
+
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0755, true);
+        }
+
+        $destPath = $destDir . DIRECTORY_SEPARATOR . $filename;
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+            throw new \RuntimeException('Could not save uploaded video.');
+        }
+
+        return 'assets/videos/uploads/' . $subdir . '/' . $filename;
     }
 
     /**

@@ -14,6 +14,7 @@ $initials = strtoupper(substr($adminName ?: 'A', 0, 1));
 
 $navItems = [
   'dashboard' => ['label' => 'Dashboard', 'href' => 'dashboard.php', 'icon' => 'bi-grid-1x2-fill'],
+  'homepage' => ['label' => 'Homepage Media', 'href' => 'homepage.php', 'icon' => 'bi-house-heart-fill'],
   'destinations' => ['label' => 'Destinations', 'href' => 'destinations.php', 'icon' => 'bi-geo-alt-fill'],
   'tours' => ['label' => 'Tours', 'href' => 'tours.php', 'icon' => 'bi-compass-fill'],
   'gallery' => ['label' => 'Gallery', 'href' => 'gallery.php', 'icon' => 'bi-images'],

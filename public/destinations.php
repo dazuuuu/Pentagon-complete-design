@@ -73,7 +73,7 @@ include 'includes/header.php';
             <p style="font-size: 0.9rem; margin-bottom: 20px;"><?php echo htmlspecialchars($tour['description'] !== '' ? $tour['description'] : 'Experience the best of ' . $tour['dest'] . ' with our expert guides.'); ?></p>
             <div class="d-flex justify-content-between align-items-center">
               <span style="font-size: 1.2rem; font-weight: 800;"><?php echo htmlspecialchars($tour['price']); ?></span>
-              <a href="<?php echo $base; ?>contact.php" style="font-weight: 600; font-size: 0.9rem; color: var(--green);">Book Now →</a>
+              <a href="<?php echo pq_url('contact.php'); ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--green);">Book Now →</a>
             </div>
           </div>
         </div>

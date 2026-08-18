@@ -7,9 +7,22 @@
  *   php -S localhost:8000 router.php
  */
 
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
+$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$uri = urldecode(parse_url($requestUri, PHP_URL_PATH) ?: '/');
+$query = parse_url($requestUri, PHP_URL_QUERY);
+$suffix = $query ? '?' . $query : '';
 $public = __DIR__;
 $path = $public . $uri;
+
+if ($uri === '/index.php') {
+    header('Location: /' . $suffix, true, 301);
+    return true;
+}
+
+if (preg_match('#^/(.+)\.php$#', $uri, $match)) {
+    header('Location: /' . $match[1] . $suffix, true, 301);
+    return true;
+}
 
 if ($uri !== '/' && is_file($path)) {
     return false;

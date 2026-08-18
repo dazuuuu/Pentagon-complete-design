@@ -70,7 +70,7 @@ include 'includes/header.php';
             <li>✓ <?php echo htmlspecialchars($feature); ?></li>
             <?php endforeach; ?>
           </ul>
-          <a href="<?php echo $base; ?>contact.php" class="btn-hero <?php echo !empty($tier['is_popular']) ? '' : 'btn-hero-primary'; ?>" style="<?php echo !empty($tier['is_popular']) ? 'background: var(--charcoal); color: #fff; ' : ''; ?>width: 100%; justify-content: center;"><?php echo !empty($tier['is_popular']) ? 'Most Popular' : 'Get Quote'; ?></a>
+          <a href="<?php echo pq_url('contact.php'); ?>" class="btn-hero <?php echo !empty($tier['is_popular']) ? '' : 'btn-hero-primary'; ?>" style="<?php echo !empty($tier['is_popular']) ? 'background: var(--charcoal); color: #fff; ' : ''; ?>width: 100%; justify-content: center;"><?php echo !empty($tier['is_popular']) ? 'Most Popular' : 'Get Quote'; ?></a>
         </div>
       </div>
       <?php endforeach; ?>

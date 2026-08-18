@@ -2,8 +2,11 @@
 /**
  * Pentagon Quest — Shared Footer Component
  */
+use App\Services\HomeMediaService;
+
 $base = $base ?? \App\Helpers\Path::baseUrl();
-$subscribeAction = $base . 'handlers/index.php';
+$subscribeAction = pq_url('handlers/index.php');
+$footerLogo = (new HomeMediaService())->logoPath();
 ?>
 
 <!-- Footer -->
@@ -22,7 +25,7 @@ $subscribeAction = $base . 'handlers/index.php';
   <div class="container" style="position: relative; z-index: 1;">
     <div class="row g-5">
       <div class="col-lg-4">
-        <img src="<?php echo $base; ?>assets/images/logo.png" alt="Logo" style="height: 40px; filter: brightness(0) invert(1); margin-bottom: 24px;">
+        <img src="<?php echo $base . ltrim($footerLogo, '/'); ?>" alt="Logo" style="height: 40px; margin-bottom: 24px;">
         <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 32px;">Crafting extraordinary African journeys since 2010. Experience the wild heart of the continent with our expert guides.</p>
         <div class="d-flex gap-3">
           <a href="#" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; transition: var(--transition);" onmouseover="this.style.background='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.1)'">
@@ -37,19 +40,19 @@ $subscribeAction = $base . 'handlers/index.php';
       <div class="col-lg-2 col-md-4">
         <h4 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Explore</h4>
         <ul class="list-unstyled" style="display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem; opacity: 0.7;">
-          <li><a href="<?php echo $base; ?>index.php">Home</a></li>
-          <li><a href="<?php echo $base; ?>destinations.php">Destinations</a></li>
-          <li><a href="<?php echo $base; ?>services.php">What We Do</a></li>
-          <li><a href="<?php echo $base; ?>gallery.php">Gallery</a></li>
+          <li><a href="<?php echo pq_url(); ?>">Home</a></li>
+          <li><a href="<?php echo pq_url('destinations.php'); ?>">Destinations</a></li>
+          <li><a href="<?php echo pq_url('services.php'); ?>">What We Do</a></li>
+          <li><a href="<?php echo pq_url('gallery.php'); ?>">Gallery</a></li>
         </ul>
       </div>
 
       <div class="col-lg-2 col-md-4">
         <h4 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Support</h4>
         <ul class="list-unstyled" style="display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem; opacity: 0.7;">
-          <li><a href="<?php echo $base; ?>about.php">Our Story</a></li>
-          <li><a href="<?php echo $base; ?>contact.php">Contact Us</a></li>
-          <li><a href="<?php echo $base; ?>blog.php">Blog</a></li>
+          <li><a href="<?php echo pq_url('about.php'); ?>">Our Story</a></li>
+          <li><a href="<?php echo pq_url('contact.php'); ?>">Contact Us</a></li>
+          <li><a href="<?php echo pq_url('blog.php'); ?>">Blog</a></li>
         </ul>
       </div>
 

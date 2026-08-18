@@ -41,10 +41,10 @@ include 'includes/header.php';
           </div>
           <?php endif; ?>
 
-          <form method="POST" action="<?php echo $base; ?>handlers/index.php">
+          <form method="POST" action="<?php echo pq_url('handlers/index.php'); ?>">
             <?php echo pq_csrf_field(); ?>
             <input type="hidden" name="_action" value="contact">
-            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($base . 'contact.php'); ?>">
+            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars(pq_url('contact.php')); ?>">
             <div class="row g-3">
               <div class="col-md-6">
                 <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 8px;">Full Name</label>

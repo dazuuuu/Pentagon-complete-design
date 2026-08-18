@@ -237,7 +237,7 @@ if ($installed) {
       <div class="ok">Pentagon Quest is installed. Setup is locked so it cannot be run again unless you delete <code>apps/pentagon_quest_logic/installed.lock</code>.</div>
       <div class="actions">
         <a class="btn" href="<?php echo htmlspecialchars($base); ?>">Open the website</a>
-        <a class="btn secondary" href="<?php echo htmlspecialchars($base); ?>admin/login.php">Open admin login</a>
+        <a class="btn secondary" href="<?php echo htmlspecialchars(pq_url('admin/login.php')); ?>">Open admin login</a>
       </div>
     <?php endif; ?>
   </div>

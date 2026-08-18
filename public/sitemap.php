@@ -7,12 +7,12 @@ $base = rtrim(($_ENV['APP_URL'] ?? 'https://pentagonquest.com'), '/');
 $today = date('Y-m-d');
 $pages = [
     ['path' => '/', 'priority' => '1.0', 'changefreq' => 'weekly'],
-    ['path' => '/destinations.php', 'priority' => '0.9', 'changefreq' => 'weekly'],
-    ['path' => '/services.php', 'priority' => '0.8', 'changefreq' => 'monthly'],
-    ['path' => '/gallery.php', 'priority' => '0.7', 'changefreq' => 'monthly'],
-    ['path' => '/blog.php', 'priority' => '0.7', 'changefreq' => 'weekly'],
-    ['path' => '/about.php', 'priority' => '0.8', 'changefreq' => 'monthly'],
-    ['path' => '/contact.php', 'priority' => '0.9', 'changefreq' => 'monthly'],
+    ['path' => '/destinations', 'priority' => '0.9', 'changefreq' => 'weekly'],
+    ['path' => '/services', 'priority' => '0.8', 'changefreq' => 'monthly'],
+    ['path' => '/gallery', 'priority' => '0.7', 'changefreq' => 'monthly'],
+    ['path' => '/blog', 'priority' => '0.7', 'changefreq' => 'weekly'],
+    ['path' => '/about', 'priority' => '0.8', 'changefreq' => 'monthly'],
+    ['path' => '/contact', 'priority' => '0.9', 'changefreq' => 'monthly'],
 ];
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
