@@ -2,53 +2,53 @@
 -- Tours look up destination_id by name so auto-increment gaps cannot break the FK.
 
 INSERT INTO destinations (name, country, image_url, is_featured, sort_order, status) VALUES
-('Masai Mara', 'Kenya', 'var(--green)', 1, 1, 'active'),
-('Serengeti', 'Tanzania', 'var(--charcoal)', 1, 2, 'active'),
-('Bwindi Forest', 'Uganda', 'var(--green-light)', 1, 3, 'active');
+('Masai Mara', 'Kenya', 'assets/images/start-here.jpeg', 1, 1, 'active'),
+('Serengeti', 'Tanzania', 'assets/images/start-here-old.jpeg', 1, 2, 'active'),
+('Bwindi Forest', 'Uganda', 'assets/images/climbing-mt-kenya.jpg', 1, 3, 'active');
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-SELECT 'Masai Mara Great Migration Safari', id, 'Kenya', 'Wildlife Safari', '7 Days', 1850.00, 'Best Seller', 'Experience the best of Kenya with our expert guides.', 'active'
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+SELECT 'Masai Mara Great Migration Safari', id, 'Kenya', 'Wildlife Safari', '7 Days', 1850.00, 'Best Seller', 'Experience the best of Kenya with our expert guides.', 'assets/images/start-here.jpeg', 'active'
 FROM destinations WHERE name = 'Masai Mara' LIMIT 1;
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-SELECT 'Serengeti & Ngorongoro Crater', id, 'Tanzania', 'Wildlife Safari', '9 Days', 2200.00, 'Popular', 'Experience the best of Tanzania with our expert guides.', 'active'
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+SELECT 'Serengeti & Ngorongoro Crater', id, 'Tanzania', 'Wildlife Safari', '9 Days', 2200.00, 'Popular', 'Experience the best of Tanzania with our expert guides.', 'assets/images/start-here-old.jpeg', 'active'
 FROM destinations WHERE name = 'Serengeti' LIMIT 1;
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-SELECT 'Bwindi Gorilla Trekking Expedition', id, 'Uganda', 'Gorilla Trekking', '5 Days', 2400.00, 'Adventure', 'Experience the best of Uganda with our expert guides.', 'active'
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+SELECT 'Bwindi Gorilla Trekking Expedition', id, 'Uganda', 'Gorilla Trekking', '5 Days', 2400.00, 'Adventure', 'Experience the best of Uganda with our expert guides.', 'assets/images/climbing-mt-kenya.jpg', 'active'
 FROM destinations WHERE name = 'Bwindi Forest' LIMIT 1;
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-SELECT 'Kilimanjaro Summit — Machame Route', id, 'Tanzania', 'Mountain Trek', '8 Days', 2100.00, 'Trekking', 'Experience the best of Tanzania with our expert guides.', 'active'
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+SELECT 'Kilimanjaro Summit — Machame Route', id, 'Tanzania', 'Mountain Trek', '8 Days', 2100.00, 'Trekking', 'Experience the best of Tanzania with our expert guides.', 'assets/images/climbing-mt-kenya.jpg', 'active'
 FROM destinations WHERE name = 'Serengeti' LIMIT 1;
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-VALUES ('Rwanda Gorillas & Volcanoes', NULL, 'Rwanda', 'Gorilla Trekking', '4 Days', 2800.00, 'Exclusive', 'Experience the best of Rwanda with our expert guides.', 'active');
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+VALUES ('Rwanda Gorillas & Volcanoes', NULL, 'Rwanda', 'Gorilla Trekking', '4 Days', 2800.00, 'Exclusive', 'Experience the best of Rwanda with our expert guides.', 'assets/images/climbing-mt-kenya.jpg', 'active');
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-SELECT 'Zanzibar Beach & Spice Retreat', id, 'Tanzania', 'Beach & Coastal', '6 Days', 1400.00, 'Relaxation', 'Experience the best of Tanzania with our expert guides.', 'active'
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+SELECT 'Zanzibar Beach & Spice Retreat', id, 'Tanzania', 'Beach & Coastal', '6 Days', 1400.00, 'Relaxation', 'Experience the best of Tanzania with our expert guides.', 'assets/images/start-here-old.jpeg', 'active'
 FROM destinations WHERE name = 'Serengeti' LIMIT 1;
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-SELECT 'Amboseli & Tsavo Safari Circuit', id, 'Kenya', 'Wildlife Safari', '6 Days', 1650.00, 'Value', 'Experience the best of Kenya with our expert guides.', 'active'
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+SELECT 'Amboseli & Tsavo Safari Circuit', id, 'Kenya', 'Wildlife Safari', '6 Days', 1650.00, 'Value', 'Experience the best of Kenya with our expert guides.', 'assets/images/start-here.jpeg', 'active'
 FROM destinations WHERE name = 'Masai Mara' LIMIT 1;
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-VALUES ('Victoria Falls & Botswana Safari', NULL, 'Botswana', 'Wildlife Safari', '10 Days', 3200.00, 'Premium', 'Experience the best of Botswana with our expert guides.', 'active');
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+VALUES ('Victoria Falls & Botswana Safari', NULL, 'Botswana', 'Wildlife Safari', '10 Days', 3200.00, 'Premium', 'Experience the best of Botswana with our expert guides.', 'assets/images/start-here.jpeg', 'active');
 
-INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, status)
-VALUES ('Namibia Desert & Sossusvlei Dunes', NULL, 'Namibia', 'Wildlife Safari', '12 Days', 3600.00, 'Luxury', 'Experience the best of Namibia with our expert guides.', 'active');
+INSERT INTO tours (title, destination_id, country, tour_type, duration, price, badge, description, image_url, status)
+VALUES ('Namibia Desert & Sossusvlei Dunes', NULL, 'Namibia', 'Wildlife Safari', '12 Days', 3600.00, 'Luxury', 'Experience the best of Namibia with our expert guides.', 'assets/images/climbing-mt-kenya.jpg', 'active');
 
 INSERT INTO gallery (title, category, image_url, sort_order, status) VALUES
-('Lion at Sunrise', 'Wildlife', '', 1, 'active'),
-('Elephant Herd', 'Wildlife', '', 2, 'active'),
-('Kilimanjaro Peak', 'Landscape', '', 3, 'active'),
-('Maasai Culture', 'Culture', '', 4, 'active'),
-('Gorilla Trek', 'Adventure', '', 5, 'active'),
-('Zanzibar Shores', 'Coastal', '', 6, 'active'),
-('Serengeti Plains', 'Wildlife', '', 7, 'active'),
-('Victoria Falls', 'Landscape', '', 8, 'active'),
-('Cheetah Hunt', 'Wildlife', '', 9, 'active');
+('Lion at Sunrise', 'Wildlife', 'assets/images/start-here.jpeg', 1, 'active'),
+('Elephant Herd', 'Wildlife', 'assets/images/start-here.jpeg', 2, 'active'),
+('Kilimanjaro Peak', 'Landscape', 'assets/images/climbing-mt-kenya.jpg', 3, 'active'),
+('Maasai Culture', 'Culture', 'assets/images/pentagon-director.jpeg', 4, 'active'),
+('Gorilla Trek', 'Adventure', 'assets/images/climbing-mt-kenya.jpg', 5, 'active'),
+('Zanzibar Shores', 'Coastal', 'assets/images/start-here-old.jpeg', 6, 'active'),
+('Serengeti Plains', 'Wildlife', 'assets/images/start-here-old.jpeg', 7, 'active'),
+('Victoria Falls', 'Landscape', 'assets/images/start-here.jpeg', 8, 'active'),
+('Cheetah Hunt', 'Wildlife', 'assets/images/start-here.jpeg', 9, 'active');
 
 INSERT INTO testimonials (author_name, author_location, quote, accent_color, sort_order, status) VALUES
 ('Sarah Jenkins', 'United Kingdom', 'The most authentic safari experience I''ve ever had. Pentagon Quest''s attention to detail and knowledge of the land is unparalleled.', 'gold', 1, 'active'),
@@ -62,13 +62,13 @@ INSERT INTO offers (title, description, badge, status, sort_order) VALUES
 ('Early Bird Safari 2026', 'Book your 2026 safari by December and enjoy 15% off all inclusive packages.', 'Limited Time', 'active', 1),
 ('Self-Drive Expedition', 'Experience the freedom of Africa with our new fully-equipped 4x4 self-drive rentals.', 'New Launch', 'active', 2);
 
-INSERT INTO blog_posts (title, category, excerpt, status, sort_order) VALUES
-('Top 10 Safari Photography Tips', 'Photography', 'Capture the perfect shot with our expert guide to wildlife photography in the African bush.', 'active', 1),
-('What to Pack for Your First Safari', 'Travel Guide', 'From neutral clothing to essential gear, here is everything you need to pack for your adventure.', 'active', 2),
-('Understanding the Great Migration', 'Wildlife', 'A deep dive into one of nature''s greatest spectacles: the annual trek of millions of wildebeest.', 'active', 3),
-('The Hidden Gems of Namibia', 'Destinations', 'Beyond the dunes: discovering the secret landscapes and wildlife of the Namib desert.', 'active', 4),
-('A Guide to Cultural Etiquette', 'Culture', 'How to respectfully engage with local communities during your African safari.', 'active', 5),
-('Sustainable Safari: Our Commitment', 'Sustainability', 'Learn how Pentagon Quest is working to preserve Africa''s wild spaces for future generations.', 'active', 6);
+INSERT INTO blog_posts (title, category, excerpt, image_url, status, sort_order) VALUES
+('Top 10 Safari Photography Tips', 'Photography', 'Capture the perfect shot with our expert guide to wildlife photography in the African bush.', 'assets/images/start-here.jpeg', 'active', 1),
+('What to Pack for Your First Safari', 'Travel Guide', 'From neutral clothing to essential gear, here is everything you need to pack for your adventure.', 'assets/images/start-here-old.jpeg', 'active', 2),
+('Understanding the Great Migration', 'Wildlife', 'A deep dive into one of nature''s greatest spectacles: the annual trek of millions of wildebeest.', 'assets/images/start-here.jpeg', 'active', 3),
+('The Hidden Gems of Namibia', 'Destinations', 'Beyond the dunes: discovering the secret landscapes and wildlife of the Namib desert.', 'assets/images/climbing-mt-kenya.jpg', 'active', 4),
+('A Guide to Cultural Etiquette', 'Culture', 'How to respectfully engage with local communities during your African safari.', 'assets/images/pentagon-director.jpeg', 'active', 5),
+('Sustainable Safari: Our Commitment', 'Sustainability', 'Learn how Pentagon Quest is working to preserve Africa''s wild spaces for future generations.', 'assets/images/start-here.jpeg', 'active', 6);
 
 INSERT INTO service_offerings (title, description, status, sort_order) VALUES
 ('Wildlife Game Drives', 'Track the Big Five across Africa''s finest reserves with expert naturalist guides.', 'active', 1),

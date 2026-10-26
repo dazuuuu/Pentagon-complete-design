@@ -1,10 +1,18 @@
 <?php
 
+/**
+ * Database connection — THE single place to edit when you host this site.
+ *
+ * No .env file is used anywhere in this app. Open this file directly on
+ * your server (cPanel File Manager, FTP, SSH — whatever you have) and
+ * replace the values below with your live database credentials.
+ */
+
 return [
-    'host' => $_ENV['DB_HOST'] ?? 'localhost',
-    'port' => (int) ($_ENV['DB_PORT'] ?? 3306),
-    'name' => $_ENV['DB_NAME'] ?? 'pentagon_quest',
-    'user' => $_ENV['DB_USER'] ?? 'root',
-    'pass' => $_ENV['DB_PASS'] ?? '',
+    'host' => 'localhost',
+    'port' => 3306,
+    'name' => 'pentagon_quest',
+    'user' => 'root',
+    'pass' => '',
     'charset' => 'utf8mb4',
 ];

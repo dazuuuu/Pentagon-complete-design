@@ -33,6 +33,25 @@ class ExperienceService
         return $experiences;
     }
 
+    /**
+     * Every picture from active experiences, newest experience first, each
+     * carrying its (optional) experience title/description as a caption.
+     */
+    public function getActivePhotos(): array
+    {
+        $photos = [];
+        foreach ($this->getActive() as $experience) {
+            foreach ($experience['images'] as $image) {
+                $photos[] = [
+                    'image_path' => $image['image_path'],
+                    'title' => trim((string) ($experience['title'] ?? '')),
+                    'description' => trim((string) ($experience['description'] ?? '')),
+                ];
+            }
+        }
+        return $photos;
+    }
+
     public function getAll(): array
     {
         return $this->model->all();
@@ -46,6 +65,31 @@ class ExperienceService
     public function create(array $data): int
     {
         return $this->model->create($data);
+    }
+
+    /**
+     * One-step upload: pictures are required, title/description optional.
+     * Files are validated and stored before the experience row is created so
+     * a failed upload never leaves an empty experience behind.
+     */
+    public function createWithImages(array $data, array $files): int
+    {
+        $paths = Upload::storeMany($files, 'experiences');
+        if ($paths === []) {
+            throw new \RuntimeException('Please choose at least one picture.');
+        }
+
+        $id = $this->model->create(array_merge($data, ['title' => trim((string) ($data['title'] ?? ''))]));
+        foreach ($paths as $i => $path) {
+            $this->imageModel->create($id, $path, $i);
+        }
+        return $id;
+    }
+
+    public function setStatus(int $id, string $status): bool
+    {
+        $experience = $this->model->find($id);
+        return $experience ? $this->model->update($id, array_merge($experience, ['status' => $status])) : false;
     }
 
     public function update(int $id, array $data): bool

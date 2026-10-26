@@ -4,153 +4,245 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 
 use App\Core\Auth;
 use App\Helpers\Session;
+use App\Helpers\Upload;
 use App\Services\ExperienceService;
 
 Auth::requireAuth();
 Session::start();
 
 $service = new ExperienceService();
+$view = $_GET['view'] ?? 'list';
+$editId = (int) ($_GET['id'] ?? 0);
+
+if (Upload::postTooLarge()) {
+    Session::flash('error', Upload::postTooLargeMessage());
+    header('Location: experiences.php' . ($view === 'edit' && $editId ? '?view=edit&id=' . $editId : ''));
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] ?? '')) {
+    $action = isset($_POST['delete_id']) ? 'delete' : (isset($_POST['delete_image']) ? 'delete_image' : ($_POST['action'] ?? ''));
+    $id = (int) ($_POST['id'] ?? 0);
+    $redirect = 'experiences.php';
+
+    $data = [
+        'title' => trim($_POST['title'] ?? ''),
+        'description' => trim($_POST['description'] ?? ''),
+        'status' => ($_POST['status'] ?? 'active') === 'inactive' ? 'inactive' : 'active',
+        'sort_order' => (int) ($_POST['sort_order'] ?? 0),
+    ];
+
+    try {
+        if ($action === 'create') {
+            $service->createWithImages($data, $_FILES['images'] ?? []);
+            Session::flash('message', 'Pictures uploaded and published to the homepage.');
+        } elseif ($action === 'update') {
+            $service->update($id, $data);
+            $service->addImages($id, $_FILES['images'] ?? []);
+            Session::flash('message', 'Experience updated.');
+            $redirect = 'experiences.php?view=edit&id=' . $id;
+        } elseif ($action === 'delete_image') {
+            $service->deleteImage((int) $_POST['delete_image']);
+            Session::flash('message', 'Picture removed.');
+            $redirect = 'experiences.php?view=edit&id=' . $id;
+        } elseif ($action === 'delete') {
+            $service->delete((int) $_POST['delete_id']);
+            Session::flash('message', 'Experience deleted.');
+        } elseif ($action === 'bulk') {
+            $ids = array_map('intval', (array) ($_POST['ids'] ?? []));
+            $bulk = $_POST['bulk_action'] ?? '';
+            foreach ($ids as $itemId) {
+                match ($bulk) {
+                    'delete' => $service->delete($itemId),
+                    'publish' => $service->setStatus($itemId, 'active'),
+                    'hide' => $service->setStatus($itemId, 'inactive'),
+                    default => null,
+                };
+            }
+            if ($ids && $bulk) {
+                Session::flash('message', count($ids) . ' experience(s) updated.');
+            }
+        }
+    } catch (Throwable $e) {
+        Session::flash('error', $e->getMessage());
+        if ($action === 'update' || $action === 'delete_image') {
+            $redirect = 'experiences.php?view=edit&id=' . $id;
+        }
+    }
+
+    header('Location: ' . $redirect);
+    exit;
+}
+
 $message = Session::flash('message');
 $error = Session::flash('error');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] ?? '')) {
-  $action = $_POST['action'] ?? '';
-
-  try {
-    if ($action === 'upload_images') {
-      $service->addImages((int) $_POST['id'], $_FILES['images'] ?? []);
-      Session::flash('message', 'Images uploaded.');
-    } elseif ($action === 'delete_image') {
-      $service->deleteImage((int) $_POST['image_id']);
-      Session::flash('message', 'Image removed.');
-    } else {
-      $data = [
-        'title' => trim($_POST['title'] ?? ''),
-        'description' => trim($_POST['description'] ?? ''),
-        'status' => $_POST['status'] ?? 'active',
-        'sort_order' => (int) ($_POST['sort_order'] ?? 0),
-      ];
-
-      if ($action === 'create') {
-        $id = $service->create($data);
-        if (!empty($_FILES['images']['name'][0] ?? '')) {
-          $service->addImages($id, $_FILES['images']);
-        }
-        Session::flash('message', 'Experience created.');
-      } elseif ($action === 'update') {
-        $service->update((int) $_POST['id'], $data);
-        Session::flash('message', 'Experience updated.');
-      } elseif ($action === 'delete') {
-        $service->delete((int) $_POST['id']);
-        Session::flash('message', 'Experience deleted.');
-      }
+$experience = null;
+if ($view === 'edit') {
+    $experience = $editId ? $service->find($editId) : null;
+    if (!$experience) {
+        $view = 'list';
+        $error = $error ?: 'That experience no longer exists.';
     }
-  } catch (\RuntimeException $e) {
-    Session::flash('error', $e->getMessage());
-  }
-
-  header('Location: experiences.php');
-  exit;
 }
 
-$items = $service->getAll();
+$items = $view === 'list' ? $service->getAll() : [];
 $pageTitle = 'Experiences';
 $currentAdminPage = 'experiences';
 include __DIR__ . '/includes/header.php';
 ?>
-<div class="content-card p-4">
-  <h2 class="mb-3">Manage Previous Experiences</h2>
-  <p class="text-muted small">Shown on the homepage: the latest experience appears in the big feature box, older ones in the small boxes. Add multiple pictures per experience — they display as a slider.</p>
-  <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
-  <?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 
-  <form method="POST" enctype="multipart/form-data" class="row g-2 mb-4">
-    <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-    <input type="hidden" name="action" value="create">
-    <div class="col-md-6"><input class="form-control" name="title" placeholder="Title" required></div>
-    <div class="col-md-2"><input class="form-control" name="sort_order" type="number" placeholder="Sort" value="0"></div>
-    <div class="col-md-4"><button class="btn btn-success w-100">Add Experience</button></div>
-    <div class="col-12"><textarea class="form-control" name="description" placeholder="Short description" rows="2"></textarea></div>
-    <div class="col-12">
-      <input class="form-control" type="file" name="images[]" accept="image/*" multiple>
-      <div class="form-text">Upload one or more pictures — they'll show as a slider on the homepage card.</div>
+<?php if ($message): ?><div class="alert alert-success"><?php echo pq_admin_e($message); ?></div><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-danger"><?php echo pq_admin_e($error); ?></div><?php endif; ?>
+
+<?php if ($view === 'edit'): ?>
+<?php $images = $service->getImages((int) $experience['id']); ?>
+<div class="wp-head">
+  <a class="wp-back" href="experiences.php"><i class="bi bi-arrow-left"></i> All Experiences</a>
+  <h2>Edit Experience</h2>
+</div>
+
+<form method="POST" enctype="multipart/form-data" class="row g-3">
+  <?php echo pq_admin_csrf(); ?>
+  <input type="hidden" name="action" value="update">
+  <input type="hidden" name="id" value="<?php echo (int) $experience['id']; ?>">
+
+  <div class="col-lg-8">
+    <div class="wp-box">
+      <div class="wp-box-head">Pictures (<?php echo count($images); ?>)</div>
+      <div class="wp-box-body">
+        <?php if ($images !== []): ?>
+        <div class="wp-media-grid mb-3">
+          <?php foreach ($images as $image): ?>
+          <div class="wp-media-item">
+            <img src="<?php echo pq_admin_e(pq_admin_media($image['image_path'])); ?>" alt="" loading="lazy">
+            <button type="submit" form="wp-image-action" name="delete_image" value="<?php echo (int) $image['id']; ?>" title="Remove picture" data-confirm="Remove this picture?">&times;</button>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+        <?php echo pq_admin_dropzone('images', true, false, null, 'Add more pictures — they are uploaded when you click Update.'); ?>
+      </div>
+    </div>
+    <div class="wp-box">
+      <div class="wp-box-head">Caption <span class="wp-optional">— optional</span></div>
+      <div class="wp-box-body">
+        <input class="form-control mb-3" name="title" value="<?php echo pq_admin_e($experience['title']); ?>" placeholder="Title, e.g. Maasai Mara, July 2026">
+        <textarea class="form-control" name="description" rows="3" placeholder="Short description"><?php echo pq_admin_e($experience['description'] ?? ''); ?></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="wp-box">
+      <div class="wp-box-head">Publish</div>
+      <div class="wp-box-body">
+        <label class="form-label small fw-semibold">Visibility</label>
+        <select class="form-select mb-3" name="status">
+          <option value="active" <?php echo $experience['status'] === 'active' ? 'selected' : ''; ?>>Published</option>
+          <option value="inactive" <?php echo $experience['status'] === 'inactive' ? 'selected' : ''; ?>>Hidden</option>
+        </select>
+        <input type="hidden" name="sort_order" value="<?php echo (int) $experience['sort_order']; ?>">
+        <div class="small text-muted">Added <?php echo pq_admin_date($experience['created_at'] ?? null); ?></div>
+      </div>
+      <div class="wp-box-foot">
+        <button class="wp-delete-link" form="wp-row-action" name="delete_id" value="<?php echo (int) $experience['id']; ?>" data-confirm="Delete this experience and all its pictures?">Move to trash</button>
+        <button class="btn btn-primary">Update</button>
+      </div>
+    </div>
+  </div>
+</form>
+<form method="POST" id="wp-image-action" hidden>
+  <?php echo pq_admin_csrf(); ?>
+  <input type="hidden" name="id" value="<?php echo (int) $experience['id']; ?>">
+</form>
+<?php echo pq_admin_row_action_form(); ?>
+
+<?php else: ?>
+<div class="wp-head">
+  <h2>Experiences</h2>
+  <span class="small text-muted">Pictures here appear in the homepage “Previous Experiences” gallery.</span>
+</div>
+
+<form method="POST" enctype="multipart/form-data" class="wp-box">
+  <?php echo pq_admin_csrf(); ?>
+  <input type="hidden" name="action" value="create">
+  <div class="wp-box-head">Upload pictures</div>
+  <div class="wp-box-body">
+    <?php echo pq_admin_dropzone('images', true, true); ?>
+    <details class="mt-3">
+      <summary class="small text-muted" style="cursor:pointer;">Add a caption <span class="wp-optional">(optional)</span></summary>
+      <div class="row g-2 mt-1">
+        <div class="col-md-5"><input class="form-control" name="title" placeholder="Title, e.g. Maasai Mara, July 2026"></div>
+        <div class="col-md-7"><input class="form-control" name="description" placeholder="Short description"></div>
+      </div>
+    </details>
+  </div>
+  <div class="wp-box-foot">
+    <span class="small text-muted">Pictures go live on the homepage straight away.</span>
+    <button class="btn btn-primary"><i class="bi bi-upload"></i> Upload</button>
+  </div>
+</form>
+
+<div class="content-card p-3">
+  <?php if ($items === []): ?>
+  <div class="wp-empty"><i class="bi bi-images"></i>No experiences yet — drop some pictures above.</div>
+  <?php else: ?>
+  <form method="POST" id="wp-bulk">
+    <?php echo pq_admin_csrf(); ?>
+    <input type="hidden" name="action" value="bulk">
+    <div class="wp-bulk">
+      <select class="form-select form-select-sm" name="bulk_action">
+        <option value="">Bulk actions</option>
+        <option value="publish">Publish</option>
+        <option value="hide">Hide</option>
+        <option value="delete">Delete</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary" data-confirm="Apply this action to the selected experiences?">Apply</button>
     </div>
   </form>
-
-  <table class="table table-sm align-middle">
-    <thead><tr><th>Title</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <?php foreach ($items as $item): ?>
-      <tr>
-        <form method="POST">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="update">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <td><input class="form-control form-control-sm" name="title" value="<?php echo htmlspecialchars($item['title']); ?>"></td>
+  <div class="table-responsive">
+    <table class="table wp-table">
+      <thead><tr>
+        <th class="wp-check"><input class="form-check-input" type="checkbox" data-check-all aria-label="Select all"></th>
+        <th>Pictures</th><th>Caption</th><th>Status</th><th>Date</th>
+      </tr></thead>
+      <tbody>
+        <?php foreach ($items as $item): ?>
+        <?php
+          $images = $service->getImages((int) $item['id']);
+          $title = trim((string) $item['title']);
+          $editUrl = 'experiences.php?view=edit&id=' . (int) $item['id'];
+        ?>
+        <tr>
+          <td><input class="form-check-input" type="checkbox" name="ids[]" value="<?php echo (int) $item['id']; ?>" form="wp-bulk"></td>
           <td>
-            <select class="form-select form-select-sm" name="status">
-              <option value="active" <?php echo $item['status'] === 'active' ? 'selected' : ''; ?>>active</option>
-              <option value="inactive" <?php echo $item['status'] === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-            </select>
-          </td>
-          <td class="d-flex gap-1">
-            <input type="hidden" name="description" value="<?php echo htmlspecialchars($item['description'] ?? ''); ?>">
-            <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-            <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-        <form method="POST" onsubmit="return confirm('Delete this experience?');">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="delete">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-          </td>
-      </tr>
-      <tr>
-        <td colspan="3" class="pt-0">
-          <details>
-            <summary class="text-muted small">Description &amp; pictures (<?php echo count($service->getImages((int) $item['id'])); ?>)</summary>
-
-            <div class="my-2">
-              <label class="small text-muted mb-1 d-block">Description</label>
-              <form method="POST" class="d-flex flex-column gap-2">
-                <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-                <input type="hidden" name="action" value="update">
-                <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-                <input type="hidden" name="title" value="<?php echo htmlspecialchars($item['title']); ?>">
-                <input type="hidden" name="status" value="<?php echo htmlspecialchars($item['status']); ?>">
-                <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-                <textarea class="form-control form-control-sm" name="description" rows="2" style="max-width:500px;"><?php echo htmlspecialchars($item['description'] ?? ''); ?></textarea>
-                <button class="btn btn-sm btn-outline-primary align-self-start">Save Description</button>
-              </form>
-            </div>
-
-            <label class="small text-muted mb-1 d-block">Pictures</label>
-            <div class="d-flex flex-wrap gap-2 my-2">
-              <?php foreach ($service->getImages((int) $item['id']) as $image): ?>
-              <div class="position-relative">
-                <img src="../<?php echo htmlspecialchars($image['image_path']); ?>" style="width:90px;height:70px;object-fit:cover;border-radius:6px;">
-                <form method="POST" class="position-absolute top-0 end-0" onsubmit="return confirm('Remove this picture?');">
-                  <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-                  <input type="hidden" name="action" value="delete_image">
-                  <input type="hidden" name="image_id" value="<?php echo (int) $image['id']; ?>">
-                  <button class="btn btn-sm btn-danger py-0 px-1">&times;</button>
-                </form>
-              </div>
+            <a class="wp-thumbs" href="<?php echo $editUrl; ?>">
+              <?php foreach (array_slice($images, 0, 4) as $image): ?>
+              <img src="<?php echo pq_admin_e(pq_admin_media($image['image_path'])); ?>" alt="" loading="lazy">
               <?php endforeach; ?>
+              <?php if (count($images) > 4): ?><span class="more">+<?php echo count($images) - 4; ?></span><?php endif; ?>
+              <?php if ($images === []): ?><span class="more text-danger">No pictures</span><?php endif; ?>
+            </a>
+          </td>
+          <td>
+            <a class="wp-title<?php echo $title === '' ? ' is-untitled' : ''; ?>" href="<?php echo $editUrl; ?>"><?php echo pq_admin_e($title !== '' ? $title : '(no caption)'); ?></a>
+            <div class="small text-muted"><?php echo count($images); ?> picture<?php echo count($images) === 1 ? '' : 's'; ?></div>
+            <div class="wp-row-actions">
+              <a href="<?php echo $editUrl; ?>">Edit</a><span class="sep">|</span>
+              <button class="danger" form="wp-row-action" name="delete_id" value="<?php echo (int) $item['id']; ?>" data-confirm="Delete this experience and all its pictures?">Delete</button>
             </div>
-            <form method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
-              <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-              <input type="hidden" name="action" value="upload_images">
-              <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-              <input class="form-control form-control-sm" type="file" name="images[]" accept="image/*" multiple style="max-width:320px;">
-              <button class="btn btn-sm btn-outline-success">Upload</button>
-            </form>
-          </details>
-        </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+          </td>
+          <td><?php echo pq_admin_status_badge($item['status']); ?></td>
+          <td class="small text-muted"><?php echo pq_admin_date($item['created_at'] ?? null); ?></td>
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+  <?php endif; ?>
 </div>
+<?php echo pq_admin_row_action_form(); ?>
+<?php endif; ?>
+
 <?php include __DIR__ . '/includes/footer.php'; ?>

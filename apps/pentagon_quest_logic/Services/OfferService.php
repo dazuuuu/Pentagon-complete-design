@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Upload;
 use App\Models\Offer;
 use PDOException;
 
@@ -23,6 +24,16 @@ class OfferService
         }
     }
 
+    public function getActiveBannerOffer(): ?array
+    {
+        try {
+            $offer = $this->model->activeBannerOffer();
+            return $offer ? $this->formatForView($offer) : null;
+        } catch (PDOException) {
+            return null;
+        }
+    }
+
     public function getAll(): array
     {
         return array_map([$this, 'formatForView'], $this->model->all());
@@ -34,18 +45,38 @@ class OfferService
         return $offer ? $this->formatForView($offer) : null;
     }
 
-    public function create(array $data): int
+    public function create(array $data, array $imageFile = [], array $videoFile = []): int
     {
+        $imagePath = Upload::store($imageFile, 'offers');
+        if ($imagePath !== null) {
+            $data['image_url'] = $imagePath;
+        }
+        $videoPath = Upload::storeVideo($videoFile, 'offers');
+        if ($videoPath !== null) {
+            $data['video_url'] = $videoPath;
+        }
         return $this->model->create($data);
     }
 
-    public function update(int $id, array $data): bool
+    public function update(int $id, array $data, array $imageFile = [], array $videoFile = []): bool
     {
+        $imagePath = Upload::store($imageFile, 'offers');
+        if ($imagePath !== null) {
+            $data['image_url'] = $imagePath;
+        }
+        $videoPath = Upload::storeVideo($videoFile, 'offers');
+        if ($videoPath !== null) {
+            $data['video_url'] = $videoPath;
+        }
         return $this->model->update($id, $data);
     }
 
     public function delete(int $id): bool
     {
+        $offer = $this->model->find($id);
+        if ($offer && !empty($offer['image_url']) && str_starts_with($offer['image_url'], 'assets/images/uploads/')) {
+            Upload::delete($offer['image_url']);
+        }
         return $this->model->delete($id);
     }
 
@@ -56,23 +87,7 @@ class OfferService
 
     private function formatForView(array $offer): array
     {
-        if (!empty($offer['tour_id'])) {
-            $offer['target_type'] = 'tour';
-            $offer['target_name'] = $offer['tour_title'];
-            $offer['target_image'] = $offer['tour_image'];
-            $offer['target_url'] = 'tour-details.php?id=' . $offer['tour_id'] . '&offer=' . $offer['id'];
-        } elseif (!empty($offer['destination_id'])) {
-            $offer['target_type'] = 'destination';
-            $offer['target_name'] = $offer['destination_name'];
-            $offer['target_image'] = $offer['destination_image'];
-            $offer['target_url'] = 'destination-details.php?id=' . $offer['destination_id'] . '&offer=' . $offer['id'];
-        } else {
-            $offer['target_type'] = null;
-            $offer['target_name'] = null;
-            $offer['target_image'] = null;
-            $offer['target_url'] = 'contact.php';
-        }
-
+        $offer['target_url'] = $offer['link_url'] ?: null;
         return $offer;
     }
 }

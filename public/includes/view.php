@@ -6,14 +6,40 @@
 
 use App\Helpers\Path;
 
-function pq_cover_style(?string $value, string $fallback = 'var(--green)'): string
+function pq_asset_url(string $path): string
+{
+    return Path::baseUrl() . ltrim($path, '/');
+}
+
+/**
+ * Public URL for a stored image/video path. Accepts absolute URLs, site-root
+ * paths, and the web-relative paths Upload::store() saves (tolerating stray
+ * "public/" or "../" prefixes that older records or hand-typed URLs carry).
+ */
+function pq_media_url(?string $path): string
+{
+    $path = trim((string) $path);
+    if ($path === '' || preg_match('#^(?:https?:)?//#i', $path) || str_starts_with($path, 'data:')) {
+        return $path;
+    }
+
+    $path = str_replace('\\', '/', $path);
+    $path = preg_replace('#^(?:\./|\.\./)+#', '', $path) ?? $path;
+    $path = preg_replace('#^/?(?:public_html|public)/#', '', $path) ?? $path;
+
+    return Path::baseUrl() . ltrim($path, '/');
+}
+
+function pq_cover_style(?string $value, string $fallback = 'assets/images/start-here.jpeg'): string
 {
     $value = trim((string) $value);
-    if ($value === '') {
-        return 'background: ' . $fallback;
+    $fallback = trim($fallback);
+    if ($fallback === '' || str_starts_with($fallback, 'var(') || str_starts_with($fallback, '#') || str_starts_with($fallback, 'rgb')) {
+        $fallback = 'assets/images/start-here.jpeg';
     }
-    if (str_starts_with($value, 'var(') || str_starts_with($value, '#') || str_starts_with($value, 'rgb')) {
-        return 'background: ' . $value;
+
+    if ($value === '' || str_starts_with($value, 'var(') || str_starts_with($value, '#') || str_starts_with($value, 'rgb')) {
+        $value = $fallback;
     }
 
     $url = str_starts_with($value, 'http') ? $value : Path::baseUrl() . ltrim($value, '/');
@@ -54,8 +80,14 @@ function pq_url(string $path = ''): string
         $query = '?' . $query;
     }
 
-    $path = preg_replace('#(?:^|/)index\.php$#', '', $path) ?? $path;
-    $path = preg_replace('#\.php$#', '', $path) ?? $path;
+    static $appConfig = null;
+    $appConfig ??= require Path::config('app.php');
+    $prettyUrls = (bool) ($appConfig['pretty_urls'] ?? false);
+    if ($prettyUrls) {
+        $path = preg_replace('#(?:^|/)index\.php$#', '', $path) ?? $path;
+        $path = preg_replace('#\.php$#', '', $path) ?? $path;
+    }
+
     $path = ltrim($path, '/');
 
     return $base . $path . $query . $fragment;

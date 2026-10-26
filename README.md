@@ -1,16 +1,16 @@
-# Pentagon Quest
+# Pentagon Safaris
 
 Clean architecture with UI separated from backend logic. The repository has two folders:
 
 ```
-apps/pentagon_quest_logic/   backend, Composer, vendor, .env, migrations, updates
+apps/pentagon_quest_logic/   backend, Composer, vendor, config/, migrations, updates
 public/                      website UI (this folder is public_html on hosting)
 ```
 
 On hosting, upload `public/` as `public_html/` and keep `apps/pentagon_quest_logic/` next to it (not inside the web root):
 
 ```
-/home/user/apps/pentagon_quest_logic/   Composer, vendor, .env, PHP logic
+/home/user/apps/pentagon_quest_logic/   Composer, vendor, config/, PHP logic
 /home/user/public_html/                 contents of public/ (index.php, router, assets)
 ```
 
@@ -24,7 +24,7 @@ Complete backend. Not web-accessible. This is the only place `vendor/` belongs.
 | --- | --- |
 | `composer.json` / `composer.lock` | PHP dependencies |
 | `vendor/` | Installed packages (`composer install` here) |
-| `.env` / `.env.example` | Database, SMTP, and admin credentials |
+| `config/database.php`, `config/mail.php`, `config/app.php`, `config/admin.php` | THE single files to edit for database, SMTP, app, and default-admin settings — no `.env` file is used anywhere |
 | `.htaccess` | Denies HTTP access to this folder |
 | `Core/` | Database connection and admin auth |
 | `Models/` | Persistence |
@@ -80,7 +80,7 @@ php apps/pentagon_quest_logic/database/migrate.php
 
 ## Setup
 
-1. Copy `apps/pentagon_quest_logic/.env.example` to `apps/pentagon_quest_logic/.env` and set database plus SMTP values.
+1. Edit `apps/pentagon_quest_logic/config/database.php` and `config/mail.php` directly with your database and SMTP values (no `.env` file — the `/setup` wizard below also writes `config/database.php` for you).
 2. Install PHP packages from the backend folder only:
 
 ```bash

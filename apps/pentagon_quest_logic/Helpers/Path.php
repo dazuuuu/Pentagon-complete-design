@@ -111,7 +111,6 @@ class Path
             && (
                 is_dir($dir . DIRECTORY_SEPARATOR . 'includes')
                 || is_file($dir . DIRECTORY_SEPARATOR . 'paths.php')
-                || is_file($dir . DIRECTORY_SEPARATOR . 'router.php')
             );
     }
 
@@ -186,11 +185,6 @@ class Path
         return $file === '' ? self::logic('vendor') : self::logic('vendor', $file);
     }
 
-    public static function env(): string
-    {
-        return self::logic('.env');
-    }
-
     public static function publicPath(string ...$segments): string
     {
         return self::append(self::webRoot(), ...$segments);
@@ -213,6 +207,17 @@ class Path
         $webRoot = realpath(self::webRoot());
 
         if ($docRoot && $webRoot && $docRoot !== $webRoot && str_starts_with($webRoot, $docRoot)) {
+            $rootIndex = $docRoot . DIRECTORY_SEPARATOR . 'index.php';
+            $rootHtaccess = $docRoot . DIRECTORY_SEPARATOR . '.htaccess';
+            if (is_file($rootIndex) && is_file($rootHtaccess)) {
+                $rootEntry = @file_get_contents($rootIndex, false, null, 0, 300) ?: '';
+                $rootRules = @file_get_contents($rootHtaccess, false, null, 0, 300) ?: '';
+                if (str_contains($rootEntry, 'Deployment compatibility entry point')
+                    && str_contains($rootRules, 'repository-root compatibility rules')) {
+                    return '/';
+                }
+            }
+
             $prefix = substr($webRoot, strlen(rtrim($docRoot, DIRECTORY_SEPARATOR)));
             $prefix = '/' . trim(str_replace('\\', '/', $prefix), '/');
             return rtrim($prefix, '/') . '/';

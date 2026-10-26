@@ -80,13 +80,14 @@
     document.querySelectorAll('[data-poster-lightbox]').forEach(function (poster) {
       poster.addEventListener('click', function () {
         const src = poster.getAttribute('data-poster-src') || '';
-        const title = poster.getAttribute('data-poster-title') || 'Featured poster';
+        const title = poster.getAttribute('data-poster-title') || '';
         const description = poster.getAttribute('data-poster-description') || '';
 
         posterLightboxImage.src = src;
         posterLightboxImage.alt = title;
         posterLightboxTitle.textContent = title;
         posterLightboxDescription.textContent = description;
+        posterLightboxTitle.parentElement.hidden = title === '' && description === '';
         posterLightbox.classList.add('is-open');
         posterLightbox.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';

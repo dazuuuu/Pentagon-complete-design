@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pentagon Quest path handler (web-root copy).
+ * Pentagon Safaris path handler (web-root copy).
  *
  * This file ships inside public/ and is uploaded as public_html/paths.php.
  * It locates the backend package, which lives outside the document root:
@@ -48,7 +48,6 @@ if (!function_exists('pentagon_normalize_dir')) {
             && (
                 is_file($dir . DIRECTORY_SEPARATOR . 'paths.php')
                 || is_dir($dir . DIRECTORY_SEPARATOR . 'includes')
-                || is_file($dir . DIRECTORY_SEPARATOR . 'router.php')
             );
     }
 

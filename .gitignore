@@ -2,6 +2,10 @@
 /vendor/
 
 # Secrets and logs
+# (No .env file is used anywhere in this app — DB/mail/app config lives in
+# apps/pentagon_quest_logic/config/*.php. These rules just guard against one
+# reappearing by accident.)
+/.env
 apps/pentagon_quest_logic/.env
 apps/pentagon_quest_logic/installed.lock
 *.log

@@ -13,6 +13,12 @@ $service = new GalleryService();
 $message = Session::flash('message');
 $error = Session::flash('error');
 
+if (\App\Helpers\Upload::postTooLarge()) {
+  Session::flash('error', \App\Helpers\Upload::postTooLargeMessage());
+  header('Location: gallery.php');
+  exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] ?? '')) {
   $action = $_POST['action'] ?? '';
 
@@ -33,6 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] 
       }
       Session::flash('message', 'Gallery item(s) created.');
     } elseif ($action === 'update') {
+      $paths = \App\Helpers\Upload::storeMany($_FILES['images'] ?? [], 'gallery');
+      if ($paths !== []) {
+        $old = $service->find((int) $_POST['id']);
+        if ($old && str_starts_with((string) $old['image_url'], 'assets/images/uploads/')) {
+          \App\Helpers\Upload::delete($old['image_url']);
+        }
+        $data['image_url'] = $paths[0];
+      }
       $service->update((int) $_POST['id'], $data);
       Session::flash('message', 'Gallery item updated.');
     } elseif ($action === 'delete') {
@@ -51,62 +65,30 @@ $items = $service->getAll();
 $pageTitle = 'Gallery';
 $currentAdminPage = 'gallery';
 include __DIR__ . '/includes/header.php';
-?>
-<div class="content-card p-4">
-  <h2 class="mb-3">Manage Gallery</h2>
-  <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
-  <?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 
-  <form method="POST" enctype="multipart/form-data" class="row g-2 mb-4">
-    <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-    <input type="hidden" name="action" value="create">
-    <div class="col-md-4"><input class="form-control" name="title" placeholder="Title" required></div>
-    <div class="col-md-3"><input class="form-control" name="category" placeholder="Category" required></div>
-    <div class="col-md-3"><input class="form-control" name="image_url" placeholder="Image URL (used if no file chosen)"></div>
-    <div class="col-md-2"><button class="btn btn-success w-100">Add</button></div>
-    <div class="col-md-12">
-      <input class="form-control" type="file" name="images[]" accept="image/*" multiple>
-      <div class="form-text">Select multiple pictures from your device — each one is added as its own gallery item under this title/category.</div>
-    </div>
-  </form>
+echo pq_admin_alerts($message, $error);
+echo pq_admin_sheet([
+  'id' => 'gallery',
+  'title' => 'Gallery',
+  'singular' => 'Picture',
+  'intro' => 'Click any row to edit it. When adding, choose several pictures at once to create one entry per picture.',
+  'empty' => 'No gallery pictures yet.',
+  'rows' => $items,
+  'thumb' => fn ($r) => $r['image_url'] ?: null,
+  'columns' => [
+    ['label' => 'Title', 'value' => fn ($r) => $r['title']],
+    ['label' => 'Category', 'filter' => true, 'value' => fn ($r) => $r['category']],
+    ['label' => 'Order', 'class' => 'num', 'value' => fn ($r) => (int) $r['sort_order']],
+    ['label' => 'Status', 'html' => true, 'value' => fn ($r) => pq_admin_status_badge($r['status'])],
+  ],
+  'fields' => [
+    ['name' => 'images', 'label' => 'Picture(s)', 'type' => 'images', 'preview' => fn ($r) => $r['image_url'] ?: null],
+    ['name' => 'title', 'label' => 'Title', 'required' => true, 'col' => 6],
+    ['name' => 'category', 'label' => 'Category', 'required' => true, 'col' => 6],
+    ['name' => 'image_url', 'label' => '…or image URL', 'placeholder' => 'Optional — an uploaded picture overrides this'],
+    ['name' => 'status', 'label' => 'Visibility', 'type' => 'status', 'col' => 6],
+    ['name' => 'sort_order', 'label' => 'Order', 'type' => 'number', 'default' => 0, 'col' => 6],
+  ],
+]);
 
-  <table class="table table-sm">
-    <thead><tr><th>Picture</th><th>Title</th><th>Category</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <?php foreach ($items as $item): ?>
-      <tr>
-        <form method="POST">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="update">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <td>
-            <?php if (str_starts_with($item['image_url'], 'assets/') || str_starts_with($item['image_url'], 'http')): ?>
-              <img src="<?php echo (str_starts_with($item['image_url'], 'http') ? '' : '../') . htmlspecialchars($item['image_url']); ?>" style="width:70px;height:55px;object-fit:cover;border-radius:6px;">
-            <?php endif; ?>
-          </td>
-          <td><input class="form-control form-control-sm" name="title" value="<?php echo htmlspecialchars($item['title']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="category" value="<?php echo htmlspecialchars($item['category']); ?>"></td>
-          <td>
-            <select class="form-select form-select-sm" name="status">
-              <option value="active" <?php echo $item['status'] === 'active' ? 'selected' : ''; ?>>active</option>
-              <option value="inactive" <?php echo $item['status'] === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-            </select>
-          </td>
-          <td class="d-flex gap-1">
-            <input type="hidden" name="image_url" value="<?php echo htmlspecialchars($item['image_url']); ?>">
-            <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-            <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-        <form method="POST" onsubmit="return confirm('Delete this item?');">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="delete">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-          </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-<?php include __DIR__ . '/includes/footer.php'; ?>
+include __DIR__ . '/includes/footer.php';

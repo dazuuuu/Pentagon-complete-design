@@ -1,0 +1,3 @@
+ALTER TABLE offers
+ADD COLUMN is_banner TINYINT(1) DEFAULT 0 AFTER description,
+ADD COLUMN end_time DATETIME NULL AFTER is_banner;

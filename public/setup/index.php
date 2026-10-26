@@ -5,34 +5,32 @@ require_once dirname(__DIR__) . '/includes/bootstrap.php';
 use App\Helpers\Path;
 use App\Helpers\Session;
 use App\Helpers\Validator;
+use App\Core\Auth;
 use App\Services\SetupService;
 
 $setup = new SetupService();
 $base = Path::baseUrl();
-$env = $setup->existingEnv();
+$currentDb = require Path::config('database.php');
 $installed = $setup->isInstalled();
 
-$step = $installed ? 'done' : (string) ($_POST['step'] ?? $_GET['step'] ?? 'database');
+$step = $installed ? 'done' : 'install';
 $error = '';
 $log = [];
 
 $dbDefaults = [
-    'host' => $env['DB_HOST'] ?? 'localhost',
-    'port' => $env['DB_PORT'] ?? '3306',
-    'name' => $env['DB_NAME'] ?? 'pentagon_quest',
-    'user' => $env['DB_USER'] ?? 'root',
-    'pass' => $env['DB_PASS'] ?? '',
+    'host' => $currentDb['host'] ?? 'localhost',
+    'port' => (string) ($currentDb['port'] ?? '3306'),
+    'name' => $currentDb['name'] ?? 'pentagon_quest',
+    'user' => $currentDb['user'] ?? 'root',
+    'pass' => $currentDb['pass'] ?? '',
 ];
 
-$adminDefaults = [
-    'name' => $env['ADMIN_NAME'] ?? 'Site Admin',
-    'email' => $env['ADMIN_EMAIL'] ?? 'admin@pentagonquest.com',
-];
+$adminDefaults = $setup->defaultAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$installed) {
     if (!Session::verifyCsrf($_POST['_csrf'] ?? null)) {
         $error = 'Invalid security token. Refresh the page and try again.';
-    } elseif ($step === 'database') {
+    } else {
         $dbDefaults = [
             'host' => trim((string) ($_POST['db_host'] ?? 'localhost')),
             'port' => trim((string) ($_POST['db_port'] ?? '3306')),
@@ -41,17 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$installed) {
             'pass' => (string) ($_POST['db_pass'] ?? ''),
         ];
 
-        try {
-            $setup->prepareDatabase($dbDefaults);
-            $log = $setup->runMigrations(true);
-            $setup->seed();
-            $setup->runUpdates();
-            $step = 'admin';
-        } catch (Throwable $e) {
-            $error = $e->getMessage();
-            $step = 'database';
-        }
-    } elseif ($step === 'admin') {
         $adminDefaults['name'] = trim((string) ($_POST['admin_name'] ?? ''));
         $adminDefaults['email'] = trim((string) ($_POST['admin_email'] ?? ''));
         $password = (string) ($_POST['admin_password'] ?? '');
@@ -63,24 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$installed) {
             $error = 'Please enter a valid admin email address.';
         } else {
             try {
-                $setup->createAdmin($adminDefaults['name'], $adminDefaults['email'], $password);
-                $setup->writeEnv([
-                    'host' => $_ENV['DB_HOST'] ?? $dbDefaults['host'],
-                    'port' => $_ENV['DB_PORT'] ?? $dbDefaults['port'],
-                    'name' => $_ENV['DB_NAME'] ?? $dbDefaults['name'],
-                    'user' => $_ENV['DB_USER'] ?? $dbDefaults['user'],
-                    'pass' => $_ENV['DB_PASS'] ?? $dbDefaults['pass'],
-                ], [
-                    'name' => $adminDefaults['name'],
-                    'email' => $adminDefaults['email'],
-                    'password' => $password,
-                ]);
-                $setup->markInstalled($adminDefaults['email']);
-                $installed = true;
-                $step = 'done';
+                $setup->prepareDatabase($dbDefaults);
+                $log = $setup->runMigrations(true);
+                $setup->seed();
+                $setup->runUpdates();
+                $admin = $setup->createAdmin($adminDefaults['name'], $adminDefaults['email'], $password);
+                $setup->markInstalled($admin['email']);
+                Auth::login($admin['id'], $admin['name']);
+                header('Location: ' . pq_url('admin/dashboard.php'));
+                exit;
             } catch (Throwable $e) {
                 $error = $e->getMessage();
-                $step = 'admin';
+                $step = 'install';
             }
         }
     }
@@ -95,7 +76,7 @@ if ($installed) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setup | Pentagon Quest</title>
+  <title>Setup | Pentagon Safaris</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
@@ -171,13 +152,11 @@ if ($installed) {
 </head>
 <body>
   <div class="card">
-    <div class="tag">Pentagon Quest</div>
+    <div class="tag">Pentagon Safaris</div>
     <h1><?php echo $step === 'done' ? 'Setup complete' : 'Install the website'; ?></h1>
     <p class="lead">
-      <?php if ($step === 'database'): ?>
-        Connect MySQL, then we will rebuild the schema from required_migrations (this replaces existing Pentagon Quest tables in that database) and seed the site content.
-      <?php elseif ($step === 'admin'): ?>
-        Migrations finished. Create the administrator account used at <code>/admin/</code>.
+      <?php if ($step === 'install'): ?>
+        Enter your hosting database credentials and first admin account. Setup will run required migrations, seed content, apply updates, create the admin, then log you into <code>/admin/</code>.
       <?php else: ?>
         The database is ready. You can open the public site or the admin portal.
       <?php endif; ?>
@@ -185,7 +164,7 @@ if ($installed) {
 
     <div class="steps">
       <span class="on"></span>
-      <span class="<?php echo in_array($step, ['admin', 'done'], true) ? 'on' : ''; ?>"></span>
+      <span class="<?php echo $step === 'done' ? 'on' : ''; ?>"></span>
       <span class="<?php echo $step === 'done' ? 'on' : ''; ?>"></span>
     </div>
 
@@ -193,10 +172,9 @@ if ($installed) {
       <div class="error"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
-    <?php if ($step === 'database'): ?>
+    <?php if ($step === 'install'): ?>
       <form method="POST">
         <input type="hidden" name="_csrf" value="<?php echo htmlspecialchars(Session::csrfToken()); ?>">
-        <input type="hidden" name="step" value="database">
         <label>Database host</label>
         <input type="text" name="db_host" value="<?php echo htmlspecialchars($dbDefaults['host']); ?>" required>
         <div class="row">
@@ -213,16 +191,7 @@ if ($installed) {
         <input type="text" name="db_user" value="<?php echo htmlspecialchars($dbDefaults['user']); ?>" required>
         <label>Password</label>
         <input type="password" name="db_pass" value="<?php echo htmlspecialchars($dbDefaults['pass']); ?>">
-        <button class="btn" type="submit">Run migrations</button>
-      </form>
-    <?php elseif ($step === 'admin'): ?>
-      <?php if ($log): ?>
-        <div class="ok">Migrations applied.</div>
-        <div class="log"><?php echo htmlspecialchars(implode("\n", $log)); ?></div>
-      <?php endif; ?>
-      <form method="POST">
-        <input type="hidden" name="_csrf" value="<?php echo htmlspecialchars(Session::csrfToken()); ?>">
-        <input type="hidden" name="step" value="admin">
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,.1); margin: 14px 0 22px;">
         <label>Admin name</label>
         <input type="text" name="admin_name" value="<?php echo htmlspecialchars($adminDefaults['name']); ?>" required>
         <label>Admin email</label>
@@ -231,13 +200,13 @@ if ($installed) {
         <input type="password" name="admin_password" required minlength="8">
         <label>Confirm password</label>
         <input type="password" name="admin_password_confirm" required minlength="8">
-        <button class="btn" type="submit">Create admin and open site</button>
+        <button class="btn" type="submit">Install and open admin</button>
       </form>
     <?php else: ?>
-      <div class="ok">Pentagon Quest is installed. Setup is locked so it cannot be run again unless you delete <code>apps/pentagon_quest_logic/installed.lock</code>.</div>
+      <div class="ok">Pentagon Safaris is installed. Setup is locked so it cannot be run again unless you delete <code>apps/pentagon_quest_logic/installed.lock</code>.</div>
       <div class="actions">
         <a class="btn" href="<?php echo htmlspecialchars($base); ?>">Open the website</a>
-        <a class="btn secondary" href="<?php echo htmlspecialchars(pq_url('admin/login.php')); ?>">Open admin login</a>
+        <a class="btn secondary" href="<?php echo htmlspecialchars(pq_url('admin/dashboard.php')); ?>">Open admin dashboard</a>
       </div>
     <?php endif; ?>
   </div>

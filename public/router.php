@@ -23,18 +23,7 @@ set_include_path($public . PATH_SEPARATOR . get_include_path());
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $uri = urldecode(parse_url($requestUri, PHP_URL_PATH) ?: '/');
 $query = parse_url($requestUri, PHP_URL_QUERY);
-$suffix = $query ? '?' . $query : '';
 $path = $public . $uri;
-
-if ($uri === '/index.php') {
-    header('Location: /' . $suffix, true, 301);
-    return true;
-}
-
-if (preg_match('#^/(.+)\.php$#', $uri, $match)) {
-    header('Location: /' . $match[1] . $suffix, true, 301);
-    return true;
-}
 
 if ($uri !== '/' && is_file($path)) {
     $webRootReal = realpath($public);
@@ -91,21 +80,8 @@ if (preg_match('#^/api/#', $uri)) {
     return true;
 }
 
-if ($uri === '/sitemap.xml') {
-    require $public . '/sitemap.php';
-    return true;
-}
-
-$phpFile = $public . rtrim($uri, '/') . '.php';
-if ($uri !== '/' && is_file($phpFile)) {
-    require $phpFile;
-    return true;
-}
-
-if ($uri === '/' || $uri === '') {
-    require $public . '/index.php';
-    return true;
-}
-
-http_response_code(404);
-echo 'Not found';
+// Everything else (including '/', '/about', '/sitemap.xml', and any other
+// clean public route) is handled by the front controller, which maps
+// request paths to views/<page>/index.php and returns a real 404 itself.
+require $public . '/index.php';
+return true;

@@ -41,53 +41,30 @@ $items = $service->getAll();
 $pageTitle = 'Testimonials';
 $currentAdminPage = 'testimonials';
 include __DIR__ . '/includes/header.php';
-?>
-<div class="content-card p-4">
-  <h2 class="mb-3">Manage Testimonials</h2>
-  <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
 
-  <form method="POST" class="row g-2 mb-4">
-    <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-    <input type="hidden" name="action" value="create">
-    <div class="col-md-2"><input class="form-control" name="author_name" placeholder="Author" required></div>
-    <div class="col-md-2"><input class="form-control" name="author_location" placeholder="Location"></div>
-    <div class="col-md-6"><input class="form-control" name="quote" placeholder="Quote" required></div>
-    <div class="col-md-2"><button class="btn btn-success w-100">Add</button></div>
-  </form>
+echo pq_admin_alerts($message, $error ?? null);
+echo pq_admin_sheet([
+  'id' => 'testimonials',
+  'title' => 'Testimonials',
+  'singular' => 'Testimonial',
+  'intro' => 'Click any row to edit it.',
+  'empty' => 'No testimonials yet.',
+  'rows' => $items,
+  'columns' => [
+    ['label' => 'Author', 'value' => fn ($r) => $r['author_name']],
+    ['label' => 'Location', 'value' => fn ($r) => $r['author_location'] ?: '—'],
+    ['label' => 'Quote', 'class' => 'wrap', 'value' => fn ($r) => mb_strimwidth((string) $r['quote'], 0, 140, '…')],
+    ['label' => 'Accent', 'filter' => true, 'value' => fn ($r) => ucfirst((string) $r['accent_color'])],
+    ['label' => 'Status', 'html' => true, 'value' => fn ($r) => pq_admin_status_badge($r['status'])],
+  ],
+  'fields' => [
+    ['name' => 'author_name', 'label' => 'Author', 'required' => true, 'col' => 6],
+    ['name' => 'author_location', 'label' => 'Location', 'col' => 6],
+    ['name' => 'quote', 'label' => 'Quote', 'type' => 'textarea', 'rows' => 5, 'required' => true],
+    ['name' => 'accent_color', 'label' => 'Accent colour', 'type' => 'select', 'options' => ['gold' => 'Gold', 'green' => 'Green', 'earth' => 'Earth', 'charcoal' => 'Charcoal'], 'col' => 4],
+    ['name' => 'status', 'label' => 'Visibility', 'type' => 'status', 'col' => 4],
+    ['name' => 'sort_order', 'label' => 'Order', 'type' => 'number', 'default' => 0, 'col' => 4],
+  ],
+]);
 
-  <table class="table table-sm">
-    <thead><tr><th>Author</th><th>Location</th><th>Quote</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <?php foreach ($items as $item): ?>
-      <tr>
-        <form method="POST">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="update">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <td><input class="form-control form-control-sm" name="author_name" value="<?php echo htmlspecialchars($item['author_name']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="author_location" value="<?php echo htmlspecialchars($item['author_location'] ?? ''); ?>"></td>
-          <td><input class="form-control form-control-sm" name="quote" value="<?php echo htmlspecialchars($item['quote']); ?>"></td>
-          <td>
-            <select class="form-select form-select-sm" name="status">
-              <option value="active" <?php echo $item['status'] === 'active' ? 'selected' : ''; ?>>active</option>
-              <option value="inactive" <?php echo $item['status'] === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-            </select>
-          </td>
-          <td class="d-flex gap-1">
-            <input type="hidden" name="accent_color" value="<?php echo htmlspecialchars($item['accent_color']); ?>">
-            <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-            <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-        <form method="POST" onsubmit="return confirm('Delete this testimonial?');">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="delete">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-          </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-<?php include __DIR__ . '/includes/footer.php'; ?>
+include __DIR__ . '/includes/footer.php';

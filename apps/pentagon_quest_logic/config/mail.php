@@ -1,12 +1,20 @@
 <?php
 
+/**
+ * Outgoing email (SMTP) — THE single place to edit for mail credentials.
+ *
+ * No .env file is used anywhere in this app. Open this file directly on
+ * your server and fill in your live SMTP details (Gmail app password,
+ * SendGrid, your host's mail server, etc).
+ */
+
 return [
-    'host' => $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com',
-    'port' => (int) ($_ENV['SMTP_PORT'] ?? 587),
-    'username' => $_ENV['SMTP_USER'] ?? '',
-    'password' => $_ENV['SMTP_PASS'] ?? '',
-    'encryption' => $_ENV['SMTP_ENCRYPTION'] ?? 'tls',
-    'from_email' => $_ENV['MAIL_FROM_EMAIL'] ?? 'noreply@pentagonquest.com',
-    'from_name' => $_ENV['MAIL_FROM_NAME'] ?? 'Pentagon Quest',
-    'admin_email' => $_ENV['MAIL_ADMIN_EMAIL'] ?? 'info@pentagonquest.com',
+    'host' => 'smtp.gmail.com',
+    'port' => 587,
+    'username' => '',
+    'password' => '',
+    'encryption' => 'tls',
+    'from_email' => 'info@pentagonsafaris.com',
+    'from_name' => 'Pentagon Safaris',
+    'admin_email' => 'info@pentagonsafaris.com',
 ];

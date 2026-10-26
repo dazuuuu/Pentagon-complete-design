@@ -66,120 +66,51 @@ $tiers = $tierService->getAll();
 $pageTitle = 'Services';
 $currentAdminPage = 'services';
 include __DIR__ . '/includes/header.php';
-?>
-<div class="content-card p-4 mb-4">
-  <h2 class="mb-3">Core Offerings</h2>
-  <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
 
-  <form method="POST" class="row g-2 mb-4">
-    <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-    <input type="hidden" name="action" value="offering_create">
-    <div class="col-md-4"><input class="form-control" name="title" placeholder="Title" required></div>
-    <div class="col-md-5"><input class="form-control" name="description" placeholder="Description" required></div>
-    <div class="col-md-1"><input class="form-control" name="sort_order" type="number" value="0"></div>
-    <div class="col-md-2"><button class="btn btn-success w-100">Add</button></div>
-  </form>
+echo pq_admin_alerts($message ?? null, $error ?? null);
+echo pq_admin_sheet([
+  'id' => 'offerings',
+  'title' => 'Core Offerings',
+  'singular' => 'Offering',
+  'intro' => 'Click any row to edit it.',
+  'empty' => 'No offerings yet.',
+  'rows' => $offerings,
+  'actions' => ['create' => 'offering_create', 'update' => 'offering_update', 'delete' => 'offering_delete'],
+  'columns' => [
+    ['label' => 'Title', 'value' => fn ($r) => $r['title']],
+    ['label' => 'Description', 'class' => 'wrap', 'value' => fn ($r) => mb_strimwidth((string) $r['description'], 0, 140, '…')],
+    ['label' => 'Order', 'class' => 'num', 'value' => fn ($r) => (int) $r['sort_order']],
+    ['label' => 'Status', 'html' => true, 'value' => fn ($r) => pq_admin_status_badge($r['status'])],
+  ],
+  'fields' => [
+    ['name' => 'title', 'label' => 'Title', 'required' => true],
+    ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'rows' => 4, 'required' => true],
+    ['name' => 'status', 'label' => 'Visibility', 'type' => 'status', 'col' => 6],
+    ['name' => 'sort_order', 'label' => 'Order', 'type' => 'number', 'default' => 0, 'col' => 6],
+  ],
+]);
+echo pq_admin_sheet([
+  'id' => 'tiers',
+  'title' => 'Pricing Tiers',
+  'singular' => 'Tier',
+  'empty' => 'No pricing tiers yet.',
+  'rows' => $tiers,
+  'actions' => ['create' => 'tier_create', 'update' => 'tier_update', 'delete' => 'tier_delete'],
+  'columns' => [
+    ['label' => 'Name', 'value' => fn ($r) => $r['name']],
+    ['label' => 'Price', 'class' => 'num', 'value' => fn ($r) => number_format((float) $r['price'], 2)],
+    ['label' => 'Features', 'class' => 'wrap', 'value' => fn ($r) => mb_strimwidth(str_replace(["\r\n", "\n"], ' · ', (string) $r['features']), 0, 120, '…')],
+    ['label' => 'Popular', 'filter' => true, 'html' => true, 'value' => fn ($r) => $r['is_popular'] ? '<span class="sheet-yes"><i class="bi bi-star-fill"></i> Yes</span>' : '<span class="sheet-no">No</span>'],
+    ['label' => 'Status', 'html' => true, 'value' => fn ($r) => pq_admin_status_badge($r['status'])],
+  ],
+  'fields' => [
+    ['name' => 'name', 'label' => 'Tier name', 'required' => true, 'col' => 6, 'placeholder' => 'e.g. Classic'],
+    ['name' => 'price', 'label' => 'Price / person', 'type' => 'price', 'required' => true, 'col' => 6],
+    ['name' => 'features', 'label' => 'Features', 'type' => 'textarea', 'rows' => 6, 'placeholder' => 'One feature per line'],
+    ['name' => 'status', 'label' => 'Visibility', 'type' => 'status', 'col' => 4],
+    ['name' => 'sort_order', 'label' => 'Order', 'type' => 'number', 'default' => 0, 'col' => 4],
+    ['name' => 'is_popular', 'label' => 'Most popular', 'type' => 'checkbox', 'col' => 4],
+  ],
+]);
 
-  <table class="table table-sm align-middle">
-    <thead><tr><th>Title</th><th>Description</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <?php foreach ($offerings as $item): ?>
-      <tr>
-        <form method="POST">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="offering_update">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <td><input class="form-control form-control-sm" name="title" value="<?php echo htmlspecialchars($item['title']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="description" value="<?php echo htmlspecialchars($item['description'] ?? ''); ?>"></td>
-          <td>
-            <select class="form-select form-select-sm" name="status">
-              <option value="active" <?php echo $item['status'] === 'active' ? 'selected' : ''; ?>>active</option>
-              <option value="inactive" <?php echo $item['status'] === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-            </select>
-          </td>
-          <td class="d-flex gap-1">
-            <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-            <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-        <form method="POST" onsubmit="return confirm('Delete this offering?');">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="offering_delete">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-          </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-
-<div class="content-card p-4">
-  <h2 class="mb-3">Pricing Tiers</h2>
-
-  <form method="POST" class="row g-2 mb-4">
-    <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-    <input type="hidden" name="action" value="tier_create">
-    <div class="col-md-3"><input class="form-control" name="name" placeholder="Tier name (e.g. Classic)" required></div>
-    <div class="col-md-2"><input class="form-control" name="price" type="number" step="0.01" placeholder="Price / person" required></div>
-    <div class="col-md-1"><input class="form-control" name="sort_order" type="number" value="0"></div>
-    <div class="col-md-2 form-check pt-2"><input class="form-check-input" type="checkbox" name="is_popular" id="popular"><label for="popular" class="form-check-label">Most Popular</label></div>
-    <div class="col-md-2"><button class="btn btn-success w-100">Add</button></div>
-    <div class="col-12"><textarea class="form-control" name="features" placeholder="One feature per line" rows="3"></textarea></div>
-  </form>
-
-  <table class="table table-sm align-middle">
-    <thead><tr><th>Name</th><th>Price</th><th>Popular</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <?php foreach ($tiers as $item): ?>
-      <tr>
-        <form method="POST">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="tier_update">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <td><input class="form-control form-control-sm" name="name" value="<?php echo htmlspecialchars($item['name']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="price" type="number" step="0.01" value="<?php echo htmlspecialchars($item['price']); ?>"></td>
-          <td class="text-center"><input type="checkbox" name="is_popular" <?php echo $item['is_popular'] ? 'checked' : ''; ?>></td>
-          <td>
-            <select class="form-select form-select-sm" name="status">
-              <option value="active" <?php echo $item['status'] === 'active' ? 'selected' : ''; ?>>active</option>
-              <option value="inactive" <?php echo $item['status'] === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-            </select>
-          </td>
-          <td class="d-flex gap-1">
-            <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-            <input type="hidden" name="features" value="<?php echo htmlspecialchars($item['features'] ?? ''); ?>">
-            <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-        <form method="POST" onsubmit="return confirm('Delete this tier?');">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="tier_delete">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-          </td>
-      </tr>
-      <tr>
-        <td colspan="5" class="pt-0">
-          <details>
-            <summary class="text-muted small">Features</summary>
-            <form method="POST" class="d-flex flex-column gap-2 my-2">
-              <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-              <input type="hidden" name="action" value="tier_update">
-              <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-              <input type="hidden" name="name" value="<?php echo htmlspecialchars($item['name']); ?>">
-              <input type="hidden" name="price" value="<?php echo htmlspecialchars($item['price']); ?>">
-              <input type="hidden" name="status" value="<?php echo htmlspecialchars($item['status']); ?>">
-              <input type="hidden" name="sort_order" value="<?php echo (int) $item['sort_order']; ?>">
-              <?php if ($item['is_popular']): ?><input type="hidden" name="is_popular" value="1"><?php endif; ?>
-              <textarea class="form-control form-control-sm" name="features" rows="3" placeholder="One feature per line"><?php echo htmlspecialchars($item['features'] ?? ''); ?></textarea>
-              <button class="btn btn-sm btn-outline-primary align-self-start">Save Features</button>
-            </form>
-          </details>
-        </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-<?php include __DIR__ . '/includes/footer.php'; ?>
+include __DIR__ . '/includes/footer.php';

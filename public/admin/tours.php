@@ -15,6 +15,12 @@ $destinationService = new DestinationService();
 $message = Session::flash('message');
 $error = Session::flash('error');
 
+if (\App\Helpers\Upload::postTooLarge()) {
+  Session::flash('error', \App\Helpers\Upload::postTooLargeMessage());
+  header('Location: tours.php');
+  exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] ?? '')) {
   $action = $_POST['action'] ?? '';
 
@@ -59,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] 
         Session::flash('message', 'Tour created.');
       } elseif ($action === 'update') {
         $tourService->update((int) $_POST['id'], $data);
+        $tourService->setCoverImage((int) $_POST['id'], $_FILES['cover_image'] ?? []);
+        $tourService->addImages((int) $_POST['id'], $_FILES['images'] ?? []);
         Session::flash('message', 'Tour updated.');
       } elseif ($action === 'delete') {
         $tourService->delete((int) $_POST['id']);
@@ -69,138 +77,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && Session::verifyCsrf($_POST['csrf'] 
     Session::flash('error', $e->getMessage());
   }
 
-  header('Location: tours.php');
+  $reopen = in_array($action, ['update', 'delete_image'], true) ? (int) ($_POST['id'] ?? 0) : 0;
+  header('Location: tours.php' . ($reopen ? '?edit=' . $reopen : ''));
   exit;
 }
 
 $items = $tourService->getAll();
 $destinations = $destinationService->getAll();
+$destinationOptions = ['' => '— None —'];
+$destinationNames = [];
+foreach ($destinations as $d) {
+  $destinationOptions[(string) $d['id']] = $d['name'] . ' (' . $d['country'] . ')';
+  $destinationNames[(int) $d['id']] = $d['name'];
+}
 $pageTitle = 'Tours';
 $currentAdminPage = 'tours';
 include __DIR__ . '/includes/header.php';
-?>
-<div class="content-card p-4">
-  <h2 class="mb-3">Manage Tours</h2>
-  <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
-  <?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 
-  <form method="POST" enctype="multipart/form-data" class="row g-2 mb-4">
-    <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-    <input type="hidden" name="action" value="create">
-    <div class="col-md-3"><input class="form-control" name="title" placeholder="Title" required></div>
-    <div class="col-md-2"><input class="form-control" name="country" placeholder="Country" required></div>
-    <div class="col-md-2"><input class="form-control" name="tour_type" placeholder="Type" required></div>
-    <div class="col-md-1"><input class="form-control" name="duration" placeholder="Duration" required></div>
-    <div class="col-md-1"><input class="form-control" name="price" type="number" step="0.01" placeholder="Price" required></div>
-    <div class="col-md-1"><input class="form-control" name="badge" placeholder="Badge"></div>
-    <div class="col-md-2"><button class="btn btn-success w-100">Add Tour</button></div>
-    <div class="col-12"><textarea class="form-control" name="description" placeholder="Description (shown on the tour's details page)" rows="2"></textarea></div>
-    <div class="col-md-6">
-      <label class="form-label small text-muted mb-0">1. Cover image</label>
-      <input class="form-control" type="file" name="cover_image" accept="image/*">
-      <input class="form-control mt-1" name="image_url" placeholder="...or paste a cover image URL instead">
-    </div>
-    <div class="col-md-6">
-      <label class="form-label small text-muted mb-0">2. Additional pictures (gallery)</label>
-      <input class="form-control" type="file" name="images[]" accept="image/*" multiple>
-      <div class="form-text">Shown on the tour's details page. JPG, PNG, GIF, or WEBP — max 8MB each.</div>
-    </div>
-  </form>
+echo pq_admin_alerts($message, $error);
+echo pq_admin_sheet([
+  'id' => 'tours',
+  'title' => 'Tours',
+  'singular' => 'Tour',
+  'intro' => 'Click any row to edit it.',
+  'empty' => 'No tours yet.',
+  'rows' => $items,
+  'thumb' => fn ($r) => $r['image_url'] ?: null,
+  'gallery' => fn ($r) => array_map(fn ($i) => ['id' => $i['id'], 'path' => $i['image_path']], $tourService->getImages((int) $r['id'])),
+  'columns' => [
+    ['label' => 'Title', 'value' => fn ($r) => $r['title']],
+    ['label' => 'Destination', 'filter' => true, 'value' => fn ($r) => $destinationNames[(int) ($r['destination_id'] ?? 0)] ?? '—'],
+    ['label' => 'Country', 'filter' => true, 'value' => fn ($r) => $r['country']],
+    ['label' => 'Type', 'filter' => true, 'value' => fn ($r) => $r['tour_type']],
+    ['label' => 'Duration', 'value' => fn ($r) => $r['duration']],
+    ['label' => 'Price', 'class' => 'num', 'value' => fn ($r) => number_format((float) $r['price'], 2)],
+    ['label' => 'Badge', 'value' => fn ($r) => $r['badge'] ?: '—'],
+    ['label' => 'Status', 'html' => true, 'value' => fn ($r) => pq_admin_status_badge($r['status'])],
+  ],
+  'fields' => [
+    ['name' => 'title', 'label' => 'Title', 'required' => true],
+    ['name' => 'destination_id', 'label' => 'Destination', 'type' => 'select', 'options' => $destinationOptions, 'col' => 6],
+    ['name' => 'country', 'label' => 'Country', 'required' => true, 'col' => 6],
+    ['name' => 'tour_type', 'label' => 'Type', 'required' => true, 'col' => 4, 'placeholder' => 'e.g. Wildlife'],
+    ['name' => 'duration', 'label' => 'Duration', 'required' => true, 'col' => 4, 'placeholder' => 'e.g. 5 Days'],
+    ['name' => 'price', 'label' => 'Price', 'type' => 'price', 'required' => true, 'col' => 4],
+    ['name' => 'badge', 'label' => 'Badge', 'col' => 6, 'placeholder' => 'Optional, e.g. Best Seller'],
+    ['name' => 'status', 'label' => 'Visibility', 'type' => 'status', 'col' => 6],
+    ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'rows' => 5, 'placeholder' => "Shown on the tour's details page"],
+    ['name' => 'cover_image', 'label' => 'Cover image', 'type' => 'image', 'preview' => fn ($r) => $r['image_url'] ?: null],
+    ['name' => 'image_url', 'label' => '…or cover image URL', 'placeholder' => 'Optional — an uploaded image overrides this'],
+    ['name' => 'images', 'label' => 'Add gallery pictures', 'type' => 'images'],
+  ],
+]);
 
-  <table class="table table-sm align-middle">
-    <thead><tr><th>Title</th><th>Country</th><th>Type</th><th>Duration</th><th>Price</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <?php foreach ($items as $item): ?>
-      <tr>
-        <form method="POST">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="update">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <td><input class="form-control form-control-sm" name="title" value="<?php echo htmlspecialchars($item['title']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="country" value="<?php echo htmlspecialchars($item['country']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="tour_type" value="<?php echo htmlspecialchars($item['tour_type']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="duration" value="<?php echo htmlspecialchars($item['duration']); ?>"></td>
-          <td><input class="form-control form-control-sm" name="price" type="number" step="0.01" value="<?php echo htmlspecialchars($item['price']); ?>"></td>
-          <td>
-            <select class="form-select form-select-sm" name="status">
-              <option value="active" <?php echo $item['status'] === 'active' ? 'selected' : ''; ?>>active</option>
-              <option value="inactive" <?php echo $item['status'] === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-            </select>
-          </td>
-          <td class="d-flex gap-1">
-            <input type="hidden" name="badge" value="<?php echo htmlspecialchars($item['badge'] ?? ''); ?>">
-            <input type="hidden" name="description" value="<?php echo htmlspecialchars($item['description'] ?? ''); ?>">
-            <input type="hidden" name="image_url" value="<?php echo htmlspecialchars($item['image_url'] ?? ''); ?>">
-            <input type="hidden" name="destination_id" value="<?php echo htmlspecialchars((string) ($item['destination_id'] ?? '')); ?>">
-            <button class="btn btn-sm btn-primary">Save</button>
-        </form>
-        <form method="POST" onsubmit="return confirm('Delete this tour?');">
-          <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-          <input type="hidden" name="action" value="delete">
-          <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-          </td>
-      </tr>
-      <tr>
-        <td colspan="7" class="pt-0">
-          <details>
-            <summary class="text-muted small">Description &amp; photos (<?php echo count($tourService->getImages((int) $item['id'])); ?> extra picture<?php echo count($tourService->getImages((int) $item['id'])) === 1 ? '' : 's'; ?>)</summary>
-
-            <div class="row g-3 my-1">
-              <div class="col-md-6">
-                <label class="small text-muted mb-1 d-block">Description</label>
-                <form method="POST" class="d-flex flex-column gap-2">
-                  <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-                  <input type="hidden" name="action" value="update_description">
-                  <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-                  <textarea class="form-control form-control-sm" name="description" rows="3"><?php echo htmlspecialchars($item['description'] ?? ''); ?></textarea>
-                  <button class="btn btn-sm btn-outline-primary align-self-start">Save Description</button>
-                </form>
-              </div>
-              <div class="col-md-6">
-                <label class="small text-muted mb-1 d-block">Cover image</label>
-                <div class="d-flex align-items-center gap-2 mb-2">
-                  <?php if (!empty($item['image_url'])): ?>
-                  <img src="<?php echo (str_starts_with($item['image_url'], 'http') ? '' : '../') . htmlspecialchars($item['image_url']); ?>" style="width:90px;height:70px;object-fit:cover;border-radius:6px;">
-                  <?php endif; ?>
-                </div>
-                <form method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
-                  <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-                  <input type="hidden" name="action" value="update_cover">
-                  <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-                  <input class="form-control form-control-sm" type="file" name="cover_image" accept="image/*" style="max-width:260px;">
-                  <button class="btn btn-sm btn-outline-primary">Replace</button>
-                </form>
-              </div>
-            </div>
-
-            <label class="small text-muted mb-1 d-block">Additional pictures (gallery)</label>
-            <div class="d-flex flex-wrap gap-2 my-2">
-              <?php foreach ($tourService->getImages((int) $item['id']) as $image): ?>
-              <div class="position-relative">
-                <img src="../<?php echo htmlspecialchars($image['image_path']); ?>" style="width:90px;height:70px;object-fit:cover;border-radius:6px;">
-                <form method="POST" class="position-absolute top-0 end-0" onsubmit="return confirm('Remove this picture?');">
-                  <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-                  <input type="hidden" name="action" value="delete_image">
-                  <input type="hidden" name="image_id" value="<?php echo (int) $image['id']; ?>">
-                  <button class="btn btn-sm btn-danger py-0 px-1">&times;</button>
-                </form>
-              </div>
-              <?php endforeach; ?>
-            </div>
-            <form method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
-              <input type="hidden" name="csrf" value="<?php echo Session::csrfToken(); ?>">
-              <input type="hidden" name="action" value="upload_images">
-              <input type="hidden" name="id" value="<?php echo (int) $item['id']; ?>">
-              <input class="form-control form-control-sm" type="file" name="images[]" accept="image/*" multiple style="max-width:320px;">
-              <button class="btn btn-sm btn-outline-success">Upload</button>
-            </form>
-          </details>
-        </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-<?php include __DIR__ . '/includes/footer.php'; ?>
+include __DIR__ . '/includes/footer.php';

@@ -76,12 +76,40 @@ class HomeMediaService
         if ($path === null && trim((string) ($data['image_url'] ?? '')) === '') {
             throw new \RuntimeException('Please choose a poster image or enter an image URL.');
         }
-        return $this->posters->create(array_merge($data, ['image_url' => $path ?? trim($data['image_url'])]));
+        return $this->posters->create(array_merge($data, [
+            'title' => trim((string) ($data['title'] ?? '')),
+            'image_url' => $path ?? trim($data['image_url']),
+        ]));
     }
 
-    public function updatePoster(int $id, array $data): bool
+    public function findPoster(int $id): ?array
     {
-        return $this->posters->update($id, $data);
+        return $this->posters->find($id);
+    }
+
+    /**
+     * Update a poster; a newly uploaded file replaces (and deletes) the old image.
+     */
+    public function updatePoster(int $id, array $data, array $file = []): bool
+    {
+        $poster = $this->posters->find($id);
+        if (!$poster) {
+            throw new \RuntimeException('Poster not found.');
+        }
+
+        $path = Upload::store($file, 'posters');
+        $imageUrl = $path ?? (trim((string) ($data['image_url'] ?? '')) ?: $poster['image_url']);
+        if ($imageUrl !== $poster['image_url'] && str_starts_with($poster['image_url'], 'assets/images/uploads/')) {
+            Upload::delete($poster['image_url']);
+        }
+
+        return $this->posters->update($id, array_merge($data, ['image_url' => $imageUrl]));
+    }
+
+    public function setPosterStatus(int $id, string $status): bool
+    {
+        $poster = $this->posters->find($id);
+        return $poster ? $this->posters->update($id, array_merge($poster, ['status' => $status])) : false;
     }
 
     public function deletePoster(int $id): bool

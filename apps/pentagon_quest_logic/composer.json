@@ -1,11 +1,12 @@
 {
-  "name": "pentagon-quest/website",
-  "description": "Pentagon Quest backend — Composer, vendor, and .env live in this package; UI lives in public/",
+  "name": "pentagon-safaris/website",
+  "description": "Pentagon Safaris backend — Composer, vendor, and .env live in this package; UI lives in public/",
   "type": "project",
   "require": {
     "php": ">=8.1",
     "phpmailer/phpmailer": "^6.9",
-    "vlucas/phpdotenv": "^5.6"
+    "phpoffice/phpspreadsheet": "^5.9",
+    "dompdf/dompdf": "^3.1"
   },
   "autoload": {
     "psr-4": {

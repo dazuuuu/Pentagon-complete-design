@@ -32,6 +32,44 @@ class ClientService
     }
 
     /**
+     * Register a brand-new client (not created via an enquiry accept) and
+     * email them a welcome confirmation — skipped silently if they have no
+     * email or SMTP isn't configured yet.
+     */
+    public function register(array $data): int
+    {
+        $id = $this->model->create($data);
+        $client = $this->model->find($id);
+        if ($client) {
+            $this->mail->sendClientRegistrationWelcome($client);
+        }
+        return $id;
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        return $this->model->update($id, $data);
+    }
+
+    public function search(array $filters): array
+    {
+        try {
+            return $this->model->search($filters);
+        } catch (PDOException) {
+            return [];
+        }
+    }
+
+    public function distinctCountries(): array
+    {
+        try {
+            return $this->model->distinctCountries();
+        } catch (PDOException) {
+            return [];
+        }
+    }
+
+    /**
      * Update a client's status/scheduled date and email them the change
      * (skipped silently when the client has no email on file).
      */

@@ -110,6 +110,52 @@ class MailService
         return $this->send($client['email'] ?? null, $subject, $this->template('Trip Update', $content));
     }
 
+    /**
+     * Welcome a client registered manually from the admin Clients page
+     * (as opposed to one created automatically via an enquiry accept).
+     */
+    public function sendClientRegistrationWelcome(array $client): bool
+    {
+        $subject = 'Welcome to Pentagon Safaris, ' . $client['full_name'];
+
+        $purposeLine = !empty($client['purpose_of_visit'])
+            ? sprintf(' for <strong>%s</strong>', htmlspecialchars($client['purpose_of_visit']))
+            : '';
+
+        $content = sprintf(
+            '<p style="margin:0 0 16px;">Hi %s,</p>'
+            . '<p style="margin:0 0 16px; line-height:1.6;">Welcome to Pentagon Safaris! We are delighted to have you with us%s and look forward to helping you plan an unforgettable trip.</p>'
+            . '<p style="margin:0; line-height:1.6;">One of our travel specialists will be in touch with you shortly to discuss the details.</p>',
+            htmlspecialchars($client['full_name']),
+            $purposeLine
+        );
+
+        return $this->send($client['email'] ?? null, $subject, $this->template('Welcome to Pentagon Safaris', $content));
+    }
+
+    /**
+     * Notify a client of a new or updated appointment (set from the Clients
+     * CRM page's Appointments mini-section).
+     */
+    public function sendAppointmentNotification(array $client, array $appointment): bool
+    {
+        $subject = 'Your appointment with Pentagon Safaris';
+
+        $content = sprintf(
+            '<p style="margin:0 0 16px;">Hi %s,</p>'
+            . '<p style="margin:0 0 16px; line-height:1.6;">Here are the details of your appointment with Pentagon Safaris.</p>',
+            htmlspecialchars($client['full_name'])
+        );
+
+        $content .= $this->infoBox('Appointment Date', htmlspecialchars(date('F j, Y g:i A', strtotime($appointment['appointment_date']))));
+
+        if (!empty($appointment['purpose'])) {
+            $content .= $this->infoBox('Purpose', htmlspecialchars($appointment['purpose']));
+        }
+
+        return $this->send($client['email'] ?? null, $subject, $this->template('Appointment Details', $content));
+    }
+
     public function sendEnquiryRejected(array $data): bool
     {
         $subject = 'Update on your enquiry — Pentagon Safaris';
@@ -186,7 +232,8 @@ class MailService
 
     private function siteUrl(string $path): string
     {
-        $base = rtrim($_ENV['APP_URL'] ?? '', '/');
+        $appConfig = require Path::config('app.php');
+        $base = rtrim((string) ($appConfig['url'] ?? ''), '/');
         return $base !== '' ? $base . '/' . ltrim($path, '/') : $path;
     }
 
@@ -239,7 +286,7 @@ class MailService
             <td style="background:#121212; padding:32px 40px; text-align:center;">
               <p style="margin:0 0 8px; color:#D4AF37; font-weight:700; font-size:14px;">Pentagon Safaris</p>
               <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">Nairobi, Kenya &middot; Offices in Nairobi, Eldoret and Kericho</p>
-              <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">+254 720 090751</p>
+              <p style="margin:0 0 6px; color:rgba(255,255,255,0.65); font-size:12px;">+254 718 620 982</p>
               <p style="margin:0; color:rgba(255,255,255,0.65); font-size:12px;">info@pentagonsafaris.com &middot; www.pentagonsafaris.com</p>
             </td>
           </tr>
@@ -273,7 +320,7 @@ HTML;
             // alias Gmail is allowed to send as) — otherwise Gmail's outbound
             // spoofing protection lets the send() call report success while
             // the message is silently dropped or spam-filtered downstream.
-            // The branded address (e.g. noreply@pentagonquest.com) is kept
+            // The branded address is kept
             // as the Reply-To so replies still land in the right inbox.
             $mail->setFrom($this->config['username'], $this->config['from_name']);
             if (!empty($this->config['from_email']) && $this->config['from_email'] !== $this->config['username']) {

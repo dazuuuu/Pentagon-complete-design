@@ -27,14 +27,34 @@ class DestinationService
         }
     }
 
+    /**
+     * Admin-pinned "Featured" destinations first, then topped up with the
+     * newest active destinations (so a freshly added destination shows up
+     * on the homepage immediately, not just after being marked Featured).
+     */
     public function getFeatured(int $limit = 3): array
     {
         try {
-            $items = $this->model->featured($limit);
-            if (empty($items)) {
-                $items = array_slice($this->model->allActive(), 0, $limit);
+            $featured = $this->model->featured($limit);
+            if (count($featured) >= $limit) {
+                return $featured;
             }
-            return $items;
+
+            $featuredIds = array_column($featured, 'id');
+            $active = $this->model->allActive();
+            usort($active, static fn (array $a, array $b): int => (int) $b['id'] <=> (int) $a['id']);
+
+            foreach ($active as $item) {
+                if (count($featured) >= $limit) {
+                    break;
+                }
+                if (in_array($item['id'], $featuredIds, true)) {
+                    continue;
+                }
+                $featured[] = $item;
+            }
+
+            return $featured;
         } catch (PDOException) {
             return [];
         }

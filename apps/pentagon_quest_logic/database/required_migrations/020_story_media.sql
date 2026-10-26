@@ -1,0 +1,8 @@
+-- Schema for App\Models\StoryMedia
+CREATE TABLE IF NOT EXISTS story_media (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  image_path VARCHAR(255) NOT NULL,
+  caption VARCHAR(255) NULL,
+  sort_order INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

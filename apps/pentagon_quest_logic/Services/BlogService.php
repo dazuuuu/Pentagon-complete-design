@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\HtmlSanitizer;
 use App\Helpers\Upload;
 use App\Models\BlogPost;
 use PDOException;
@@ -36,11 +37,17 @@ class BlogService
 
     public function create(array $data): int
     {
+        if (array_key_exists('content', $data)) {
+            $data['content'] = HtmlSanitizer::clean((string) $data['content']);
+        }
         return $this->model->create($data);
     }
 
     public function update(int $id, array $data): bool
     {
+        if (array_key_exists('content', $data)) {
+            $data['content'] = HtmlSanitizer::clean((string) $data['content']);
+        }
         return $this->model->update($id, $data);
     }
 

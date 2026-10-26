@@ -4,12 +4,18 @@ namespace App\Models;
 
 class Offer extends BaseModel
 {
-    private const SELECT = "SELECT o.*,
-            t.title AS tour_title, t.image_url AS tour_image,
-            d.name AS destination_name, d.image_url AS destination_image
-        FROM offers o
-        LEFT JOIN tours t ON o.tour_id = t.id
-        LEFT JOIN destinations d ON o.destination_id = d.id";
+    private const SELECT = "SELECT o.*
+        FROM offers o";
+
+    public function activeBannerOffer(): ?array
+    {
+        $stmt = $this->db->prepare(
+            self::SELECT . " WHERE o.status = 'active' AND o.is_banner = 1 AND (o.end_time IS NULL OR o.end_time > NOW()) ORDER BY o.id DESC LIMIT 1"
+        );
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
 
     public function allActive(): array
     {
@@ -34,14 +40,17 @@ class Offer extends BaseModel
     public function create(array $data): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO offers (title, description, badge, tour_id, destination_id, status, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO offers (title, description, image_url, video_url, is_banner, end_time, badge, link_url, status, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $data['title'],
             $data['description'] ?? null,
+            $data['image_url'] ?? null,
+            $data['video_url'] ?? null,
+            $data['is_banner'] ?? 0,
+            $data['end_time'] ?? null,
             $data['badge'] ?? null,
-            $data['tour_id'] ?: null,
-            $data['destination_id'] ?: null,
+            $data['link_url'] ?? null,
             $data['status'] ?? 'active',
             $data['sort_order'] ?? 0,
         ]);
@@ -51,14 +60,17 @@ class Offer extends BaseModel
     public function update(int $id, array $data): bool
     {
         $stmt = $this->db->prepare(
-            'UPDATE offers SET title = ?, description = ?, badge = ?, tour_id = ?, destination_id = ?, status = ?, sort_order = ? WHERE id = ?'
+            'UPDATE offers SET title = ?, description = ?, image_url = ?, video_url = ?, is_banner = ?, end_time = ?, badge = ?, link_url = ?, status = ?, sort_order = ? WHERE id = ?'
         );
         return $stmt->execute([
             $data['title'],
             $data['description'] ?? null,
+            $data['image_url'] ?? null,
+            $data['video_url'] ?? null,
+            $data['is_banner'] ?? 0,
+            $data['end_time'] ?? null,
             $data['badge'] ?? null,
-            $data['tour_id'] ?: null,
-            $data['destination_id'] ?: null,
+            $data['link_url'] ?? null,
             $data['status'] ?? 'active',
             $data['sort_order'] ?? 0,
             $id,
